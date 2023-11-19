@@ -1,0 +1,16 @@
+.nav-item.dropdown:hover .dropdown-menu {
+    display: block;
+    visibility: visible;
+  }
+  
+  .dropdown-menu {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s ease;
+  }
+  
+  .dropdown-menu.show {
+    visibility: visible;
+    opacity: 1;
+  }
+  
