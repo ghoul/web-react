@@ -60,7 +60,7 @@ const AddClass = () => {
       });
   };
   const send = (event) => {
-    navigate('/classes');
+    navigate('/all-classes');
   }
   return (
     <Row>

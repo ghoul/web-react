@@ -12,12 +12,13 @@ import {
   Input,
 } from 'reactstrap';
 import './HomeworkForm.css'; // Import your CSS for additional styling
+import { useNavigate } from 'react-router-dom';
 
 const AllHomework = () => {
   const [homeworkName, setHomeworkName] = useState('');
   const [pairs, setPairs] = useState([{ question: '', answer: '', image: null, points: 0 }]);
   const [successMessage, setSuccessMessage] = useState('');
-
+  const navigate  = useNavigate();
   const handleHomeworkNameChange = (e) => {
     setHomeworkName(e.target.value);
   };
@@ -86,10 +87,13 @@ const AllHomework = () => {
       alert('Namų darbe privalo būti bent viena užduotis');
     }
   };
-
+  const send = (event) => {
+    navigate('/all-homework');
+  }
   return (
     <Row>
       <Col>
+      <Button style={{ backgroundColor: '#1b1c20', color: 'white', marginBottom: '10px' }} onClick={send}> ← Atgal</Button>
         <Card>
           <CardTitle tag="h6" className="border-bottom p-3 mb-0">
             <i className="bi bi-pen me-2"></i>

@@ -9,20 +9,33 @@ import user2 from "../assets/images/users/user2.jpg";
 import user3 from "../assets/images/users/user3.jpg";
 import user4 from "../assets/images/users/user4.jpg";
 import user5 from "../assets/images/users/user5.jpg";
+import { useNavigate } from 'react-router-dom';
 
 const AllHomework = () => {
-  const [homeworks, setHomeworks] = useState([]);
-
+  const [homework, setHomework] = useState([]);
+  let token = localStorage.getItem('token'); 
+  const navigate  = useNavigate();
   useEffect(() => {
     // Fetch homeworks data from your backend (assuming the endpoint is /api/homeworks)
-    axios.get('/api/homeworks') // Replace with your actual endpoint
-      .then(response => {
-        setHomeworks(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching homeworks:', error);
-      });
+    const fetchHomework = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/handle_homework/', {
+          method: 'GET',
+          headers: {
+            'Authorization' : `${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await response.json();
+        setHomework(data);
+      } catch (error) {
+        console.error('Error fetching Classes:', error);
+      }
+    };
+
+    fetchHomework();
   }, []);
+
 
   const handleEdit = (id) => {
     // Handle edit button click
@@ -106,7 +119,7 @@ const AllHomework = () => {
               </tr>
             </thead>
             <tbody>
-              {tableData.map((tdata, index) => (
+              {tableData.map((tdata, index) => ( //TODO: homework
                 <tr key={index} className="border-top">
                   <td>
                     <div className="d-flex align-items-center p-2">

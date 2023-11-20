@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 // import { useAlert } from "react-alert";
 import { useLocation } from "react-router-dom";
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 // import Forms from "./ui/Forms";
 import {
   Card,
@@ -16,7 +16,7 @@ import {
   Form,
   FormGroup,
   Label,
-  Input
+  Input, Table
 } from "reactstrap";
 import { useNavigate } from 'react-router-dom';
 
@@ -25,8 +25,11 @@ export default function UpdateClass() {
   const navigate  = useNavigate();
   const [message, setMessage] = useState(''); 
   console.log("id: ", classsId);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedStudentId, setSelectedStudentId] = useState(null);
 
   const [titleInput, settitleInput] = useState("");
+  const [students, setStudents] = useState([]); 
   const [fail, setFail] = useState("");
   let token = localStorage.getItem('token'); 
 
@@ -45,8 +48,25 @@ export default function UpdateClass() {
       .then((response) => response.json())
       .then((data) => {
         settitleInput(data.title);
-        console.log("grazino" + data);
+        console.log("grazino title" + data.title);
       });
+
+      fetch(
+        `http://localhost:8000/handle_students_class/0/${classsId}/`,
+        {
+          method: "GET",
+          headers: {
+            'Authorization' : `${token}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          setStudents(data);
+          console.log("grazino" + data);
+        });
   };
   useEffect(() => {
     const id = classsId;
@@ -91,7 +111,38 @@ export default function UpdateClass() {
         setMessage('Klaida!' + error.error);
       });
   };
+  const removeStudent = () => {
+    fetch(`http://localhost:8000/handle_students/${selectedStudentId}/${classsId}/`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization' : `${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Handle success, update classes state, and close the modal
+        const updatedStudents = students.filter(student => student.id !== selectedStudentId);
+        setStudents(updatedStudents);
+        hideModalHandler(); // Move hideModalHandler inside the .then() block
+        window.location.reload();
+      })
+      .catch(error => {
+        // Handle error
+        window.location.reload();
+        console.error('Error deleting classs:', error);
+      });
+  };
   
+
+  const showModalHandler = (studentId) => {
+    setSelectedStudentId(studentId);
+    setShowModal(true);
+  };
+
+  const hideModalHandler = () => {
+    setShowModal(false);
+  };
   const send = (event) => {
     navigate('/all-classes');
   }
@@ -118,6 +169,33 @@ export default function UpdateClass() {
               </CardBody>
             </Card>
           </Col>
+          <Table>
+        <thead>
+          <tr>
+            <th>Vardas</th>
+            <th>Pavardė</th>
+            <th>Šalinti</th>
+          </tr>
+        </thead>
+        <tbody>
+          {students.map((student) => (
+            <tr key={student.id}>
+              <td>{student.name}</td>
+              <td>{student.surname}</td>
+              <td>
+                <Button style={{ backgroundColor: 'red', color: 'white' }} onClick={() => showModalHandler(student.id)}>
+                  X
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+      <Button style={{ backgroundColor: '#204963', marginRight: '10px' }}>
+                  <Link to={`/add-student`} className="nav-link" style={{ color: 'white' }}>
+                    Pridėti naują
+                  </Link>
+                </Button>
         </Row>
       </div>
   );

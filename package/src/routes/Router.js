@@ -13,6 +13,7 @@ const AddHomework = lazy(() => import("../views/AddHomework.js"));
 const AllHomework = lazy(() => import("../views/AllHomework.js"));
 const AddClass = lazy(() => import("../views/AddClass.js"));
 const AllClasses = lazy(() => import("../views/AllClasses.js"));
+const UpdateClass = lazy(() => import("../views/UpdateClass.js"));
 // const Category = lazy(() => import("../views/Category.js"));
 // const Trick = lazy(() => import("../views/OneTrick.js"));
 // const UpdateTrick = lazy(() => import("../views/UpdateTrick.js"));
@@ -47,6 +48,7 @@ const ThemeRoutes = [
       { path: "/create-homework", element: <AddHomework/>},     
       { path: "/create-class", element: <AddClass/>},
       { path: "/all-classes", element: <AllClasses/>},
+      { path: "/edit-class/:classsId", element: <UpdateClass/>},
 
       // { path: "/categories", element: <CategoriesList  />},
 

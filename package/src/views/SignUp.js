@@ -90,9 +90,8 @@ function SignupForm() {
               onChange={(e) => setRole(e.target.value)}
               style={{ margin: '10px', padding: '8px', borderRadius: '4px', width: '200px' }}
             >
-              <option value="">Pasirinkite vaidmenį</option>
-              <option value="mokytojas">Mokytojas</option>
-              <option value="mokinys">Mokinys</option>
+              <option value="1">Mokinys</option>
+              <option value="2">Mokytojas</option>
             </select>
             <button
               onClick={handleSignup}

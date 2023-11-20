@@ -77,22 +77,29 @@ const Header = () => {
   };
 
   return (
-    <Navbar style={{ backgroundColor: '#181A1F' }} dark expand="md" className="fix-header justify-content-center">
-      <NavbarBrand href="/" className="mx-auto">
-        <img
-          src={logo}
-          alt="logo"
-          width="70"
-        />
-      </NavbarBrand>
-      <Button
-        color="primary"
-        className=" d-lg-none"
-        onClick={() => showMobilemenu()} //todo
-      >
-        <i className="bi bi-list"></i>
-      </Button>
-    </Navbar>
+<Navbar style={{ backgroundColor: '#181A1F' }} dark expand="md" className="fix-header justify-content-center">
+  <NavbarBrand href="/" className="mx-auto">
+    <img src={logo} alt="logo" width="70" />
+  </NavbarBrand>
+  <Button color="primary" className="d-lg-none" onClick={() => showMobilemenu()}>
+    <i className="bi bi-list"></i>
+  </Button>
+  {!logged && (
+    <>
+      <NavItem>
+        <Link to="/login" className="nav-link" style={{ color: 'white' }}>
+          Prisijungti   | 
+        </Link>
+      </NavItem>
+      {/* <span style={{ color: 'white', margin: '0 10px' }}>|</span> */}
+      <NavItem>
+        <Link to="/signup" className="nav-link" style={{ color: 'white' }}>
+          |   Registruotis
+        </Link>
+      </NavItem>
+    </>
+  )}
+</Navbar>
   );
   }
 
