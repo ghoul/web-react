@@ -2,11 +2,11 @@ import { Button, Nav, NavItem } from "reactstrap";
 import { Link, useLocation } from "react-router-dom";
 import user1 from "../assets/images/users/user4.jpg";
 import probg from "../assets/images/bg/download.jpg";
-
+import { useNavigate } from 'react-router-dom';
 const navigation = [
   {
     title: "Pagrindinis",
-    href: "/starter",
+    href: "/",
     icon: "bi bi-speedometer2",
   },
   //TODO: ADMIN DALYKAI
@@ -42,7 +42,7 @@ const navigation = [
   },
   {
     title: "Klasės",
-    href: "/table",
+    href: "/all-classes",
     icon: "bi bi-layout-split",
   },
   {
@@ -60,11 +60,11 @@ const navigation = [
     href: "/about",
     icon: "bi bi-people",
   },
-  {
-    title: "Atsijungti",
-    href: "/about",
-    icon: "bi bi-people",
-  },
+  // {
+  //   title: "Atsijungti",
+  //   href: "/login",
+  //   icon: "bi bi-people",
+  // },
 ];
 
 const Sidebar = () => {
@@ -72,7 +72,12 @@ const Sidebar = () => {
     document.getElementById("sidebarArea").classList.toggle("showSidebar");
   };
   let location = useLocation();
-
+  const navigate  = useNavigate();
+  const handleLogout = () => {
+    localStorage.clear(); // Clear all items from localStorage
+    navigate('/login');
+    
+  };
   return (
     <div>
       <div className="d-flex align-items-center"></div>
@@ -109,15 +114,15 @@ const Sidebar = () => {
               </Link>
             </NavItem>
           ))}
-          {/* <Button
+          <Button
             color="danger"
             tag="a"
             target="_blank"
             className="mt-3"
-            href="https://wrappixel.com/templates/materialpro-react-admin/?ref=33"
+            onClick={handleLogout}
           >
-            Upgrade To Pro
-          </Button> */}
+            Atsijungti
+          </Button>
         </Nav>
       </div>
     </div>

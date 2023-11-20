@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './Login.css'; // Import CSS for transition
 
 function LoginForm() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -23,13 +23,13 @@ function LoginForm() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
       if (response.ok) {
         // Token obtained successfully, store it in localStorage
-        localStorage.setItem('admin', data.admin);
+        localStorage.setItem('role', data.role);
         localStorage.setItem('token', data.token);
         console.log('Login successful!'); setShowLoginForm(false); // Hide the login form on successful login
         // Navigate after a brief delay to allow for the transition
@@ -71,9 +71,9 @@ function LoginForm() {
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <input
             type="text"
-            placeholder="Prisijungimo vardas"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            placeholder="El. paštas"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             style={{ margin: '10px', padding: '8px', borderRadius: '4px', width: '200px' }}
           />
           <input

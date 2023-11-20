@@ -15,7 +15,7 @@ import './HomeworkForm.css'; // Import your CSS for additional styling
 
 const AllHomework = () => {
   const [homeworkName, setHomeworkName] = useState('');
-  const [pairs, setPairs] = useState([{ question: '', answer: '', image: null }]);
+  const [pairs, setPairs] = useState([{ question: '', answer: '', image: null, points: 0 }]);
   const [successMessage, setSuccessMessage] = useState('');
 
   const handleHomeworkNameChange = (e) => {
@@ -33,7 +33,6 @@ const AllHomework = () => {
     updatedPairs[index].image = event.target.files[0];
     setPairs(updatedPairs);
   };
-
   const addPair = () => {
     setPairs([...pairs, { question: '', answer: '', image: null }]);
   };
@@ -97,7 +96,7 @@ const AllHomework = () => {
             Namų darbo kūrimo forma
           </CardTitle>
           <CardBody>
-          {successMessage &&<div style={{ marginBottom: '10px', color: successMessage.includes('Invalid') ? 'red' : 'green' }}>{successMessage}</div>}
+          {successMessage &&<div style={{ marginBottom: '10px', color: successMessage.includes('Klaida') ? 'red' : 'green' }}>{successMessage}</div>}
             <Form onSubmit={handleSubmit}>
               <FormGroup>
                 <Label for="homeworkName">Namų darbo pavadinimas</Label>
@@ -136,6 +135,16 @@ const AllHomework = () => {
                       accept="image/*"
                       onChange={(e) => handleImageChange(index, e)}
                     />
+                    <FormGroup>
+                    <Label for={`points${index}`}>Taškai nr. {index+1}</Label>
+                    <Input
+                      type="number"
+                      id={`points${index}`}
+                      value={pair.points}
+                      onChange={(e) => handlePairChange(index, 'points', e.target.value)}
+                      min="0"
+                    />
+                  </FormGroup>
                   </FormGroup>
                   <Button type="button" onClick={() => removePair(index)}>
                     Ištrinti
