@@ -5,6 +5,7 @@ import { useEffect } from "react";
 // import { useAlert } from "react-alert";
 import { useLocation } from "react-router-dom";
 import { useParams, Link } from 'react-router-dom';
+import { Modal } from "./Modal.js";
 // import Forms from "./ui/Forms";
 import {
   Card,
@@ -64,7 +65,7 @@ export default function UpdateClass() {
       )
         .then((response) => response.json())
         .then((data) => {
-          setStudents(data);
+          setStudents(data.students);
           console.log("grazino" + data);
         });
   };
@@ -112,26 +113,28 @@ export default function UpdateClass() {
       });
   };
   const removeStudent = () => {
-    fetch(`http://localhost:8000/handle_students/${selectedStudentId}/${classsId}/`, {
+    fetch(`http://localhost:8000/handle_students_class/${selectedStudentId}/${classsId}/`, {
       method: 'DELETE',
       headers: {
         'Authorization' : `${token}`,
         'Content-Type': 'application/json',
       },
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response)=> {
+        // if(data.success){
         // Handle success, update classes state, and close the modal
         const updatedStudents = students.filter(student => student.id !== selectedStudentId);
         setStudents(updatedStudents);
         hideModalHandler(); // Move hideModalHandler inside the .then() block
-        window.location.reload();
-      })
-      .catch(error => {
-        // Handle error
-        window.location.reload();
-        console.error('Error deleting classs:', error);
+        // window.location.reload();
+        console.log("pasalino studenta")
+        // }
       });
+      // .catch(error => {
+      //   // Handle error
+      //   //window.location.reload();
+      //   console.error('Error deleting classs:', error);
+      // });
   };
   
 
@@ -148,6 +151,11 @@ export default function UpdateClass() {
   }
   return (
     <div>
+       <Modal
+        show={showModal}
+        hide={hideModalHandler}
+        onRemoveProduct={removeStudent}
+      ></Modal>
     <Row>
           <Col>
           <Button style={{ backgroundColor: '#1b1c20', color: 'white', marginBottom: '10px' }} onClick={send}> ← Atgal</Button>
@@ -178,7 +186,12 @@ export default function UpdateClass() {
           </tr>
         </thead>
         <tbody>
-          {students.map((student) => (
+        {students.length === 0 ? (
+          <tr>
+            <td colSpan="3">Klasė tuščia</td>
+          </tr>
+        ) : (
+          students.map((student) => (
             <tr key={student.id}>
               <td>{student.name}</td>
               <td>{student.surname}</td>
@@ -188,12 +201,13 @@ export default function UpdateClass() {
                 </Button>
               </td>
             </tr>
-          ))}
-        </tbody>
+          ))
+        )}
+      </tbody>
       </Table>
       <Button style={{ backgroundColor: '#204963', marginRight: '10px' }}>
-                  <Link to={`/add-student`} className="nav-link" style={{ color: 'white' }}>
-                    Pridėti naują
+                  <Link to={`/add-students/${classsId}`} className="nav-link" style={{ color: 'white' }}>
+                    Pridėti +
                   </Link>
                 </Button>
         </Row>

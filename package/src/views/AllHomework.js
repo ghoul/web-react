@@ -1,22 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Button } from 'reactstrap';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
-import { Card, CardBody, CardTitle, CardSubtitle, Table } from "reactstrap";
-import user1 from "../assets/images/users/user1.jpg";
-import user2 from "../assets/images/users/user2.jpg";
-import user3 from "../assets/images/users/user3.jpg";
-import user4 from "../assets/images/users/user4.jpg";
-import user5 from "../assets/images/users/user5.jpg";
+import { Button, Table } from 'reactstrap';
+import { Modal } from './Modal.js';
 import { useNavigate } from 'react-router-dom';
-
 const AllHomework = () => {
   const [homework, setHomework] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedHomeworkId, setSelectedHomeworkId] = useState(null);
   let token = localStorage.getItem('token'); 
   const navigate  = useNavigate();
   useEffect(() => {
-    // Fetch homeworks data from your backend (assuming the endpoint is /api/homeworks)
     const fetchHomework = async () => {
       try {
         const response = await fetch('http://localhost:8000/handle_homework/', {
@@ -27,152 +20,97 @@ const AllHomework = () => {
           },
         });
         const data = await response.json();
-        setHomework(data);
+        setHomework(data.homework);
       } catch (error) {
-        console.error('Error fetching Classes:', error);
+        console.error('Error fetching Homework:', error);
       }
     };
 
     fetchHomework();
   }, []);
 
+  const deleteHomework = () => {
+    fetch(`http://localhost:8000/handle_homework_id/${selectedHomeworkId}/`, {
+      method: 'DELETE',
+      headers: {
+        'Authorization' : `${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Handle success, update homework state, and close the modal
+        const updatedHomework = homework.filter(homework => homework.id !== selectedHomeworkId);
+        setHomework(updatedHomework);
+        hideModalHandler(); // Move hideModalHandler inside the .then() block
+        // window.location.reload();
+      })
+      .catch(error => {
+        // Handle error
+        // window.location.reload();
+        console.error('Error deleting homework:', error);
+      });
+  };
+  
 
-  const handleEdit = (id) => {
-    // Handle edit button click
-    console.log('Edit homework with ID:', id);
+  const showModalHandler = (homeworkId) => {
+    setSelectedHomeworkId(homeworkId);
+    setShowModal(true);
   };
 
-  const handleDelete = (id) => {
-    // Handle delete button click
-    console.log('Delete homework with ID:', id);
+  const hideModalHandler = () => {
+    setShowModal(false);
   };
-
-  const handleAssign = (id) => {
-    // Handle assign button click
-    console.log('Assign homework with ID:', id);
-  };
-  const tableData = [
-    {
-      avatar: user1,
-      name: "Hanna Gover",
-      email: "hgover@gmail.com",
-      project: "Flexy React",
-      status: "pending",
-      weeks: "35",
-      budget: "95K",
-    },
-    {
-      avatar: user2,
-      name: "Hanna Gover",
-      email: "hgover@gmail.com",
-      project: "Lading pro React",
-      status: "done",
-      weeks: "35",
-      budget: "95K",
-    },
-    {
-      avatar: user3,
-      name: "Hanna Gover",
-      email: "hgover@gmail.com",
-      project: "Elite React",
-      status: "holt",
-      weeks: "35",
-      budget: "95K",
-    },
-    {
-      avatar: user4,
-      name: "Hanna Gover",
-      email: "hgover@gmail.com",
-      project: "Flexy React",
-      status: "pending",
-      weeks: "35",
-      budget: "95K",
-    },
-    {
-      avatar: user5,
-      name: "Hanna Gover",
-      email: "hgover@gmail.com",
-      project: "Ample React",
-      status: "done",
-      weeks: "35",
-      budget: "95K",
-    },
-  ];
+  const send = (event) => {
+    navigate('/');
+  }
   return (
-    <div>
-   <Card>
-        <CardBody>
-          <CardTitle tag="h5">Project Listing</CardTitle>
-          <CardSubtitle className="mb-2 text-muted" tag="h6">
-            Overview of the projects
-          </CardSubtitle>
-
-          <Table className="no-wrap mt-3 align-middle" responsive borderless>
-            <thead>
-              <tr>
-                <th>Team Lead</th>
-                <th>Project</th>
-
-                <th>Status</th>
-                <th>Weeks</th>
-                <th>Budget</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tableData.map((tdata, index) => ( //TODO: homework
-                <tr key={index} className="border-top">
-                  <td>
-                    <div className="d-flex align-items-center p-2">
-                      <img
-                        src={tdata.avatar}
-                        className="rounded-circle"
-                        alt="avatar"
-                        width="45"
-                        height="45"
-                      />
-                      <div className="ms-3">
-                        <h6 className="mb-0">{tdata.name}</h6>
-                        <span className="text-muted">{tdata.email}</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td>{tdata.project}</td>
-                  <td>
-                    {tdata.status === "pending" ? (
-                      <span className="p-2 bg-danger rounded-circle d-inline-block ms-3"></span>
-                    ) : tdata.status === "holt" ? (
-                      <span className="p-2 bg-warning rounded-circle d-inline-block ms-3"></span>
-                    ) : (
-                      <span className="p-2 bg-success rounded-circle d-inline-block ms-3"></span>
-                    )}
-                  </td>
-                  <td>{tdata.weeks}</td>
-                  <td>{tdata.budget}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        </CardBody>
-      </Card>
-        {/* {homeworks.map(homework => (
-          <tr key={homework.id}>
-            <td>{homework.title}</td>
-            <td>{homework.creationDate}</td>
-            <td>{homework.numberOfQuestions}</td>
-            <td>
-              <button onClick={() => handleAssign(homework.id)}>Assign</button>
-              <button onClick={() => handleEdit(homework.id)}>Edit</button>
-              <button onClick={() => handleDelete(homework.id)}>Delete</button>
-            </td>
-          </tr> */}
-    <Button style={{ backgroundColor: '#204963', marginRight: '10px' }}>
+    <div className="list">
+      <Modal show={showModal} hide={hideModalHandler} onRemoveProduct={deleteHomework}></Modal>
+      <Button style={{ backgroundColor: '#171a1e', color: 'white', marginBottom: '10px' }} onClick={send}> ← Į pradžią</Button>
+      <Table>
+        <thead>
+          <tr>
+            <th>Pavadinimas</th>
+            <th>Klausimų skaičius</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {homework.map((homework) => (
+            <tr key={homework.id}>
+              <td>{homework.title}</td>
+              <td>{homework.questions}</td>
+              <td>
+              <Button style={{ backgroundColor: '#204963', marginRight: '10px' }}>
+                  <Link to={`/check-homework/${homework.id}`} className="nav-link" style={{ color: 'white' }}> 
+                    Peržiūrėti
+                  </Link>
+                </Button>
+                <Button style={{ backgroundColor: '#204963', marginRight: '10px' }}>
+                  <Link to={`/assign-homework/${homework.id}`} className="nav-link" style={{ color: 'white' }}> 
+                    Paskirti
+                  </Link>
+                </Button>
+                {/* perkelt i check */}
+                {/* <Button style={{ backgroundColor: '#204963', marginRight: '10px' }}>
+                  <Link to={`/edit-homework/${homework.id}`} className="nav-link" style={{ color: 'white' }}> 
+                    Redaguoti
+                  </Link>
+                </Button> */}
+                <Button style={{ backgroundColor: 'orange', color: '#204963' }} onClick={() => showModalHandler(homework.id)}>
+                  Šalinti
+                </Button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+      <Button style={{ backgroundColor: '#204963', marginRight: '10px' }}>
                   <Link to={`/create-homework`} className="nav-link" style={{ color: 'white' }}>
                     Pridėti naują
                   </Link>
                 </Button>
-                {/* <Button style={{ backgroundColor: 'orange', color: '#204963' }} onClick={() => showModalHandler(category.id)}>
-                  Šalinti
-                </Button> */}
     </div>
   );
 };

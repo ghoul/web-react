@@ -19,6 +19,7 @@ const AllHomework = () => {
   const [pairs, setPairs] = useState([{ question: '', answer: '', image: null, points: 0 }]);
   const [successMessage, setSuccessMessage] = useState('');
   const navigate  = useNavigate();
+  let token = localStorage.getItem('token'); 
   const handleHomeworkNameChange = (e) => {
     setHomeworkName(e.target.value);
   };
@@ -53,6 +54,7 @@ const AllHomework = () => {
       pairs.forEach((pair, index) => {
         formData.append(`pairs[${index}][question]`, pair.question);
         formData.append(`pairs[${index}][answer]`, pair.answer);
+        formData.append(`pairs[${index}][points]`, pair.points);
         if (pair.image) {
           formData.append(`pairs[${index}][image]`, pair.image);
         }
@@ -62,10 +64,13 @@ const AllHomework = () => {
       console.log('Data to be sent:', formData);
       // Perform further actions like API request
       try {
-        const response = await fetch('http://localhost:8000/submit_homework/', {
-            //TODO:TOKEN
+        console.log(formData.homeworkName);
+        const response = await fetch('http://localhost:8000/handle_homework/', {
           method: 'POST',
-          body: formData,
+          headers: {
+            'Authorization': `${token}`,
+          },
+          body: formData, // Send formData directly
         });
     
         if (response.ok) {

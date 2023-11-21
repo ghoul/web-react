@@ -43,11 +43,11 @@ const AllClasses = () => {
         const updatedClasses = classes.filter(classs => classs.id !== selectedClassId);
         setClasses(updatedClasses);
         hideModalHandler(); // Move hideModalHandler inside the .then() block
-        window.location.reload();
+        // window.location.reload();
       })
       .catch(error => {
         // Handle error
-        window.location.reload();
+        // window.location.reload();
         console.error('Error deleting classs:', error);
       });
   };
