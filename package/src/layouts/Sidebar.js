@@ -47,7 +47,12 @@ const navigation = [
   },
   {
     title: "Mokiniai",
-    href: "/forms",
+    href: "/all-students",
+    icon: "bi bi-textarea-resize",
+  },
+  {
+    title: "Mokytojai",
+    href: "/all-teachers",
     icon: "bi bi-textarea-resize",
   },
   {

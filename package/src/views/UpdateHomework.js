@@ -17,7 +17,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 const UpdateHomework = () => {
 const {homeworkId }= useParams();
   const [homeworkName, setHomeworkName] = useState('');
-  const [pairs, setPairs] = useState([{ question: '', answer: '', image: null, points: 0 }]);
+  const [pairs, setPairs] = useState([{ id: null, question: '', answer: '', image: null, points: 0 }]);
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
   let token = localStorage.getItem('token');
@@ -37,10 +37,12 @@ const {homeworkId }= useParams();
           if (data.success) {
             // Set homework details in the state to pre-fill the form
             setHomeworkName(data.homework.title);
+            // console.log("hw name: " + homeworkName);
 
             // Pre-fill question-answer pairs, if available
             if (data.homework.pairs && data.homework.pairs.length > 0) {
               setPairs(data.homework.pairs.map(pair => ({
+                id: pair.id,
                 question: pair.question,
                 answer: pair.answer,
                 image: pair.image,
@@ -85,29 +87,45 @@ const {homeworkId }= useParams();
     updatedPairs.splice(index, 1);
     setPairs(updatedPairs);
   };
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // const formData = new FormData();
+    // formData.append('homeworkName', homeworkName);
+    // console.log("Homework Name: ", formData.get('homeworkName'));
+
+    // for (let pair of formData.entries()) {
+    //   console.log(pair[0], pair[1]); // Logs each key and value pair
+    // }
     if (pairs.length > 0 && pairs.some(pair => pair.question.trim() !== '' && pair.answer.trim() !== '')) {
-      const formData = new FormData();
-      formData.append('homeworkName', homeworkName);
-
-      pairs.forEach((pair, index) => {
-        formData.append(`pairs[${index}][question]`, pair.question);
-        formData.append(`pairs[${index}][answer]`, pair.answer);
-        formData.append(`pairs[${index}][points]`, pair.points);
-        if (pair.image) {
-          formData.append(`pairs[${index}][image]`, pair.image);
-        }
-      });
-
+    //   pairs.forEach((pair, index) => {
+    //     formData.append(`pairs[${index}][question]`, pair.question);
+    //     console.log("question: " + pair.question);
+    //     formData.append(`pairs[${index}][answer]`, pair.answer);
+    //     console.log("answer: " + pair.answer);
+    //     formData.append(`pairs[${index}][points]`, pair.points);
+    //     if (pair.image) {
+    //       formData.append(`pairs[${index}][image]`, pair.image);
+    //     }
+    //   });
+    const dataToSend = {
+      homeworkName: homeworkName,
+      pairs: pairs.map(pair => ({
+        id: pair.id,
+        question: pair.question,
+        answer: pair.answer,
+        points: pair.points,
+        image: pair.image,
+      }))
+    };
       try {
         const response = await fetch(`http://localhost:8000/handle_homework_id/${homeworkId}/`, {
           method: 'PUT',
           headers: {
             'Authorization': `${token}`,
           },
-          body: formData,
+          // body: formData,
+          body: JSON.stringify(dataToSend), 
         });
 
         if (response.ok) {

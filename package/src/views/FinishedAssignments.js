@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button } from 'reactstrap';
+import { Button , Col} from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { Card, CardBody, CardTitle, CardSubtitle, Table } from "reactstrap";
-import { useNavigate } from 'react-router-dom';
-import { Modal } from "./Modal.js";
-const Starter = () => {
+const FinishedAssignments = () => {
   const [homeworkTeacher, setHomeworkTeacher] = useState([]);
   const [homeworkStudent, setHomeworkStudent] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
   let token = localStorage.getItem('token'); 
   const navigate  = useNavigate();
-  const getAssignments = () => {
-    axios.get(`http://localhost:8000/handle_assignments_teacher/`, {
+  useEffect(() => {
+    // Fetch homeworks data from your backend (assuming the endpoint is /api/homeworks)
+    axios.get(`http://localhost:8000/handle_assignments_teacher_finished/`, {
       method: 'GET',
       headers: {
         'Authorization' : `${token}`,
@@ -27,53 +25,16 @@ const Starter = () => {
       .catch(error => {
         console.error('Error fetching homeworks:', error);
       });
-  };
-  useEffect(() => {
-    // Fetch homeworks data from your backend (assuming the endpoint is /api/homeworks)
-   getAssignments();
   }, []);
-
-  const showModalHandler = (assignmentId) => {
-    setSelectedAssignmentId(assignmentId);
-    setShowModal(true);
-  };
-
-  const hideModalHandler = () => {
-    setShowModal(false);
-  };
-
-  const deleteAssignment = () => {
-    console.log("assid: " + selectedAssignmentId);
-    const assignment = {
-        id: selectedAssignmentId,
-      };
-    fetch(`http://localhost:8000/handle_assignments_teacher/`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization' : `${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(assignment),
-    })
-    .then((response) => {
-        if (response.ok) {
-        //   const updatedNotConfirmedStudents = notConfirmedStudents.filter(student => student.id !== studentId);
-        //   setNotConfirmedStudents(updatedNotConfirmedStudents);
-          hideModalHandler();
-          getAssignments();
-          console.log("pasalino assignment");
-        } else {
-          // Handle error scenario
-          console.error('Failed to add student');
-        }
-      })
-  };
+  const send = (event) => {
+    navigate(`/`);
+  }
   return (
     <div>
+        <Col> <Button style={{ backgroundColor: '#1b1c20', color: 'white', marginBottom: '10px' }} onClick={send}> ← Atgal</Button></Col>
    <Card>
-   <Modal show={showModal} hide={hideModalHandler} onRemoveProduct={deleteAssignment}></Modal>
         <CardBody>
-          <CardTitle tag="h5">Aktyvūs namų darbai</CardTitle>
+          <CardTitle tag="h5">Užbaigti namų darbai</CardTitle>
           <CardSubtitle className="mb-2 text-muted" tag="h6">
             Statistika
           </CardSubtitle>
@@ -87,15 +48,15 @@ const Starter = () => {
                 <th>Klasė</th>
                 <th>Būsena</th>
                 <th>Detaliau</th>
-                <th>Šalinti</th>
               </tr>
             </thead>
             <tbody>
             {homeworkTeacher.length === 0 ? (
           <tr>
-            <td colSpan="6">Aktyvių namų darbų nėra</td>
+            <td colSpan="6">Užbaigtų namų darbų nėra</td>
           </tr>
-            ) : (homeworkTeacher.map((tdata, index) => (
+            ) : (
+              homeworkTeacher.map((tdata, index) => (
                 <tr key={index} className="border-top">
                   <td>{tdata.title}</td>
                   <td>{tdata.fromDate}</td>
@@ -111,20 +72,14 @@ const Starter = () => {
                     )}
                   </td>
                   <td> <Button><Link to={`/statistics/${tdata.id}`} className="nav-link" style={{ color: 'white' }}> → </Link></Button></td>
-                  <td>
-                <Button style={{ backgroundColor: 'red', color: 'white' }} onClick={() => showModalHandler(tdata.id)}>
-                  X
-                </Button>
-              </td>
                 </tr>
-              )))}
+            )))}
             </tbody>
           </Table>
         </CardBody>
       </Card>
-      <Button><Link to={`/finished-assignments`} className="nav-link" style={{ color: 'white' }}>Užbaigti namų darbai → </Link></Button>
     </div>
   );
 };
 
-export default Starter;
+export default FinishedAssignments;

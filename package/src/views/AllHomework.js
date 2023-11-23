@@ -77,7 +77,12 @@ const AllHomework = () => {
           </tr>
         </thead>
         <tbody>
-          {homework.map((homework) => (
+        {homework.length === 0 ? (
+          <tr>
+            <td colSpan="3">Namų darbų nėra</td>
+          </tr>
+        ) : (
+          homework.map((homework) => (
             <tr key={homework.id}>
               <td>{homework.title}</td>
               <td>{homework.questions}</td>
@@ -103,7 +108,9 @@ const AllHomework = () => {
                 </Button>
               </td>
             </tr>
-          ))}
+        ))
+        )}
+        
         </tbody>
       </Table>
       <Button style={{ backgroundColor: '#204963', marginRight: '10px' }}>

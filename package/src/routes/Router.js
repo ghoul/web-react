@@ -18,6 +18,11 @@ const AllClasses = lazy(() => import("../views/AllClasses.js"));
 const UpdateClass = lazy(() => import("../views/UpdateClass.js"));
 const AddStudents = lazy(() => import("../views/AddStudents.js"));
 const UpdateHomework = lazy(() => import("../views/UpdateHomework.js"));
+const AllStudents = lazy(() => import("../views/AllStudents.js"));
+const AllTeachers = lazy(() => import("../views/AllTeachers.js"));
+const Statistics = lazy(() => import("../views/Statistics.js"));
+const FinishedAssignments = lazy(() => import("../views/FinishedAssignments.js"));
+const OneStudentStatistics  = lazy(() => import("../views/OneStudentStatistics.js"));
 // const Category = lazy(() => import("../views/Category.js"));
 // const Trick = lazy(() => import("../views/OneTrick.js"));
 // const UpdateTrick = lazy(() => import("../views/UpdateTrick.js"));
@@ -57,6 +62,11 @@ const ThemeRoutes = [
       { path: "/check-homework/:homeworkId", element: <CheckHomework/>},  
       { path: "/assign-homework/:homeworkId", element: <AssignHomework/>}, 
       { path: "/edit-homework/:homeworkId", element: <UpdateHomework/>},   
+      { path: "/all-students", element: <AllStudents/>},
+      { path: "/all-teachers", element: <AllTeachers/>},
+      { path: "/statistics/:assignmentId", element: <Statistics/>},
+      { path: "/finished-assignments", element: <FinishedAssignments/>}, 
+       {path: "/statistics/:assignmentId/:studentId", element: <OneStudentStatistics/>},
 
       // { path: "/categories", element: <CategoriesList  />},
 
