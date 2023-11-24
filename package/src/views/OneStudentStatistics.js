@@ -23,15 +23,15 @@ import { useNavigate } from 'react-router-dom';
 
 export default function OneStudentStatistics() {
     const { assignmentId, studentId } = useParams();
-    const [homework, setHomework] = useState([]);
+    const [results, setResults] = useState([]);
+    const [title, setTitle] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [selectedHomeworkId, setSelectedHomeworkId] = useState(null);
   let token = localStorage.getItem('token'); 
   const navigate  = useNavigate();
   useEffect(() => {
     const fetchHomework = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/handle_homework_id/${assignmentId}/${studentId}/`, {
+        const response = await fetch(`http://localhost:8000/get_one_student_answers/${assignmentId}/${studentId}/`, {
           method: 'GET',
           headers: {
             'Authorization' : `${token}`,
@@ -39,9 +39,10 @@ export default function OneStudentStatistics() {
           },
         });
         const data = await response.json();
-        setHomework(data.homework);
+        setResults(data.results);
+        setTitle(data.title);
       } catch (error) {
-        console.error('Error fetching Homework:', error);
+        console.error('Error fetching results:', error);
       }
     };
 
@@ -59,7 +60,7 @@ export default function OneStudentStatistics() {
         <Card>
           <CardTitle tag="h6" className="border-bottom p-3 mb-0">
             <i className="bi bi-info-circle me-2"></i>
-            Homework Details
+            Namų darbo rezultatai
           </CardTitle>
           <CardBody>
             <Table>
@@ -71,27 +72,41 @@ export default function OneStudentStatistics() {
               </thead>
               <tbody>
                 <tr>
-                  <td>Homework Name</td>
-                  <td>{homework.title}</td>
+                  <td>Namų darbas: </td>
+                  <td>{title}</td>
                 </tr>
                 <tr>
                   <td>Questions and Answers</td>
                   <td>
-                    <ul>
-                      {homework.pairs &&
-                        homework.pairs.map((pair, index) => (
-                          <li key={index}>
-                            <strong>Question {index + 1}: </strong>
-                            {pair.question}
-                            <br />
-                            <strong>Answer {index + 1}: </strong>
-                            {pair.answer}
-                            <br />
-                            <strong>Points {index + 1}: </strong>
-                            {pair.points}
-                          </li>
+                    <div className="row">
+                      {results.length > 0 &&
+                        results.map((pair, index) => (
+                          <div key={index} className="col-md-12 mb-4">
+                            <div className="card">
+                              <div className="card-body">
+                                <h5 className="card-title">Question {index + 1}</h5>
+                                <p className="card-text">Question: {pair.question}</p>
+                                <p className="card-text">
+                                  <strong>Answer: </strong>
+                                  <span className={`text-${pair.answer === pair.student_answer ? 'success' : 'danger'}`}>
+                                    {pair.answer}
+                                  </span>
+                                </p>
+                                <p className="card-text">
+                                  <strong>Student Answer: </strong>
+                                  <span className={`text-${pair.answer === pair.student_answer ? 'success' : 'danger'}`}>
+                                    {pair.student_answer}
+                                  </span>
+                                </p>
+                                <p className="card-text">
+                                  <strong>Points: </strong>
+                                  {pair.points}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
                         ))}
-                    </ul>
+                    </div>
                   </td>
                 </tr>
                 {/* Display other fields or details of the homework */}

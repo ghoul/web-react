@@ -9,6 +9,7 @@ const FinishedAssignments = () => {
   const [homeworkTeacher, setHomeworkTeacher] = useState([]);
   const [homeworkStudent, setHomeworkStudent] = useState([]);
   let token = localStorage.getItem('token'); 
+  //TODO: is token role ir pagal ja rodyt
   const navigate  = useNavigate();
   useEffect(() => {
     // Fetch homeworks data from your backend (assuming the endpoint is /api/homeworks)
@@ -21,6 +22,20 @@ const FinishedAssignments = () => {
     }) // Replace with your actual endpoint
       .then(response => {
         setHomeworkTeacher(response.data.data);
+      })
+      .catch(error => {
+        console.error('Error fetching homeworks:', error);
+      });
+
+      axios.get(`http://localhost:8000/handle_assignments_student_finished/`, {
+      method: 'GET',
+      headers: {
+        'Authorization' : `${token}`,
+        'Content-Type': 'application/json',
+      },
+    }) // Replace with your actual endpoint
+      .then(response => {
+        setHomeworkStudent(response.data.data);
       })
       .catch(error => {
         console.error('Error fetching homeworks:', error);
@@ -76,6 +91,36 @@ const FinishedAssignments = () => {
             )))}
             </tbody>
           </Table>
+
+
+          <Table className="no-wrap mt-3 align-middle" responsive borderless>
+            <thead>
+              <tr>
+                <th>Pavadinimas</th>
+                <th>Pradžios data</th>
+                <th>Pabaigos data</th>
+                <th>Mokytojas</th>
+                <th>Detaliau</th>
+              </tr>
+            </thead>
+            <tbody>
+            {homeworkStudent.length === 0 ? (
+          <tr>
+            <td colSpan="6">Užbaigtų namų darbų nėra</td>
+          </tr>
+            ) : (
+              homeworkStudent.map((tdata, index) => (
+                <tr key={index} className="border-top">
+                  <td>{tdata.title}</td>
+                  <td>{tdata.fromDate}</td>
+                  <td>{tdata.toDate}</td>
+                  <td>{tdata.teacher}</td>
+                  <td> <Button><Link to={`/statistics/${tdata.id}`} className="nav-link" style={{ color: 'white' }}> → </Link></Button></td>
+                </tr>
+            )))}
+            </tbody>
+          </Table>
+
         </CardBody>
       </Card>
     </div>

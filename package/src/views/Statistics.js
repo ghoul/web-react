@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button, Col, Row } from 'reactstrap';
 import { Link, useParams } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
 import { Card, CardBody, CardTitle, CardSubtitle, Table } from "reactstrap";
 import user1 from "../assets/images/users/user1.jpg";
@@ -14,7 +15,10 @@ const Starter = () => {
   const {assignmentId} = useParams();
   const [students, setStudents] = useState([]);
   const [title, setTitle] = useState([]);
+  const [loggedId, setLoggedId] = useState('');
   let token = localStorage.getItem('token'); 
+  const decodedToken = jwtDecode(token);
+  const role = decodedToken.role;
   const navigate  = useNavigate();
 
   useEffect(() => {
@@ -30,6 +34,8 @@ const Starter = () => {
         console.log("title" + response.title);
         setStudents(response.data.students);
         setTitle(response.data.title);
+        setLoggedId(response.data.id);
+        console.log("loggedid: " + loggedId);
       })
       .catch(error => {
         console.error('Error fetching homeworks:', error);
@@ -54,7 +60,7 @@ const Starter = () => {
   const send = (event) => {
     navigate(`/`);
   }
-
+  console.log("loggedid2: " + loggedId);
   return (
     <div>
         <Row>
@@ -106,7 +112,7 @@ const Starter = () => {
                   <td>{tdata.date}</td>                  
                   <td>{tdata.time}</td>
                   <td>{tdata.points}</td>
-                  {tdata.status !== "bad" && <td><Button><Link to={`/statistics/${assignmentId}/${tdata.id}`} className="nav-link" style={{ color: 'white' }}> → </Link></Button></td> }
+                  {((role==="2" || role ==="3")|| tdata.id === loggedId ) && (tdata.status !== "bad" && <td><Button><Link to={`/statistics/${assignmentId}/${tdata.id}`} className="nav-link" style={{ color: 'white' }}> → </Link></Button></td> )}
                 </tr>
               ))}
             </tbody>
