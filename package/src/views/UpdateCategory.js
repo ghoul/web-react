@@ -5,6 +5,7 @@ import { useEffect } from "react";
 // import { useAlert } from "react-alert";
 import { useLocation } from "react-router-dom";
 import { useParams } from 'react-router-dom';
+import BACKEND_URL from '../layouts/config';
 // import Forms from "./ui/Forms";
 import {
   Card,
@@ -32,7 +33,7 @@ export default function UpdateCategory() {
 
   const getCategory = (categoryId) => {
     fetch(
-      `http://localhost:8000/categories/${categoryId}/`,
+      `${BACKEND_URL}/categories/${categoryId}/`,
       {
         method: "GET",
         headers: {
@@ -66,7 +67,7 @@ export default function UpdateCategory() {
       type: titleInput,
     };
     console.log("viduj handle data" + category.title);
-    fetch(`http://localhost:8000/categories/${categoryId}/`, {
+    fetch(`${BACKEND_URL}/categories/${categoryId}/`, {
       method: "PUT", 
       headers: {
         'Authorization' : `${token}`,
@@ -83,7 +84,7 @@ export default function UpdateCategory() {
         setTimeout(() => {
           setMessage('');
         }, 3000);
-        //window.location.href = `http://localhost:3000/categories`;
+        //window.location.href = `${BACKEND_URL}:3000/categories`;
       })
       .catch((error) => {
         console.error("Error:", error);

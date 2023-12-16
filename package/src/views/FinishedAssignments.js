@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Button , Col} from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import BACKEND_URL from '../layouts/config';
 
 import { Card, CardBody, CardTitle, CardSubtitle, Table } from "reactstrap";
 const FinishedAssignments = () => {
@@ -13,7 +14,7 @@ const FinishedAssignments = () => {
   const navigate  = useNavigate();
   useEffect(() => {
     // Fetch homeworks data from your backend (assuming the endpoint is /api/homeworks)
-    axios.get(`http://localhost:8000/handle_assignments_teacher_finished/`, {
+    axios.get(`${BACKEND_URL}/handle_assignments_teacher_finished/`, {
       method: 'GET',
       headers: {
         'Authorization' : `${token}`,
@@ -27,7 +28,7 @@ const FinishedAssignments = () => {
         console.error('Error fetching homeworks:', error);
       });
 
-      axios.get(`http://localhost:8000/handle_assignments_student_finished/`, {
+      axios.get(`${BACKEND_URL}/handle_assignments_student_finished/`, {
       method: 'GET',
       headers: {
         'Authorization' : `${token}`,

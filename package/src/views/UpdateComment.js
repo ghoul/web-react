@@ -5,6 +5,7 @@ import { useEffect } from "react";
 // import { useAlert } from "react-alert";
 import { useLocation } from "react-router-dom";
 import { useParams } from 'react-router-dom';
+import BACKEND_URL from '../layouts/config';
 // import Forms from "./ui/Forms";
 import {
   Card,
@@ -32,7 +33,7 @@ export default function UpdateComment() {
   let token = localStorage.getItem('token'); 
   const getComment = (commentId) => {
     fetch(
-      `http://localhost:8000/categories/1/tricks/${trickId}/comments/${commentId}/`,
+      `${BACKEND_URL}/categories/1/tricks/${trickId}/comments/${commentId}/`,
       {
         method: "GET",
         headers: {
@@ -61,7 +62,7 @@ export default function UpdateComment() {
       text: descriptionInput,
     };
     console.log("viduj handle data" + comment.text);
-    fetch(`http://localhost:8000/categories/1/tricks/${trickId}/comments/${commentId}/`, { 
+    fetch(`${BACKEND_URL}/categories/1/tricks/${trickId}/comments/${commentId}/`, { 
       method: "PUT", 
       headers: {
         'Authorization' : `${token}`,
@@ -77,7 +78,7 @@ export default function UpdateComment() {
         setTimeout(() => {
           setMessage('');
         }, 3000);
-        // window.location.href = `http://localhost:3000/category/${categoryName}/trick/${trickId}`;
+        // window.location.href = `${BACKEND_URL}:3000/category/${categoryName}/trick/${trickId}`;
       })
       .catch((error) => {
         console.error("Error:", error);

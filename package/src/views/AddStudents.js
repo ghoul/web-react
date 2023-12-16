@@ -20,6 +20,7 @@ import {
   Input, Table
 } from "reactstrap";
 import { useNavigate } from 'react-router-dom';
+import BACKEND_URL from '../layouts/config.js';
 
 export default function AddStudents() {
   const { classsId } = useParams();
@@ -32,10 +33,11 @@ export default function AddStudents() {
   const [students, setStudents] = useState([]); 
   const [fail, setFail] = useState("");
   let token = localStorage.getItem('token'); 
+  
 
   const getStudents = (classsId) => {
     fetch(
-      `http://localhost:8000/handle_teacher_class/${classsId}/`,
+      `${BACKEND_URL}/handle_teacher_class/${classsId}/`,
       {
         method: "GET",
         headers: {
@@ -60,7 +62,7 @@ export default function AddStudents() {
     const student = {
         id: studentId,
       };
-    fetch(`http://localhost:8000/handle_teacher_class/${classsId}/`, {
+    fetch(`${BACKEND_URL}/handle_teacher_class/${classsId}/`, {
       method: 'POST',
       headers: {
         'Authorization' : `${token}`,

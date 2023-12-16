@@ -7,6 +7,7 @@ import { useLocation } from "react-router-dom";
 import { useParams, Link } from 'react-router-dom';
 import { Modal } from "./Modal.js";
 // import Forms from "./ui/Forms";
+import BACKEND_URL from '../layouts/config.js';
 import {
   Card,
   Row,
@@ -38,7 +39,7 @@ export default function AssignHomework() {
 
   const getClasses = () => {
     fetch(
-      `http://localhost:8000/get_classes_by_teacher/`,
+      `${BACKEND_URL}/get_classes_by_teacher/`,
       {
         method: "GET",
         headers: {
@@ -67,7 +68,7 @@ export default function AssignHomework() {
         toDate : toDateInput,
         class : classInput
       };
-    fetch(`http://localhost:8000/handle_assign_homework/`, {
+    fetch(`${BACKEND_URL}/handle_assign_homework/`, {
       method: 'POST',
       headers: {
         'Authorization' : `${token}`,

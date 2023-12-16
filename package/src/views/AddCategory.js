@@ -12,6 +12,7 @@ import {
   Input,
 } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
+import BACKEND_URL from '../layouts/config';
 const AddCategory = () => {
   const [titleInput, setTitleInput] = useState('');
   const [fail, setFail] = useState('');
@@ -33,7 +34,7 @@ const AddCategory = () => {
 
     console.log('Request Body: ', JSON.stringify(category));
 
-    fetch('http://localhost:8000/categories/', {
+    fetch(`${BACKEND_URL}/categories/`, {
       method: 'POST',
       headers: {
         'Authorization' : `${token}`,

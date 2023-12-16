@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useParams, Link } from 'react-router-dom';
 import { Modal } from "./Modal.js";
+import BACKEND_URL from '../layouts/config.js';
 // import Forms from "./ui/Forms";
 import {
   Card,
@@ -31,7 +32,7 @@ export default function CheckHomework() {
   useEffect(() => {
     const fetchHomework = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/handle_homework_id/${homeworkId}`, {
+        const response = await fetch(`${BACKEND_URL}/handle_homework_id/${homeworkId}`, {
           method: 'GET',
           headers: {
             'Authorization' : `${token}`,

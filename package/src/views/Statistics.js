@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Button, Col, Row } from 'reactstrap';
 import { Link, useParams } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
-
+import BACKEND_URL from '../layouts/config';
 import { Card, CardBody, CardTitle, CardSubtitle, Table } from "reactstrap";
 import user1 from "../assets/images/users/user1.jpg";
 import user2 from "../assets/images/users/user2.jpg";
@@ -23,7 +23,7 @@ const Starter = () => {
 
   useEffect(() => {
     // Fetch homeworks data from your backend (assuming the endpoint is /api/homeworks)
-    axios.get(`http://localhost:8000/get_assignment_statistics/${assignmentId}/`, {
+    axios.get(`${BACKEND_URL}/get_assignment_statistics/${assignmentId}/`, {
         method: 'GET',
         headers: {
           'Authorization' : `${token}`,

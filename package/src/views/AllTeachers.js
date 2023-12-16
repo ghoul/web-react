@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useParams, Link } from 'react-router-dom';
 import { Modal } from "./Modal.js";
+import BACKEND_URL from '../layouts/config.js';
 // import Forms from "./ui/Forms";
 import {
   Card,
@@ -35,7 +36,7 @@ export default function AllTeachers() {
 
   const getTeachers = () => {
     fetch(
-      `http://localhost:8000/handle_teachers/`,
+      `${BACKEND_URL}/handle_teachers/`,
       {
         method: "GET",
         headers: {
@@ -51,7 +52,7 @@ export default function AllTeachers() {
       console.log("grazino" + data);
     });
     fetch(
-        `http://localhost:8000/handle_student_teachers/`,
+        `${BACKEND_URL}/handle_student_teachers/`,
         {
           method: "GET",
           headers: {
@@ -67,7 +68,7 @@ export default function AllTeachers() {
         console.log("grazino" + data);
       });
       fetch(
-        `http://localhost:8000/get_not_confirmed_teachers/`,
+        `${BACKEND_URL}/get_not_confirmed_teachers/`,
         {
           method: "GET",
           headers: {
@@ -91,7 +92,7 @@ export default function AllTeachers() {
     const teacher = {
         teacher_id: teacherId,
       };
-    fetch(`http://localhost:8000/handle_student_teachers/`, {
+    fetch(`${BACKEND_URL}/handle_student_teachers/`, {
       method: 'POST',
       headers: {
         'Authorization' : `${token}`,
@@ -116,7 +117,7 @@ export default function AllTeachers() {
     const teacher = {
         teacher_id: selectedTeacherId,
       };
-    fetch(`http://localhost:8000/handle_student_teachers/`, {
+    fetch(`${BACKEND_URL}/handle_student_teachers/`, {
       method: 'DELETE',
       headers: {
         'Authorization' : `${token}`,

@@ -5,6 +5,7 @@ import { useEffect } from "react";
 // import { useAlert } from "react-alert";
 import { useLocation } from "react-router-dom";
 import { useParams } from 'react-router-dom';
+import BACKEND_URL from '../layouts/config';
 // import Forms from "./ui/Forms";
 import {
   Card,
@@ -37,7 +38,7 @@ export default function UpdateTrick() {
 
   const getTrick = (trickId) => {
     fetch(
-      `http://localhost:8000/categories/1/tricks/${trickId}/`,
+      `${BACKEND_URL}/categories/1/tricks/${trickId}/`,
       {
         method: "GET",
         headers: {
@@ -62,7 +63,7 @@ export default function UpdateTrick() {
     getTrick(id);
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:8000/categories/', {
+        const response = await fetch(`${BACKEND_URL}/categories/`, {
           method: 'GET',  // Specify the GET method
           headers: {
             // You can include headers like authorization tokens if needed
@@ -91,7 +92,7 @@ export default function UpdateTrick() {
       category: categoryInput
     };
     console.log("viduj handle data" + trick.link);
-    fetch(`http://localhost:8000/categories/1/tricks/${trickId}/`, { //tricks/edit/${trickId}/
+    fetch(`${BACKEND_URL}/categories/1/tricks/${trickId}/`, { //tricks/edit/${trickId}/
       method: "PUT", 
       headers: {
         'Authorization' : `${token}`,
@@ -107,7 +108,7 @@ export default function UpdateTrick() {
         setTimeout(() => {
           setMessage('');
         }, 3000);
-        // window.location.href = `http://localhost:3000/category/${categoryName}/trick/${trickId}`;
+        // window.location.href = `${BACKEND_URL}:3000/category/${categoryName}/trick/${trickId}`;
       })
       .catch((error) => {
         console.error("Error:", error);

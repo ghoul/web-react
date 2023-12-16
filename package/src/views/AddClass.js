@@ -12,6 +12,7 @@ import {
   Input,
 } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
+import BACKEND_URL from '../layouts/config';
 const AddClass = () => {
   const [titleInput, setTitleInput] = useState('');
   const [fail, setFail] = useState('');
@@ -33,7 +34,7 @@ const AddClass = () => {
 
     console.log('Request Body: ', JSON.stringify(classs));
 
-    fetch('http://localhost:8000/handle_classes/', {
+    fetch(`${BACKEND_URL}/handle_classes/`, {
       method: 'POST',
       headers: {
         'Authorization' : `${token}`,

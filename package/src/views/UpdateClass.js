@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useParams, Link } from 'react-router-dom';
 import { Modal } from "./Modal.js";
+import BACKEND_URL from '../layouts/config.js';
 // import Forms from "./ui/Forms";
 import {
   Card,
@@ -36,7 +37,7 @@ export default function UpdateClass() {
 
   const getClass = (classsId) => {
     fetch(
-      `http://localhost:8000/handle_classes/${classsId}/`,
+      `${BACKEND_URL}/handle_classes/${classsId}/`,
       {
         method: "GET",
         headers: {
@@ -53,7 +54,7 @@ export default function UpdateClass() {
       });
 
       fetch(
-        `http://localhost:8000/handle_students_class/0/${classsId}/`,
+        `${BACKEND_URL}/handle_students_class/0/${classsId}/`,
         {
           method: "GET",
           headers: {
@@ -87,7 +88,7 @@ export default function UpdateClass() {
       title: titleInput,
     };
     console.log("viduj handle data" + classs.title);
-    fetch(`http://localhost:8000/handle_classes/${classsId}/`, {
+    fetch(`${BACKEND_URL}/handle_classes/${classsId}/`, {
       method: "PUT", 
       headers: {
         'Authorization' : `${token}`,
@@ -104,7 +105,7 @@ export default function UpdateClass() {
         setTimeout(() => {
           setMessage('');
         }, 3000);
-        //window.location.href = `http://localhost:3000/categories`;
+        //window.location.href = `${BACKEND_URL}:3000/categories`;
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -113,7 +114,7 @@ export default function UpdateClass() {
       });
   };
   const removeStudent = () => {
-    fetch(`http://localhost:8000/handle_students_class/${selectedStudentId}/${classsId}/`, {
+    fetch(`${BACKEND_URL}/handle_students_class/${selectedStudentId}/${classsId}/`, {
       method: 'DELETE',
       headers: {
         'Authorization' : `${token}`,

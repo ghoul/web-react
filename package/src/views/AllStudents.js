@@ -20,6 +20,7 @@ import {
   Input, Table
 } from "reactstrap";
 import { useNavigate } from 'react-router-dom';
+import BACKEND_URL from '../layouts/config.js';
 
 export default function AddStudents() {
   const navigate  = useNavigate();
@@ -34,7 +35,7 @@ export default function AddStudents() {
 
   const getStudents = () => {
     fetch(
-      `http://localhost:8000/handle_teacher_students/`,
+      `${BACKEND_URL}/handle_teacher_students/`,
       {
         method: "GET",
         headers: {
@@ -51,7 +52,7 @@ export default function AddStudents() {
     });
 
   fetch(
-    `http://localhost:8000/get_not_confirmed_students/`,
+    `${BACKEND_URL}/get_not_confirmed_students/`,
     {
       method: "GET",
       headers: {
@@ -75,7 +76,7 @@ export default function AddStudents() {
     const student = {
         student_id: studentId,
       };
-    fetch(`http://localhost:8000/handle_teacher_students/`, {
+    fetch(`${BACKEND_URL}/handle_teacher_students/`, {
       method: 'POST',
       headers: {
         'Authorization' : `${token}`,
@@ -106,7 +107,7 @@ export default function AddStudents() {
     const student = {
         student_id: selectedStudentId,
       };
-    fetch(`http://localhost:8000/handle_students/`, {
+    fetch(`${BACKEND_URL}/handle_students/`, {
       method: 'DELETE',
       headers: {
         'Authorization' : `${token}`,
@@ -132,7 +133,7 @@ export default function AddStudents() {
     const student = {
         student_id: studentId,
       };
-    fetch(`http://localhost:8000/handle_teacher_students/`, {
+    fetch(`${BACKEND_URL}/handle_teacher_students/`, {
       method: 'DELETE',
       headers: {
         'Authorization' : `${token}`,

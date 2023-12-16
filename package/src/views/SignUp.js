@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-
+import BACKEND_URL from '../layouts/config';
 function SignupForm() {
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('1');
+  
 
   const handleSignup = async () => {
     try {
-      const response = await fetch('http://localhost:8000/signup/', {
+      const response = await fetch(`${BACKEND_URL}/signup/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

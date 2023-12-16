@@ -12,6 +12,7 @@ import {
   Input,
 } from 'reactstrap';
 import './HomeworkForm.css';
+import BACKEND_URL from '../layouts/config';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const UpdateHomework = () => {
@@ -25,7 +26,7 @@ const {homeworkId }= useParams();
   useEffect(() => {
     const fetchHomeworkDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/handle_homework_id/${homeworkId}/`, {
+        const response = await fetch(`${BACKEND_URL}/handle_homework_id/${homeworkId}/`, {
           method: 'GET',
           headers: {
             'Authorization': `${token}`,
@@ -119,7 +120,7 @@ const {homeworkId }= useParams();
       }))
     };
       try {
-        const response = await fetch(`http://localhost:8000/handle_homework_id/${homeworkId}/`, {
+        const response = await fetch(`${BACKEND_URL}/handle_homework_id/${homeworkId}/`, {
           method: 'PUT',
           headers: {
             'Authorization': `${token}`,

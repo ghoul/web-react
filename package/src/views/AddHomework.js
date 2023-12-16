@@ -13,6 +13,7 @@ import {
 } from 'reactstrap';
 import './HomeworkForm.css'; // Import your CSS for additional styling
 import { useNavigate } from 'react-router-dom';
+import BACKEND_URL from '../layouts/config';
 
 const AllHomework = () => {
   const [homeworkName, setHomeworkName] = useState('');
@@ -65,7 +66,7 @@ const AllHomework = () => {
       // Perform further actions like API request
       try {
         console.log(formData.homeworkName);
-        const response = await fetch('http://localhost:8000/handle_homework/', {
+        const response = await fetch(`${BACKEND_URL}/handle_homework/`, {
           method: 'POST',
           headers: {
             'Authorization': `${token}`,

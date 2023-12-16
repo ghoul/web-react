@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button, Table } from 'reactstrap';
 import { Modal } from './Modal.js';
 import { useNavigate } from 'react-router-dom';
+import BACKEND_URL from '../layouts/config.js';
 const AllClasses = () => {
   const [classes, setClasses] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -12,7 +13,7 @@ const AllClasses = () => {
   useEffect(() => {
     const fetchClasses = async () => {
       try {
-        const response = await fetch('http://localhost:8000/handle_classes/', {
+        const response = await fetch(`${BACKEND_URL}/handle_classes/`, {
           method: 'GET',
           headers: {
             'Authorization' : `${token}`,
@@ -30,7 +31,7 @@ const AllClasses = () => {
   }, []);
 
   const deleteClass = () => {
-    fetch(`http://localhost:8000/handle_classes/${selectedClassId}/`, {
+    fetch(`${BACKEND_URL}/handle_classes/${selectedClassId}/`, {
       method: 'DELETE',
       headers: {
         'Authorization' : `${token}`,

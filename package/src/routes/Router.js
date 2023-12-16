@@ -1,44 +1,36 @@
-import { lazy } from "react";
-import { Navigate } from "react-router-dom";
-
 /****Layouts*****/
-const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
+import FullLayout from "../layouts/FullLayout.js";
 
 /***** Pages ****/
+import Starter from "../views/Starter.js";
+import Login from "../views/Login.js";
+import SignUp from "../views/SignUp.js";
+import AddHomework from "../views/AddHomework.js";
+import AssignHomework from "../views/AssignHomework.js";
+import CheckHomework from "../views/CheckHomework.js";
+import AllHomework from "../views/AllHomework.js";
+import AddClass from "../views/AddClass.js";
+import AllClasses from "../views/AllClasses.js";
+import UpdateClass from "../views/UpdateClass.js";
+import AddStudents from "../views/AddStudents.js";
+import UpdateHomework from "../views/UpdateHomework.js";
+import AllStudents from "../views/AllStudents.js";
+import AllTeachers from "../views/AllTeachers.js";
+import Statistics from "../views/Statistics.js";
+import FinishedAssignments from "../views/FinishedAssignments.js";
+import OneStudentStatistics  from "../views/OneStudentStatistics.js";
+import Profile from "../views/Profile.js";
+import Password from "../views/ChangePassword.js";
 
-const Starter = lazy(() => import("../views/Starter.js"));
-const Login = lazy(() => import("../views/Login.js"));
-const SignUp = lazy(() => import("../views/SignUp.js"));
-const AddHomework = lazy(() => import("../views/AddHomework.js"));
-const AssignHomework = lazy(() => import("../views/AssignHomework.js"));
-const CheckHomework = lazy(() => import("../views/CheckHomework.js"));
-const AllHomework = lazy(() => import("../views/AllHomework.js"));
-const AddClass = lazy(() => import("../views/AddClass.js"));
-const AllClasses = lazy(() => import("../views/AllClasses.js"));
-const UpdateClass = lazy(() => import("../views/UpdateClass.js"));
-const AddStudents = lazy(() => import("../views/AddStudents.js"));
-const UpdateHomework = lazy(() => import("../views/UpdateHomework.js"));
-const AllStudents = lazy(() => import("../views/AllStudents.js"));
-const AllTeachers = lazy(() => import("../views/AllTeachers.js"));
-const Statistics = lazy(() => import("../views/Statistics.js"));
-const FinishedAssignments = lazy(() => import("../views/FinishedAssignments.js"));
-const OneStudentStatistics  = lazy(() => import("../views/OneStudentStatistics.js"));
-// const Category = lazy(() => import("../views/Category.js"));
-// const Trick = lazy(() => import("../views/OneTrick.js"));
-// const UpdateTrick = lazy(() => import("../views/UpdateTrick.js"));
-// const UpdateCategory = lazy(() => import("../views/UpdateCategory.js"));
-// const UpdateComment = lazy(() => import("../views/UpdateComment.js"));
-// const Add = lazy(() => import("../views/Add.js"));
-// const AddCategory = lazy(() => import("../views/AddCategory.js"));
-const About = lazy(() => import("../views/About.js"));
-const Alerts = lazy(() => import("../views/ui/Alerts"));
-const Badges = lazy(() => import("../views/ui/Badges"));
-const Buttons = lazy(() => import("../views/ui/Buttons"));
-const Cards = lazy(() => import("../views/ui/Cards"));
-const Grid = lazy(() => import("../views/ui/Grid"));
-const Tables = lazy(() => import("../views/ui/Tables"));
-const Forms = lazy(() => import("../views/ui/Forms"));
-const Breadcrumbs = lazy(() => import("../views/ui/Breadcrumbs"));
+
+import Alerts from "../views/ui/Alerts";
+import Badges from "../views/ui/Badges";
+import Buttons from "../views/ui/Buttons";
+import Cards from "../views/ui/Cards";
+import Grid from "../views/ui/Grid";
+import Tables from "../views/ui/Tables";
+import Forms from "../views/ui/Forms";
+import Breadcrumbs from "../views/ui/Breadcrumbs";
 
 
 /*****Routes******/
@@ -66,24 +58,11 @@ const ThemeRoutes = [
       { path: "/all-teachers", element: <AllTeachers/>},
       { path: "/statistics/:assignmentId", element: <Statistics/>},
       { path: "/finished-assignments", element: <FinishedAssignments/>}, 
-       {path: "/statistics/:assignmentId/:studentId", element: <OneStudentStatistics/>},
+      { path: "/statistics/:assignmentId/:studentId", element: <OneStudentStatistics/>},
+      { path: "/profile", exact: true, element: <Profile /> },
+      { path: "/password", exact: true, element: <Password /> },
 
-      // { path: "/categories", element: <CategoriesList  />},
 
-      // { path: "/category/:categoryName", element: <Category  />},
-      // { path: "/category/:categoryId/edit", element: <UpdateCategory  />},
-      // { path: "/category/create", element: <AddCategory  />},
-      
-      // { path: "/category/:categoryName/trick/:trickId", element: <OneTrick />},
-
-      // { path: "/category/:categoryName/trick/:trickId/edit", element: <UpdateTrick />}, 
-      // { path: "/category/:categoryName/trick/:trickId/edit/comment/:commentId", element: <UpdateComment />},
-
-     
-
-      // { path: "/trick", exact: true, element: <Trick /> },
-      // { path: "/trick/create", exact: true, element: <Add /> },
-      { path: "/about", exact: true, element: <About /> },
       { path: "/alerts", exact: true, element: <Alerts /> },
       { path: "/badges", exact: true, element: <Badges /> },
       { path: "/buttons", exact: true, element: <Buttons /> },

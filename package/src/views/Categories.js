@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button, Table } from 'reactstrap';
 import { Modal } from './Modal.js';
 import { useNavigate } from 'react-router-dom';
+import BACKEND_URL from '../layouts/config.js';
 const CategoriesList = () => {
   const [categories, setCategories] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -12,7 +13,7 @@ const CategoriesList = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:8000/categories/', {
+        const response = await fetch(`${BACKEND_URL}/categories/`, {
           method: 'GET',
           headers: {
             'Authorization' : `${token}`,
@@ -30,7 +31,7 @@ const CategoriesList = () => {
   }, []);
 
   const deleteCategory = () => {
-    fetch(`http://localhost:8000/categories/${selectedCategoryId}/`, {
+    fetch(`${BACKEND_URL}/categories/${selectedCategoryId}/`, {
       method: 'DELETE',
       headers: {
         'Authorization' : `${token}`,

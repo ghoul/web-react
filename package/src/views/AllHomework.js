@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button, Table } from 'reactstrap';
 import { Modal } from './Modal.js';
 import { useNavigate } from 'react-router-dom';
+import BACKEND_URL from '../layouts/config.js';
 const AllHomework = () => {
   const [homework, setHomework] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -12,7 +13,7 @@ const AllHomework = () => {
   useEffect(() => {
     const fetchHomework = async () => {
       try {
-        const response = await fetch('http://localhost:8000/handle_homework/', {
+        const response = await fetch(`${BACKEND_URL}/handle_homework/`, {
           method: 'GET',
           headers: {
             'Authorization' : `${token}`,
@@ -30,7 +31,7 @@ const AllHomework = () => {
   }, []);
 
   const deleteHomework = () => {
-    fetch(`http://localhost:8000/handle_homework_id/${selectedHomeworkId}/`, {
+    fetch(`${BACKEND_URL}/handle_homework_id/${selectedHomeworkId}/`, {
       method: 'DELETE',
       headers: {
         'Authorization' : `${token}`,

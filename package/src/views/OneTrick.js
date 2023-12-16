@@ -8,6 +8,7 @@ import { Modal } from "./Modal.js";
 import './Comments.css';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import BACKEND_URL from '../layouts/config.js';
 const OneTrick = () => { //{ userComment, onUpdateComment, onDeleteComment }
   
   const { categoryName, trickId } = useParams();
@@ -29,7 +30,7 @@ const OneTrick = () => { //{ userComment, onUpdateComment, onDeleteComment }
   useEffect(() => {
     if (trickId) {
       // Fetch tricks for the specific category from the backend.
-      axios.get(`http://localhost:8000/categories/1/tricks/${trickId}/`, {
+      axios.get(`${BACKEND_URL}/categories/1/tricks/${trickId}/`, {
         headers: {
           'Authorization' : `${token}`,
           "Content-Type": "application/json"
@@ -45,7 +46,7 @@ const OneTrick = () => { //{ userComment, onUpdateComment, onDeleteComment }
       // Fetch both initial and new comments
       const fetchComments = async () => {
         try {
-          const newCommentsResponse = await axios.get(`http://localhost:8000/categories/1/tricks/${trickId}/comments/`, {
+          const newCommentsResponse = await axios.get(`${BACKEND_URL}/categories/1/tricks/${trickId}/comments/`, {
             headers: {
               'Authorization' : `${token}`,
               "Content-Type": "application/json"
@@ -66,7 +67,7 @@ const OneTrick = () => { //{ userComment, onUpdateComment, onDeleteComment }
   
   
   const postComment = (commentt) => {
-    fetch(`http://localhost:8000/categories/1/tricks/${trickId}/comments/`, {
+    fetch(`${BACKEND_URL}/categories/1/tricks/${trickId}/comments/`, {
       method: "POST",
       headers: {
         'Authorization' : `${token}`,
@@ -83,7 +84,7 @@ const OneTrick = () => { //{ userComment, onUpdateComment, onDeleteComment }
     .then(data => {
       console.log("Response Body: ", data);
       // Fetch comments again after posting a new comment
-      axios.get(`http://localhost:8000/categories/1/tricks/${trickId}/comments/`, {
+      axios.get(`${BACKEND_URL}/categories/1/tricks/${trickId}/comments/`, {
         headers: {
           'Authorization' : `${token}`,
           "Content-Type": "application/json"
@@ -110,7 +111,7 @@ const OneTrick = () => { //{ userComment, onUpdateComment, onDeleteComment }
     };
     
 
-     fetch(`http://localhost:8000/categories/1/tricks/${trickId}/`, {
+     fetch(`${BACKEND_URL}/categories/1/tricks/${trickId}/`, {
         method: "DELETE",
         headers: {
           'Authorization' : `${token}`,
@@ -122,7 +123,7 @@ const OneTrick = () => { //{ userComment, onUpdateComment, onDeleteComment }
         console.log(response);
         hideModalHandler();
         navigate(`/category/${categoryName}`);
-        // window.location.href = `http://localhost:3000/category/${categoryName}`;
+        // window.location.href = `${BACKEND_URL}:3000/category/${categoryName}`;
       });
 
     console.log("trinama: "+trickId);
@@ -144,7 +145,7 @@ const OneTrick = () => { //{ userComment, onUpdateComment, onDeleteComment }
     };
     
 
-     fetch(`http://localhost:8000/categories/1/tricks/${trickId}/comments/${commentId}/`, {
+     fetch(`${BACKEND_URL}/categories/1/tricks/${trickId}/comments/${commentId}/`, {
         method: "DELETE",
         headers: {
           'Authorization' : `${token}`,
@@ -155,7 +156,7 @@ const OneTrick = () => { //{ userComment, onUpdateComment, onDeleteComment }
       }).then((response) => {
         console.log(response);
         hideModalHandlerC();
-        //window.location.href = `http://localhost:3000/category/${categoryName}/trick/${trickId}`;
+        //window.location.href = `${BACKEND_URL}:3000/category/${categoryName}/trick/${trickId}`;
         
         window.location.reload();
       });

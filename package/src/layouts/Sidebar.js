@@ -62,7 +62,7 @@ const navigation = [
   },
   {
     title: "Profilis",
-    href: "/about",
+    href: "/profile",
     icon: "bi bi-people",
   },
   // {

@@ -12,6 +12,7 @@ import {
   Input,
 } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
+import BACKEND_URL from '../layouts/config';
 
 const Add = () => {
   const [titleInput, setTitleInput] = useState('');
@@ -26,7 +27,7 @@ const Add = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch('http://localhost:8000/categories/', {
+        const response = await fetch(`${BACKEND_URL}/categories/`, {
           headers: {
             'Authorization' : `${token}`,
             "Content-Type": "application/json"
@@ -57,7 +58,7 @@ const Add = () => {
 
     console.log('Request Body: ', JSON.stringify(trick));
 
-    fetch(`http://localhost:8000/categories/${trick.category}/tricks/`, {
+    fetch(`${BACKEND_URL}/categories/${trick.category}/tricks/`, {
       method: 'POST',
       headers: {
         'Authorization' : `${token}`,

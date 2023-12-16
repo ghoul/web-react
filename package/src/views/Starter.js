@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
-
+import BACKEND_URL from '../layouts/config.js';
 import { Card, CardBody, CardTitle, CardSubtitle, Table } from "reactstrap";
 import { useNavigate } from 'react-router-dom';
 import { Modal } from "./Modal.js";
@@ -14,7 +14,7 @@ const Starter = () => {
   let token = localStorage.getItem('token'); 
   const navigate  = useNavigate();
   const getAssignments = () => {
-    axios.get(`http://localhost:8000/handle_assignments_teacher/`, {
+    axios.get(`${BACKEND_URL}/handle_assignments_teacher/`, {
       method: 'GET',
       headers: {
         'Authorization' : `${token}`,
@@ -28,7 +28,7 @@ const Starter = () => {
         console.error('Error fetching homeworks:', error);
       });
 
-      axios.get(`http://localhost:8000/handle_assignments_student/`, {
+      axios.get(`${BACKEND_URL}/handle_assignments_student/`, {
       method: 'GET',
       headers: {
         'Authorization' : `${token}`,
@@ -61,7 +61,7 @@ const Starter = () => {
     const assignment = {
         id: selectedAssignmentId,
       };
-    fetch(`http://localhost:8000/handle_assignments_teacher/`, {
+    fetch(`${BACKEND_URL}/handle_assignments_teacher/`, {
       method: 'DELETE',
       headers: {
         'Authorization' : `${token}`,

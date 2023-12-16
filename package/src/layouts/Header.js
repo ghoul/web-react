@@ -17,6 +17,7 @@ import { ReactComponent as LogoWhite } from "../assets/images/logos/materialprow
 import user1 from "../assets/images/users/smile.png";
 import logo from "../assets/images/logos/yoyoomm.svg";
 import { useNavigate } from 'react-router-dom';
+import BACKEND_URL from './config';
 
 const Header = () => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -32,7 +33,7 @@ const Header = () => {
 
   // const fetchCategories = async () => {
   //   try {
-  //     const response = await fetch('http://localhost:8000/categories/', {
+  //     const response = await fetch(`${BACKEND_URL}/categories/', {
   //       method: 'GET',  // Specify the GET method
   //       headers: {
   //         'Authorization' : `${token}`,
