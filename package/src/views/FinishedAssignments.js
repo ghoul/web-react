@@ -68,8 +68,8 @@ const FinishedAssignments = () => {
             </thead>
             <tbody>
             {homeworkTeacher.length === 0 ? (
-          <tr>
-            <td colSpan="6">Užbaigtų namų darbų nėra</td>
+          <tr className="border-top">
+          <td colSpan="6" style={{ textAlign: 'center', fontStyle: 'italic', color: '#888' }}>Užbaigtų namų darbų nėra</td>
           </tr>
             ) : (
               homeworkTeacher.map((tdata, index) => (
@@ -79,15 +79,15 @@ const FinishedAssignments = () => {
                   <td>{tdata.toDate}</td>
                   <td>{tdata.classs}</td>
                   <td>
-                    {tdata.status === "bad" ? (
-                      <span className="p-2 bg-danger rounded-circle d-inline-block ms-3"></span>
-                    ) : tdata.status === "medium" ? (
-                      <span className="p-2 bg-warning rounded-circle d-inline-block ms-3"></span>
+                    {tdata.status === "Bad" ? (
+                      <span className="p-2 rounded-circle d-inline-block ms-3" style={{ backgroundColor: '#bf1a2f' }}></span> 
+                    ) : tdata.status === "Average" ? (
+                      <span className="p-2 rounded-circle d-inline-block ms-3"  style={{ backgroundColor: '#f3943c' }}></span> 
                     ) : (
-                      <span className="p-2 bg-success rounded-circle d-inline-block ms-3"></span>
+                      <span className="p-2 rounded-circle d-inline-block ms-3" style={{ backgroundColor: '#a6d82b' }}></span>
                     )}
                   </td>
-                  <td> <Button><Link to={`/statistics/${tdata.id}`} className="nav-link" style={{ color: 'white' }}> → </Link></Button></td>
+                  <td> <Button style={{backgroundColor: 'transparent', border:'none'}}><Link to={`/statistics/${tdata.id}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> ➔➔ </Link></Button></td>
                 </tr>
             )))}
             </tbody>
@@ -106,8 +106,8 @@ const FinishedAssignments = () => {
             </thead>
             <tbody>
             {homeworkStudent.length === 0 ? (
-          <tr>
-            <td colSpan="6">Užbaigtų namų darbų nėra</td>
+          <tr className="border-top">
+          <td colSpan="6" style={{ textAlign: 'center', fontStyle: 'italic', color: '#888' }}>Užbaigtų namų darbų nėra</td>
           </tr>
             ) : (
               homeworkStudent.map((tdata, index) => (

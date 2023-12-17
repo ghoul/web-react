@@ -68,13 +68,26 @@ const AllHomework = () => {
   return (
     <div className="list">
       <Modal show={showModal} hide={hideModalHandler} onRemoveProduct={deleteHomework}></Modal>
-      <Button style={{ backgroundColor: '#171a1e', color: 'white', marginBottom: '10px' }} onClick={send}> ← Į pradžią</Button>
+      <Button style={{ backgroundColor: '#171a1e', color: 'white', marginBottom: '10px', border: 'none' }} onClick={send}> ← Į pradžią</Button>
+      <Button  style={{
+    backgroundColor: '#a6d22c',
+    border: 'none',
+    float: 'right', // Align to the right
+    marginBottom: '10px',
+  }}>
+                  <Link to={`/create-homework`} className="nav-link" style={{ color: 'black' }}>
+                  <i class="bi bi-plus"></i>  Kurti naują
+                   
+                  </Link>
+                </Button>
       <Table>
         <thead>
           <tr>
             <th>Pavadinimas</th>
             <th>Klausimų skaičius</th>
-            <th></th>
+            <th>Peržiūrėti</th>
+            <th>Paskirti</th>
+            <th>Šalinti</th>
           </tr>
         </thead>
         <tbody>
@@ -88,37 +101,31 @@ const AllHomework = () => {
               <td>{homework.title}</td>
               <td>{homework.questions}</td>
               <td>
-              <Button style={{ backgroundColor: '#204963', marginRight: '10px' }}>
-                  <Link to={`/check-homework/${homework.id}`} className="nav-link" style={{ color: 'white' }}> 
-                    Peržiūrėti
-                  </Link>
-                </Button>
-                <Button style={{ backgroundColor: '#204963', marginRight: '10px' }}>
-                  <Link to={`/assign-homework/${homework.id}`} className="nav-link" style={{ color: 'white' }}> 
-                    Paskirti
-                  </Link>
-                </Button>
-                {/* perkelt i check */}
-                {/* <Button style={{ backgroundColor: '#204963', marginRight: '10px' }}>
-                  <Link to={`/edit-homework/${homework.id}`} className="nav-link" style={{ color: 'white' }}> 
-                    Redaguoti
-                  </Link>
-                </Button> */}
-                <Button style={{ backgroundColor: 'orange', color: '#204963' }} onClick={() => showModalHandler(homework.id)}>
-                  Šalinti
-                </Button>
+              <Button style={{ backgroundColor: 'transparent', marginRight: '10px', border: 'none' }}>
+                <Link to={`/check-homework/${homework.id}`} className="nav-link" style={{ color: 'black', fontWeight: 'bold' }}>
+                  <i className="bi bi-eye" style={{ fontSize: '1.5em' }}></i>
+                </Link>
+              </Button>
               </td>
+              <td>
+                <Button style={{ backgroundColor: 'transparent', marginRight: '10px', border: 'none' }}>
+                  <Link to={`/assign-homework/${homework.id}`} className="nav-link" style={{ color: 'black' }}> 
+                  <i class="bi bi-calendar-plus" style={{ fontSize: '1.5em' }}></i>
+                  </Link>
+                </Button>
+                </td>
+              <td>
+             <Button style={{  border: 'none', background: 'transparent' }} onClick={() => showModalHandler(homework.id)}>             
+                ✖
+                </Button>
+               </td>
             </tr>
         ))
         )}
         
         </tbody>
       </Table>
-      <Button style={{ backgroundColor: '#204963', marginRight: '10px' }}>
-                  <Link to={`/create-homework`} className="nav-link" style={{ color: 'white' }}>
-                    Pridėti naują
-                  </Link>
-                </Button>
+    
     </div>
   );
 };

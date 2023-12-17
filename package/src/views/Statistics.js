@@ -104,17 +104,17 @@ const Starter = () => {
                   </td>
                   <td>
                     {tdata.status === "Bad" ? (
-                      <span className="p-2 bg-danger rounded-circle d-inline-block ms-3"></span>
+                      <span className="p-2 rounded-circle d-inline-block ms-3" style={{ backgroundColor: '#bf1a2f' }}></span> 
                     ) : tdata.status === "Average" ? (
-                      <span className="p-2 bg-warning rounded-circle d-inline-block ms-3"></span>
+                      <span className="p-2 rounded-circle d-inline-block ms-3"  style={{ backgroundColor: '#f3943c' }}></span> 
                     ) : (
-                      <span className="p-2 bg-success rounded-circle d-inline-block ms-3"></span>
+                      <span className="p-2 rounded-circle d-inline-block ms-3" style={{ backgroundColor: '#a6d82b' }}></span>
                     )}
                   </td>
                   <td>{tdata.date}</td>                  
                   <td>{tdata.time}</td>
                   <td>{tdata.points}</td>
-                  {((((role===2 || role ===3)|| tdata.id === loggedId ) && (tdata.status !== "Bad")) && <td><Button><Link to={`/statistics/${assignmentId}/${tdata.id}`} className="nav-link" style={{ color: 'white' }}> → </Link></Button></td> )}
+                  {((((role===2 || role ===3)|| tdata.id === loggedId ) && (tdata.status !== "Bad")) && <td><Button style={{backgroundColor: 'transparent', border: 'none'}}><Link to={`/statistics/${assignmentId}/${tdata.id}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> ➔➔ </Link></Button></td> )}
                 </tr>
               ))}
             </tbody>

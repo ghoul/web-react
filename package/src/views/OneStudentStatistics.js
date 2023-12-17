@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Card, CardTitle, CardBody, Row, Col, Table } from "reactstrap";
+import { Button, Card, CardTitle, CardBody, Row, Col, CardSubtitle,Table } from "reactstrap";
 import { useNavigate, useParams } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config.js';
 
@@ -67,10 +67,17 @@ export default function OneStudentStatistics() {
       <Col>
         <Button style={{ backgroundColor: '#1b1c20', color: 'white', marginBottom: '10px' }} onClick={send}> ← Atgal</Button>
         <Card>
-          <CardTitle tag="h3" className="border-bottom p-3 mb-0">
-            {title} rezultatai
+          {/* <CardTitle tag="h3" className="border-bottom p-3 mb-0">
+            {title} 
           </CardTitle>
+          <CardSubtitle className="mb-2 text-muted" tag="h6">
+            {name}
+          </CardSubtitle> */}
           <CardBody className="pt-0">
+          <CardTitle tag="h3">{title}</CardTitle>
+          <CardSubtitle className="mb-2 text-muted" tag="h6">
+            Namų darbo sprendimas
+          </CardSubtitle>
             <div className="d-flex justify-content-between align-items-center">
               <div>
                 <h5>
@@ -91,19 +98,19 @@ export default function OneStudentStatistics() {
               <CardBody>
                 <CardTitle tag="h5"> {index + 1}. {pair.question}</CardTitle>              
                 <p className="card-text">
-                                 <strong>Answer: </strong>
+                                 <strong>Tikras atsakymas: </strong>
                                  <span className={`text-${pair.answer === pair.student_answer ? 'success' : 'danger'}`}>
                                    {pair.answer}
                                  </span>
                                </p>
                                <p className="card-text">
-                                 <strong>Student Answer: </strong>
+                                 <strong>Pateiktas atsakymas: </strong>
                                  <span className={`text-${pair.answer === pair.student_answer ? 'success' : 'danger'}`}>
                                    {pair.student_answer}
                                  </span>
                               </p>
                                <p className="card-text">
-                                 <strong>Points: </strong>
+                                 <strong>Taškai: </strong>
                                  {pair.points}
                               </p>
               </CardBody>

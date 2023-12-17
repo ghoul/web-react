@@ -3,10 +3,10 @@ import "./font.css";
 
 const Footer = () => {
   return (
-    <footer style={{ backgroundColor: '#181A1F', color: 'white', padding: '20px 0' }}>
+    <footer style={{ backgroundColor: '#98d3de', color: 'black', padding: '20px 0', fontFamily: 'Russo One, sans-serif'} }>
       <div className="container">
         <div className="row">
-        <div className="col-md-6 text-center">
+        {/* <div className="col-md-6 text-center">
             <h6>Susisiekite su mumis</h6>
             <p>
               <span>el. paštas: yoyo@gmail.com</span> | 
@@ -19,9 +19,9 @@ const Footer = () => {
               <span>Facebook "Yoyo meistrai"</span> | 
               <span> Instagram @yoyo_meistrai</span>
             </p>
-          </div>
+          </div> */}
           <div className="col-md-12">
-            <p className="text-center antiqua">&copy; {new Date().getFullYear()} Yoyo meistrai</p>
+            <p className="text-center Russo One, sans-serif">&copy; {new Date().getFullYear()} Goose </p>
           </div>
         </div>
       </div>

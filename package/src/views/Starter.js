@@ -106,8 +106,8 @@ const Starter = () => {
             </thead>
             <tbody>
             {homeworkTeacher.length === 0 ? (
-          <tr>
-            <td colSpan="6">Aktyvių namų darbų nėra</td>
+        <tr className="border-top">
+        <td colSpan="6" style={{ textAlign: 'center', fontStyle: 'italic', color: '#888' }}>Aktyvių namų darbų nėra</td>
           </tr>
             ) : (homeworkTeacher.map((tdata, index) => (
                 <tr key={index} className="border-top">
@@ -117,19 +117,28 @@ const Starter = () => {
                   <td>{tdata.classs}</td>
                   <td>
                     {tdata.status === "Bad" ? (
-                      <span className="p-2 bg-danger rounded-circle d-inline-block ms-3"></span>
+                      <span className="p-2 rounded-circle d-inline-block ms-3" style={{ backgroundColor: '#bf1a2f' }}></span> 
                     ) : tdata.status === "Average" ? (
-                      <span className="p-2 bg-warning rounded-circle d-inline-block ms-3"></span>
+                      <span className="p-2 rounded-circle d-inline-block ms-3"  style={{ backgroundColor: '#f3943c' }}></span> 
                     ) : (
-                      <span className="p-2 bg-success rounded-circle d-inline-block ms-3"></span>
+                      <span className="p-2 rounded-circle d-inline-block ms-3" style={{ backgroundColor: '#a6d82b' }}></span>
                     )}
                   </td>
-                  <td> <Button><Link to={`/statistics/${tdata.id}`} className="nav-link" style={{ color: 'white' }}> → </Link></Button></td>
                   <td>
-                <Button style={{ backgroundColor: 'red', color: 'white' }} onClick={() => showModalHandler(tdata.id)}>
-                  X
-                </Button>
-              </td>
+                  <Button style={{ color: '#98d3de', border: 'none', background: 'transparent' }}>
+  <Link to={`/statistics/${tdata.id}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> ➔➔</Link>
+</Button>
+
+
+
+</td>
+<td>
+  <Button style={{  border: 'none', background: 'transparent' }} onClick={() => showModalHandler(tdata.id)}>
+  ✖
+  </Button>
+</td>
+
+
                 </tr>
               )))}
             </tbody>
@@ -147,9 +156,11 @@ const Starter = () => {
             </thead>
             <tbody>
             {homeworkStudent.length === 0 ? (
-          <tr>
-            <td colSpan="6">Neatliktų namų darbų nėra</td>
-          </tr>
+              
+        <tr className="border-top">
+        <td colSpan="6" style={{ textAlign: 'center', fontStyle: 'italic', color: '#888' }}>Neatliktų namų darbų nėra</td>
+      </tr>
+      
             ) : (homeworkStudent.map((tdata, index) => (
                 <tr key={index} className="border-top">
                   <td>{tdata.title}</td>
@@ -165,7 +176,10 @@ const Starter = () => {
 
         </CardBody>
       </Card>
-      <Button><Link to={`/finished-assignments`} className="nav-link" style={{ color: 'white' }}>Užbaigti namų darbai → </Link></Button>
+      <Button style={{ backgroundColor: '#38423e', color: 'white', border: 'none' }}>
+  <Link to={`/finished-assignments`} className="nav-link" style={{ color: 'white' }}>Užbaigti namų darbai →</Link>
+</Button>
+
     </div>
   );
 };

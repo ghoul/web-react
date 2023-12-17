@@ -15,7 +15,7 @@ import {
 } from "reactstrap";
 import { ReactComponent as LogoWhite } from "../assets/images/logos/materialprowhite.svg";
 import user1 from "../assets/images/users/smile.png";
-import logo from "../assets/images/logos/yoyoomm.svg";
+import logo from "../assets/images/logos/goose.png";
 import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from './config';
 
@@ -78,9 +78,9 @@ const Header = () => {
   };
 
   return (
-<Navbar style={{ backgroundColor: '#181A1F' }} dark expand="md" className="fix-header justify-content-center">
+<Navbar style={{ backgroundColor: '#98d3de', width: 'fit-content', height: 'fit-content' }} className="fix-header justify-content-center">
   <NavbarBrand href="/" className="mx-auto">
-    <img src={logo} alt="logo" width="70" />
+    <img src={logo} alt="logo" style={{ width: '100%' }} />
   </NavbarBrand>
   <Button color="primary" className="d-lg-none" onClick={() => showMobilemenu()}>
     <i className="bi bi-list"></i>
