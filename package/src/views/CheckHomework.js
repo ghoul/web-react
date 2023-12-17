@@ -58,52 +58,79 @@ export default function CheckHomework() {
       <Col>
         <Button style={{ backgroundColor: '#1b1c20', color: 'white', marginBottom: '10px' }} onClick={send}> ← Atgal</Button>
         <Card>
-          <CardTitle tag="h6" className="border-bottom p-3 mb-0">
-            <i className="bi bi-info-circle me-2"></i>
-            Homework Details
+          <CardTitle tag="h3" className="border-bottom p-3 mb-0">
+            <i className="bi bi-info-circle me-2" style={{ fontSize: '1rem' }}></i>
+            {homework.title}
           </CardTitle>
-          <CardBody>
-            <Table>
-              <thead>
-                <tr>
-                  <th>Field</th>
-                  <th>Value</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Homework Name</td>
-                  <td>{homework.title}</td>
-                </tr>
-                <tr>
-                  <td>Questions and Answers</td>
-                  <td>
-                    <ul>
-                      {homework.pairs &&
-                        homework.pairs.map((pair, index) => (
-                          <li key={index}>
-                            <strong>Question {index + 1}: </strong>
-                            {pair.question}
-                            <br />
-                            <strong>Answer {index + 1}: </strong>
-                            {pair.answer}
-                            <br />
-                            <strong>Points {index + 1}: </strong>
-                            {pair.points}
-                          </li>
-                        ))}
-                    </ul>
-                  </td>
-                </tr>
-                {/* Display other fields or details of the homework */}
-              </tbody>
-            </Table>
-            <Button style={{ backgroundColor: 'orange', color: '#204963' }}>
-                <Link to={`/edit-homework/${homeworkId}`} className="nav-link" style={{ color: 'white' }}> Redaguoti</Link>
-                </Button>
-          </CardBody>
         </Card>
+        {homework.pairs &&
+          homework.pairs.map((pair, index) => (
+            <Card key={index} className="mb-3">
+              <CardBody>
+                <CardTitle tag="h5"> {index + 1}. {pair.question}</CardTitle>              
+                <p><strong>Atsakymas: </strong>{pair.answer}</p>
+                <p><strong>Taškai: </strong>{pair.points}</p>
+              </CardBody>
+            </Card>
+          ))}
+              <Button style={{ backgroundColor: 'orange', color: '#204963' }}>
+                 <Link to={`/edit-homework/${homeworkId}`} className="nav-link" style={{ color: 'white' }}> Redaguoti</Link>
+                 </Button>
       </Col>
+  
     </Row>
   );
+  // return (
+  //   <Row>
+  //     <Col>
+  //       <Button style={{ backgroundColor: '#1b1c20', color: 'white', marginBottom: '10px' }} onClick={send}> ← Atgal</Button>
+  //       <Card>
+  //         <CardTitle tag="h6" className="border-bottom p-3 mb-0">
+  //           <i className="bi bi-info-circle me-2"></i>
+  //           Homework Details
+  //         </CardTitle>
+  //         <CardBody>
+  //           <Table>
+  //             <thead>
+  //               <tr>
+  //                 <th>Field</th>
+  //                 <th>Value</th>
+  //               </tr>
+  //             </thead>
+  //             <tbody>
+  //               <tr>
+  //                 <td>Homework Name</td>
+  //                 <td>{homework.title}</td>
+  //               </tr>
+  //               <tr>
+  //                 <td>Questions and Answers</td>
+  //                 <td>
+  //                   <ul>
+  //                     {homework.pairs &&
+  //                       homework.pairs.map((pair, index) => (
+  //                         <li key={index}>
+  //                           <strong>Question {index + 1}: </strong>
+  //                           {pair.question}
+  //                           <br />
+  //                           <strong>Answer {index + 1}: </strong>
+  //                           {pair.answer}
+  //                           <br />
+  //                           <strong>Points {index + 1}: </strong>
+  //                           {pair.points}
+  //                         </li>
+  //                       ))}
+  //                   </ul>
+  //                 </td>
+  //               </tr>
+  //               {/* Display other fields or details of the homework */}
+  //             </tbody>
+  //           </Table>
+  //           <Button style={{ backgroundColor: 'orange', color: '#204963' }}>
+  //               <Link to={`/edit-homework/${homeworkId}`} className="nav-link" style={{ color: 'white' }}> Redaguoti</Link>
+  //               </Button>
+  //         </CardBody>
+  //       </Card>
+  //     </Col>
+  //   </Row>
+  // );
 };

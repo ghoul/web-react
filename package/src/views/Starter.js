@@ -116,9 +116,9 @@ const Starter = () => {
                   <td>{tdata.toDate}</td>
                   <td>{tdata.classs}</td>
                   <td>
-                    {tdata.status === "bad" ? (
+                    {tdata.status === "Bad" ? (
                       <span className="p-2 bg-danger rounded-circle d-inline-block ms-3"></span>
-                    ) : tdata.status === "medium" ? (
+                    ) : tdata.status === "Average" ? (
                       <span className="p-2 bg-warning rounded-circle d-inline-block ms-3"></span>
                     ) : (
                       <span className="p-2 bg-success rounded-circle d-inline-block ms-3"></span>

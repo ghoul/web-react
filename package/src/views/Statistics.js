@@ -61,6 +61,8 @@ const Starter = () => {
     navigate(`/`);
   }
   console.log("loggedid2: " + loggedId);
+  const typeOfData = typeof role;
+  console.log(`The type of 'role' is: ${typeOfData}`);
   return (
     <div>
         <Row>
@@ -101,9 +103,9 @@ const Starter = () => {
                     </div>
                   </td>
                   <td>
-                    {tdata.status === "bad" ? (
+                    {tdata.status === "Bad" ? (
                       <span className="p-2 bg-danger rounded-circle d-inline-block ms-3"></span>
-                    ) : tdata.status === "medium" ? (
+                    ) : tdata.status === "Average" ? (
                       <span className="p-2 bg-warning rounded-circle d-inline-block ms-3"></span>
                     ) : (
                       <span className="p-2 bg-success rounded-circle d-inline-block ms-3"></span>
@@ -112,7 +114,7 @@ const Starter = () => {
                   <td>{tdata.date}</td>                  
                   <td>{tdata.time}</td>
                   <td>{tdata.points}</td>
-                  {((role==="2" || role ==="3")|| tdata.id === loggedId ) && (tdata.status !== "bad" && <td><Button><Link to={`/statistics/${assignmentId}/${tdata.id}`} className="nav-link" style={{ color: 'white' }}> → </Link></Button></td> )}
+                  {((((role===2 || role ===3)|| tdata.id === loggedId ) && (tdata.status !== "Bad")) && <td><Button><Link to={`/statistics/${assignmentId}/${tdata.id}`} className="nav-link" style={{ color: 'white' }}> → </Link></Button></td> )}
                 </tr>
               ))}
             </tbody>
