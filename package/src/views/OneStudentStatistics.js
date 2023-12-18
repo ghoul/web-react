@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Card, CardTitle, CardBody, Row, Col, CardSubtitle,Table } from "reactstrap";
 import { useNavigate, useParams } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config.js';
+import './Style.css';
 
 export default function OneStudentStatistics() {
   const { assignmentId, studentId } = useParams();

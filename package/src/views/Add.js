@@ -13,6 +13,7 @@ import {
 } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config';
+import './Style.css';
 
 const Add = () => {
   const [titleInput, setTitleInput] = useState('');

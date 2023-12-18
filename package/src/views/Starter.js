@@ -6,6 +6,7 @@ import BACKEND_URL from '../layouts/config.js';
 import { Card, CardBody, CardTitle, CardSubtitle, Table } from "reactstrap";
 import { useNavigate } from 'react-router-dom';
 import { Modal } from "./Modal.js";
+import './Style.css';
 const Starter = () => {
   const [homeworkTeacher, setHomeworkTeacher] = useState([]);
   const [homeworkStudent, setHomeworkStudent] = useState([]);
@@ -125,7 +126,7 @@ const Starter = () => {
                     )}
                   </td>
                   <td>
-                  <Button style={{ color: '#98d3de', border: 'none', background: 'transparent' }}>
+                  <Button className='noback-button' style={{background:'transparent', border:'none'}}>
   <Link to={`/statistics/${tdata.id}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> ➔➔</Link>
 </Button>
 
@@ -133,7 +134,7 @@ const Starter = () => {
 
 </td>
 <td>
-  <Button style={{  border: 'none', background: 'transparent' }} onClick={() => showModalHandler(tdata.id)}>
+  <Button className='noback-button' style={{background:'transparent', border:'none'}} onClick={() => showModalHandler(tdata.id)}>
   ✖
   </Button>
 </td>
@@ -176,10 +177,9 @@ const Starter = () => {
 
         </CardBody>
       </Card>
-      <Button style={{ backgroundColor: '#38423e', color: 'white', border: 'none' }}>
+      <Button className="more-button" style={{background:'#a6d22c', border:'none'}} >
   <Link to={`/finished-assignments`} className="nav-link" style={{ color: 'white' }}>Užbaigti namų darbai →</Link>
 </Button>
-
     </div>
   );
 };

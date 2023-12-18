@@ -3,7 +3,7 @@ import "./font.css";
 
 const Footer = () => {
   return (
-    <footer style={{ backgroundColor: '#98d3de', color: 'black', padding: '20px 0', fontFamily: 'Russo One, sans-serif'} }>
+    <footer style={{ backgroundColor: '#98d3de', color: 'black', paddingTop: '10px', fontFamily: 'Russo One, sans-serif'} }>
       <div className="container">
         <div className="row">
         {/* <div className="col-md-6 text-center">

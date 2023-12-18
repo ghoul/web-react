@@ -4,6 +4,7 @@ import { Button , Col} from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config';
+import './Style.css';
 
 import { Card, CardBody, CardTitle, CardSubtitle, Table } from "reactstrap";
 const FinishedAssignments = () => {

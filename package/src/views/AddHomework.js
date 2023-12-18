@@ -14,6 +14,7 @@ import {
 import './HomeworkForm.css'; // Import your CSS for additional styling
 import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config';
+import './Style.css';
 
 const AllHomework = () => {
   const [homeworkName, setHomeworkName] = useState('');

@@ -4,6 +4,7 @@ import { Button, Table } from 'reactstrap';
 import { Modal } from './Modal.js';
 import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config.js';
+import './Style.css';
 const AllHomework = () => {
   const [homework, setHomework] = useState([]);
   const [showModal, setShowModal] = useState(false);

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css'; // Import CSS for transition
 import BACKEND_URL from '../layouts/config';
+import './Style.css';
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

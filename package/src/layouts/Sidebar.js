@@ -1,6 +1,7 @@
 import { Button, Nav, NavItem } from "reactstrap";
 import { Link, useLocation } from "react-router-dom";
-import user1 from "../assets/images/users/msgoose.png";
+import user2 from "../assets/images/users/msgoose.png";
+import user1 from "../assets/images/users/mrgoose.png";
 import probg from "../assets/images/bg/fonas2.png";
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
@@ -74,9 +75,22 @@ const Sidebar = () => {
   };
   let location = useLocation();
   let token = localStorage.getItem('token');
-  const decodedToken = jwtDecode(token);
-  const name = decodedToken.name;
-  const surname = decodedToken.surname;
+  let name = "";
+  let user;
+let surname="";
+let gender = 0;
+  if(token!=null) {
+    const decodedToken = jwtDecode(token);
+    name = decodedToken.name;
+    surname = decodedToken.surname;
+    gender = decodedToken.gender;
+    if(gender===1)
+    {
+      user = user1;
+    }
+    else user = user2;
+  }
+
 
   const navigate  = useNavigate();
   const handleLogout = () => {
@@ -117,7 +131,7 @@ const Sidebar = () => {
       }}
     >
       <div className="d-flex align-items-center justify-content-center position-absolute top-50 start-50 translate-middle">
-        <img src={user1} alt="user" className="rounded-circle" width="150" style={{ marginTop: '-30px' }}/>
+        <img src={user} alt="user" className="rounded-circle" width="150" style={{ marginTop: '-30px' }}/>
       </div>
       <div className="bg-dark text-white p-2 position-absolute bottom-0 start-0 w-100" style={{ opacity: '0.8' }}>
   {name} {surname}

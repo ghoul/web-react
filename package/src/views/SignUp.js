@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import BACKEND_URL from '../layouts/config';
+import './Style.css';
 function SignupForm() {
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('1');
+  const [gender, setGender] = useState('1');
   
 
   const handleSignup = async () => {
@@ -15,7 +17,7 @@ function SignupForm() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, surname, password, email, role }),
+        body: JSON.stringify({ name, surname, password, email, gender, role }),
       });
 
       const data = await response.json();
@@ -86,6 +88,14 @@ function SignupForm() {
               onChange={(e) => setPassword(e.target.value)}
               style={{ margin: '10px', padding: '8px', borderRadius: '4px', width: '200px' }}
             />
+             <select
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              style={{ margin: '10px', padding: '8px', borderRadius: '4px', width: '200px' }}
+            >
+              <option value="1">Vyras</option>
+              <option value="2">Moteris</option>
+            </select>
             <select
               value={role}
               onChange={(e) => setRole(e.target.value)}

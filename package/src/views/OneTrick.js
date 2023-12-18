@@ -9,6 +9,7 @@ import './Comments.css';
 import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import BACKEND_URL from '../layouts/config.js';
+import './Style.css';
 const OneTrick = () => { //{ userComment, onUpdateComment, onDeleteComment }
   
   const { categoryName, trickId } = useParams();

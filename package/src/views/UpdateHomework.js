@@ -14,6 +14,7 @@ import {
 import './HomeworkForm.css';
 import BACKEND_URL from '../layouts/config';
 import { useNavigate, useParams } from 'react-router-dom';
+import './Style.css';
 
 const UpdateHomework = () => {
 const {homeworkId }= useParams();

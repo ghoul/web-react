@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useParams, Link } from 'react-router-dom';
 import { Modal } from "./Modal.js";
+import './Style.css';
 // import Forms from "./ui/Forms";
 import {
   Card,
@@ -172,41 +173,42 @@ export default function AddStudents() {
         <Modal show={showModal} hide={hideModalHandler} onRemoveProduct={removeStudent}></Modal>
           <Col>
           <Button style={{ backgroundColor: '#1b1c20', color: 'white', marginBottom: '10px' }} onClick={send}> ← Atgal</Button>
+            </Col>
             <Card>
               <CardTitle tag="h6" className="border-bottom p-3 mb-0">
-                <i class="bi bi-arrow-through-heart-fill me-2"></i>
+              <i class="bi bi-patch-question-fill me-2"></i>
                 Mokinių užklausos
               </CardTitle>
-            </Card>
-          </Col>
+           
+        
           <Table>
         <thead>
           <tr>
             <th>Vardas</th>
             <th>Pavardė</th>
-            <th>Patvirtinti</th>
-            <th>Atmesti</th>
+            <th style={{textAlign:'center'}}>Patvirtinti / Atmesti</th>
+            {/* <th>Atmesti</th> */}
           </tr>
         </thead>
         <tbody>
         {notConfirmedStudents.length === 0 ? (
-          <tr>
-            <td colSpan="4">Mokinių užklausų nėra</td>
+          <tr className="border-top">
+          <td colSpan="4" style={{ textAlign: 'center', fontStyle: 'italic', color: '#888' }}>Mokinių užklausų nėra</td>
           </tr>
         ) : (
             notConfirmedStudents.map((student) => (
             <tr key={student.id}>
               <td>{student.name}</td>
               <td>{student.surname}</td>
-              <td>
-                <Button style={{ backgroundColor: 'red', color: 'white' }} onClick={() => addStudent(student.id)}>
-                  +
+              <td style={{textAlign:'center'}}>
+                <Button style={{ marginRight: '5px', backgroundColor: '#a6d22c', color: 'white', border:'none',  borderRadius: '50%', width:'40px', height:'40px' }} onClick={() => addStudent(student.id)}>
+                <i class="bi bi-patch-plus"></i>
                 </Button>
-                </td>
-                <td>
-                <Button style={{ backgroundColor: 'red', color: 'white' }} onClick={() => rejectStudent(student.id)}> 
+                {/* </td>
+                <td> */}
+                <Button style={{  marginLeft: '5px', backgroundColor: '#bf1a2f', color: 'white', border:'none',borderRadius: '50%', width:'40px', height:'40px' }} onClick={() => rejectStudent(student.id)}> 
                 {/* TODO: showModaHandler */}
-                  -
+                <i class="bi bi-patch-minus"></i>
                 </Button>
                 </td>
               
@@ -215,14 +217,15 @@ export default function AddStudents() {
         )}
       </tbody>
       </Table>
-      <Col>
+      </Card>
+      
             <Card>
               <CardTitle tag="h6" className="border-bottom p-3 mb-0">
-                <i class="bi bi-arrow-through-heart-fill me-2"></i>
+              <i class="bi bi-check-circle-fill me-2"></i>
                 Patvirtinti mokiniai
               </CardTitle>
-            </Card>
-          </Col>
+            
+     
           <Table>
         <thead>
           <tr>
@@ -233,8 +236,8 @@ export default function AddStudents() {
         </thead>
         <tbody>
         {students.length === 0 ? (
-          <tr>
-            <td colSpan="3">Mokinių nėra</td>
+         <tr className="border-top">
+         <td colSpan="3" style={{ textAlign: 'center', fontStyle: 'italic', color: '#888' }}>Mokinių nėra</td>
           </tr>
         ) : (
           students.map((student) => (
@@ -242,8 +245,8 @@ export default function AddStudents() {
               <td>{student.name}</td>
               <td>{student.surname}</td>
               <td>
-                <Button style={{ backgroundColor: 'red', color: 'white' }} onClick={() => showModalHandler(student.id)}>
-                  X
+                <Button style={{ backgroundColor: '#bf1a2f', color: 'white', border:'none' }} onClick={() => showModalHandler(student.id)}>
+                <i class="bi bi-x-lg"></i>
                 </Button>
               </td>
             </tr>
@@ -251,6 +254,7 @@ export default function AddStudents() {
         )}
       </tbody>
       </Table>
+      </Card>
         </Row>
       </div>
   );

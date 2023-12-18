@@ -21,6 +21,7 @@ import {
   Input, Table
 } from "reactstrap";
 import { useNavigate } from 'react-router-dom';
+import './Style.css';
 
 export default function UpdateClass() {
   const { classsId } = useParams();

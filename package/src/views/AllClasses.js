@@ -4,6 +4,7 @@ import { Button, Table } from 'reactstrap';
 import { Modal } from './Modal.js';
 import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config.js';
+import './Style.css';
 const AllClasses = () => {
   const [classes, setClasses] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -68,12 +69,18 @@ const AllClasses = () => {
   return (
     <div className="list">
       <Modal show={showModal} hide={hideModalHandler} onRemoveProduct={deleteClass}></Modal>
-      <Button style={{ backgroundColor: '#171a1e', color: 'white', marginBottom: '10px' }} onClick={send}> ← Į pradžią</Button>
+      <Button className='return-button' onClick={send}> ← Į pradžią</Button>
+      <Button className='add-button'>
+                  <Link to={`/create-class`} className='link-add'>
+                    + Pridėti naują
+                  </Link>
+                </Button>
       <Table>
         <thead>
           <tr>
             <th>Pavadinimas</th>
-            <th></th>
+            <th>Redaguoti</th>
+            <th>Šalinti</th>
           </tr>
         </thead>
         <tbody>
@@ -81,25 +88,23 @@ const AllClasses = () => {
             <tr key={classs.id}>
               <td>{classs.title}</td>
               <td>
-                <Button style={{ backgroundColor: '#204963', marginRight: '10px' }}>
+                <Button className='noback-button'>
                     {/* TODO: nukreipia i puslapi su klases pavadinimo redagavimu eilute ir mokiniu saraso redagavimu */}
-                  <Link to={`/edit-class/${classs.id}`} className="nav-link" style={{ color: 'white' }}> 
-                    Redaguoti
+                  <Link to={`/edit-class/${classs.id}`} className='link-icon'> 
+                  <i class="bi bi-pencil-fill"></i>
                   </Link>
                 </Button>
-                <Button style={{ backgroundColor: 'orange', color: '#204963' }} onClick={() => showModalHandler(classs.id)}>
-                  Šalinti
+                </td>
+                <td>
+                <Button className='noback-button' onClick={() => showModalHandler(classs.id)}>
+                ✖
                 </Button>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
-      <Button style={{ backgroundColor: '#204963', marginRight: '10px' }}>
-                  <Link to={`/create-class`} className="nav-link" style={{ color: 'white' }}>
-                    Pridėti naują
-                  </Link>
-                </Button>
+    
     </div>
   );
 };

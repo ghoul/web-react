@@ -13,6 +13,7 @@ import {
 } from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config';
+import './Style.css';
 const AddClass = () => {
   const [titleInput, setTitleInput] = useState('');
   const [fail, setFail] = useState('');
@@ -69,7 +70,7 @@ const AddClass = () => {
       <Button style={{ backgroundColor: '#1b1c20', color: 'white', marginBottom: '10px' }} onClick={send}> ← Atgal</Button>
         <Card>
           <CardTitle tag="h6" className="border-bottom p-3 mb-0">
-            <i className="bi bi-arrow-through-heart-fill me-2"></i>
+          <i class="bi bi-patch-plus-fill me-2"></i>
             Naujos klasės pridėjimas
           </CardTitle>
           <CardBody>
@@ -88,7 +89,7 @@ const AddClass = () => {
                   onChange={(e) => setTitleInput(e.target.value)}
                 />
               </FormGroup>
-              <Button style={{ backgroundColor: '#204963', color: 'white'}}>Įrašyti</Button>
+              <Button className='more-button'>Įrašyti</Button>
             </Form>
           </CardBody>
         </Card>

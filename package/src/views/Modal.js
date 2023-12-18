@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import './Modal.css';
+import './Style.css';
 
 export const Modal = (props) => {
     const cssClasses = ["backdrop", props.show ? "show" : "hide"];

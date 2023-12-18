@@ -11,6 +11,7 @@ import user3 from "../assets/images/users/user3.jpg";
 import user4 from "../assets/images/users/user4.jpg";
 import user5 from "../assets/images/users/user5.jpg";
 import { useNavigate } from 'react-router-dom';
+import './Style.css';
 const Starter = () => {
   const {assignmentId} = useParams();
   const [students, setStudents] = useState([]);

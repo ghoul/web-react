@@ -1,0 +1,82 @@
+.more-button {
+    background-color: #a6d22c;
+    color: white;
+    margin-bottom: 10px;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .more-button:hover {
+    background-color: #8bbf00;
+  }
+
+  .add-button {
+    background-color: #a6d22c;
+    color: white;
+    margin-bottom: 10px;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    float: right;
+  }
+  
+  .add-button:hover {
+    background-color: #8bbf00;
+  }
+
+  .return-button {
+    background-color: #1b1c20;
+    color: white;
+    margin-bottom: 10px;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .return-button:hover {
+    background-color: #161617;
+  }
+
+  .noback-button {
+    background: transparent;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .link-icon {
+    background: transparent;
+    color: black; /* Updated color */
+    text-decoration: none; /* Updated text decoration */
+    font-weight: bold; /* Updated font weight */
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .link-add {
+    background: transparent;
+    color: black; /* Updated color */
+    text-decoration: none; /* Updated text decoration */
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .circle-button {
+    width: 50px; /* Set the width and height as needed */
+    height: 50px;
+    background: #a6d22c;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 50%; /* Makes the button a perfect circle */
+  }
+  

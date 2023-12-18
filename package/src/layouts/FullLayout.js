@@ -5,6 +5,8 @@ import Footer from "./Footer";
 import { Container } from "reactstrap";
 
 const FullLayout = () => {
+  let token = localStorage.getItem('token') != null;
+
   return (
     <main >  
       {/* style={{ backgroundColor: "black" }} */}
@@ -12,9 +14,10 @@ const FullLayout = () => {
       <Header />
       <div className="pageWrapper d-lg-flex">
         {/********Sidebar**********/}
-        <aside className="sidebarArea shadow" id="sidebarArea" >
+        {token && (<aside className="sidebarArea shadow" id="sidebarArea" >
           <Sidebar />
-        </aside>
+        </aside>)
+}
         {/********Content Area**********/}
         <div className="contentArea">
           {/********Middle Content**********/}

@@ -181,6 +181,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import BACKEND_URL from '../layouts/config';
 import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import './Style.css';
 function Profile() {
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
@@ -298,14 +299,14 @@ function Profile() {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>      
-        <button type="submit" className="btn btn-primary">
-          Išsaugoti pakeitimus
+        <button type="submit" style={{background:'#52a7b2', border:'none'}} className="btn btn-primary">
+        <i class="bi bi-check me-1"></i> Išsaugoti 
         </button>
       </form>
       <br></br>
-      <Button><Link to={`/password`} className="nav-link" style={{ color: 'white' }}>Keisti slaptažodį → </Link></Button>
+      <Button style={{background:'#a6d22c', border:'none'}}><Link to={`/password`} className="nav-link" style={{ color: 'white' }}>Keisti slaptažodį <i class="bi bi-arrow-right"></i> </Link></Button>
       <br></br><br></br>
-      <Button><Link to={`/`} className="nav-link" style={{ color: 'white' }}> ← Atgal </Link></Button>
+      <Button style={{ backgroundColor: '#1b1c20', color: 'white', marginBottom: '10px' }}><Link to={`/`} className="nav-link" style={{ color: 'white' }}> ← Į pradžią </Link></Button>
     </div>
   );
 }

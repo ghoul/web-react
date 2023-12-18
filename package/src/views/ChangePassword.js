@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import BACKEND_URL from '../layouts/config';
 import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import './Style.css';
 
 function ChangePassword() {
   const [password, setPassword] = useState('');
@@ -82,12 +83,12 @@ function ChangePassword() {
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </div>
-        <button type="submit" className="btn btn-primary">
+        <button type="submit" className="btn btn-primary" style={{background:'#a6d22c', border:'none'}}>
           Keisti slaptažodį
         </button>
       </form>
 <br></br>
-      <Button><Link to={`/profile`} className="nav-link" style={{ color: 'white' }}> ← Atgal </Link></Button>
+      <Button style={{ backgroundColor: '#1b1c20', color: 'white', marginBottom: '10px' }}><Link to={`/profile`} className="nav-link" style={{ color: 'white' }}> ← Atgal </Link></Button>
     </div>
   );
 }

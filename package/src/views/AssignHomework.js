@@ -8,6 +8,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Modal } from "./Modal.js";
 // import Forms from "./ui/Forms";
 import BACKEND_URL from '../layouts/config.js';
+import './Style.css';
 import {
   Card,
   Row,

@@ -7,6 +7,7 @@ import { useLocation } from "react-router-dom";
 import { useParams, Link } from 'react-router-dom';
 import { Modal } from "./Modal.js";
 import BACKEND_URL from '../layouts/config.js';
+import './Style.css';
 // import Forms from "./ui/Forms";
 import {
   Card,
@@ -154,20 +155,20 @@ export default function AllTeachers() {
     <Modal show={showModal} hide={hideModalHandler} onRemoveProduct={cancelTeacher}></Modal>
     <Col>
     <Button style={{ backgroundColor: '#1b1c20', color: 'white', marginBottom: '10px' }} onClick={send}> ← Atgal</Button>
+    </Col>
             <Card>
-            
+            <Col>
               <CardTitle tag="h6" className="border-bottom p-3 mb-0">
-                <i class="bi bi-arrow-through-heart-fill me-2"></i>
+              <i class="bi bi-clock-history me-2"></i>
                 Laukiama patvirtinimo
               </CardTitle>
-            </Card>
-          </Col>
+              </Col>
           <Table>
         <thead>
           <tr>
             <th>Vardas</th>
             <th>Pavardė</th>
-            <th>Atšaukti</th>
+            <th style={{textAlign:'center'}}>Atšaukti</th>
           </tr>
         </thead>
         <tbody>
@@ -180,9 +181,9 @@ export default function AllTeachers() {
             <tr key={teacher.id}>
               <td>{teacher.name}</td>
               <td>{teacher.surname}</td>
-              <td>
-                <Button style={{ backgroundColor: 'red', color: 'white' }} onClick={() => showModalHandler(teacher.id)}>
-                  X
+              <td style={{textAlign:'center'}}>
+                <Button style={{ backgroundColor: '#bf1a2f', color: 'white', border:'none',borderRadius: '50%', width:'40px', height:'40px' }}onClick={() => showModalHandler(teacher.id)}>
+                <i class="bi bi-patch-minus"></i>
                 </Button>
               </td>
             </tr>
@@ -190,13 +191,15 @@ export default function AllTeachers() {
         )}
       </tbody>
       </Table>
-      <Col>
+      </Card>
+ 
             <Card>
+            <Col>
               <CardTitle tag="h6" className="border-bottom p-3 mb-0">
-                <i class="bi bi-arrow-through-heart-fill me-2"></i>
+              <i class="bi bi-people-fill me-2"></i>
                 Mano mokytojai
               </CardTitle>
-            </Card>
+           
           </Col>
           <Table>
         <thead>
@@ -220,13 +223,15 @@ export default function AllTeachers() {
         )}
       </tbody>
       </Table>
-          <Col>
+      </Card>
+          
             <Card>
+            <Col>
               <CardTitle tag="h6" className="border-bottom p-3 mb-0">
-                <i class="bi bi-arrow-through-heart-fill me-2"></i>
+              <i class="bi bi-person-plus-fill me-2"></i>
                 Mokytojo pasirinkimas
               </CardTitle>
-            </Card>
+           
           </Col>
           <Table>
         <thead>
@@ -247,8 +252,8 @@ export default function AllTeachers() {
               <td>{teacher.name}</td>
               <td>{teacher.surname}</td>
               <td>
-                <Button style={{ backgroundColor: 'red', color: 'white' }} onClick={() => addTeacher(teacher.id)}>
-                  +
+                <Button style={{ backgroundColor: '#a6d22c', color: 'white', border:'none',  borderRadius: '50%', width:'40px', height:'40px' }} onClick={() => addTeacher(teacher.id)}>
+                <i class="bi bi-patch-plus"></i>
                 </Button>
               </td>
             </tr>
@@ -256,6 +261,7 @@ export default function AllTeachers() {
         )}
       </tbody>
       </Table>
+      </Card>
         </Row>
       </div>
   );

@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useParams, Link } from 'react-router-dom';
 import { Modal } from "./Modal.js";
+import './Style.css';
 // import Forms from "./ui/Forms";
 import {
   Card,
