@@ -84,7 +84,7 @@ let gender = 0;
     name = decodedToken.name;
     surname = decodedToken.surname;
     gender = decodedToken.gender;
-    if(gender===1)
+    if(gender==="1")
     {
       user = user1;
     }
