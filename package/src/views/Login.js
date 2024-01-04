@@ -3,12 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import './Login.css'; // Import CSS for transition
 import BACKEND_URL from '../layouts/config';
 import './Style.css';
+// import CheckToken from './CheckToken';
+import { useAuth } from './AuthContext';
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const [showLoginForm, setShowLoginForm] = useState(true); // State to control visibility
+  const { login } = useAuth();
+  // const { handleLoginn } = CheckToken();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -28,10 +32,17 @@ function LoginForm() {
       });
 
       const data = await response.json();
+      
+
+     
       if (response.ok) {
         // Token obtained successfully, store it in localStorage
         localStorage.setItem('role', data.role);
         localStorage.setItem('token', data.token);
+        //handleLoginn(data.token);
+
+        login(data.token); // This will set the isLoggedIn state to true
+        
         console.log('Login successful!'); setShowLoginForm(false); // Hide the login form on successful login
         // Navigate after a brief delay to allow for the transition
         setTimeout(() => {
@@ -56,7 +67,7 @@ function LoginForm() {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100vh',
-        background: `url(${process.env.PUBLIC_URL}/yoyoback2.png)`, // Replace with your image URL
+        background: `url(${process.env.PUBLIC_URL}/fonasg.png)`, // Replace with your image URL
         backgroundSize: 'cover',
       }}
     >

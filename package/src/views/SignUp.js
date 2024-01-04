@@ -46,7 +46,7 @@ function SignupForm() {
           justifyContent: 'center',
           alignItems: 'center',
           height: '100vh',
-          background: `url(${process.env.PUBLIC_URL}/yoyoback2.png)`,
+          background: `url(${process.env.PUBLIC_URL}/fonasg.png)`,
           backgroundSize: 'cover',
         }}
       >

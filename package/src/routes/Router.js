@@ -32,7 +32,7 @@ import Tables from "../views/ui/Tables";
 import Forms from "../views/ui/Forms";
 import Breadcrumbs from "../views/ui/Breadcrumbs";
 
-
+import { AuthProvider } from "../views/AuthContext.js";
 /*****Routes******/
 
 

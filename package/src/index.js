@@ -8,6 +8,7 @@ import { HashRouter } from "react-router-dom";
 import Loader from "./layouts/loader/Loader";
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { AuthProvider } from "./views/AuthContext.js";
 
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
@@ -21,9 +22,13 @@ const root = createRoot(rootElement);
 
 root.render(
   <Suspense fallback={<Loader />}>
+     
     <HashRouter>
+    <AuthProvider>
       <App />
+      </AuthProvider>
     </HashRouter>
+    
   </Suspense>
 );
 

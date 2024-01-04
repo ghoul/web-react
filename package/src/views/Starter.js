@@ -15,8 +15,15 @@ const Starter = () => {
   const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
   const [user_id, setUserid] =useState('');
   let token = localStorage.getItem('token'); 
-  const decodedToken = jwtDecode(token);
-  let user_email = decodedToken.email;
+  let user_email = "";
+  let role = "";
+  if(token!=null)
+  {
+    const decodedToken = jwtDecode(token);
+    user_email = decodedToken.email;
+    role = decodedToken.role;
+  }
+
 
   const navigate  = useNavigate();
   const getAssignments = () => {
@@ -131,6 +138,8 @@ const Starter = () => {
    <Modal show={showModal} hide={hideModalHandler} onRemoveProduct={deleteAssignment}></Modal>
         <CardBody>
           <CardTitle tag="h5">Aktyvūs namų darbai</CardTitle>
+          {role === 2 && (
+          <>
           <CardSubtitle className="mb-2 text-muted" tag="h6">
             Statistika
           </CardSubtitle>
@@ -186,7 +195,9 @@ const Starter = () => {
               )))}
             </tbody>
           </Table>
-
+          </>
+        )}
+         {role === 1 && (
           <Table className="no-wrap mt-3 align-middle" responsive borderless>
             <thead>
               <tr>
@@ -218,6 +229,7 @@ const Starter = () => {
               )))}
             </tbody>
           </Table>
+          )}
 
         </CardBody>
       </Card>
