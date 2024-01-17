@@ -117,7 +117,7 @@ const FinishedAssignments = () => {
                   <td>{tdata.fromDate}</td>
                   <td>{tdata.toDate}</td>
                   <td>{tdata.teacher}</td>
-                  <td> <Button><Link to={`/statistics/${tdata.id}`} className="nav-link" style={{ color: 'white' }}> → </Link></Button></td>
+                  <td> <Button style={{backgroundColor: 'transparent', border:'none'}}><Link to={`/statistics/${tdata.id}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> ➔➔ </Link></Button></td>
                 </tr>
             )))}
             </tbody>

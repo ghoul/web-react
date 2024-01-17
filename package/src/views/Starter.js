@@ -8,12 +8,14 @@ import { useNavigate } from 'react-router-dom';
 import { Modal } from "./Modal.js";
 import { jwtDecode } from 'jwt-decode';
 import './Style.css';
+import { useAuth } from '../views/AuthContext';
 const Starter = () => {
   const [homeworkTeacher, setHomeworkTeacher] = useState([]);
   const [homeworkStudent, setHomeworkStudent] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
   const [user_id, setUserid] =useState('');
+  const { isLoggedIn } = useAuth();
   let token = localStorage.getItem('token'); 
   let user_email = "";
   let role = "";

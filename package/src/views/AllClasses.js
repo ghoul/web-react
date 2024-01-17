@@ -69,8 +69,13 @@ const AllClasses = () => {
   return (
     <div className="list">
       <Modal show={showModal} hide={hideModalHandler} onRemoveProduct={deleteClass}></Modal>
-      <Button className='return-button' onClick={send}> ← Į pradžią</Button>
-      <Button className='add-button'>
+      <Button className='return-button' style={{ backgroundColor: '#171a1e', color: 'white', marginBottom: '10px', border: 'none' }} onClick={send}> ← Į pradžią</Button>
+      <Button  style={{
+    backgroundColor: '#a6d22c',
+    border: 'none',
+    float: 'right', // Align to the right
+    marginBottom: '10px',
+  }}>
                   <Link to={`/create-class`} className='link-add'>
                     + Pridėti naują
                   </Link>
@@ -88,7 +93,7 @@ const AllClasses = () => {
             <tr key={classs.id}>
               <td>{classs.title}</td>
               <td>
-                <Button className='noback-button'>
+                <Button className='noback-button' style={{ backgroundColor: 'transparent', marginRight: '10px', border: 'none' }}>
                     {/* TODO: nukreipia i puslapi su klases pavadinimo redagavimu eilute ir mokiniu saraso redagavimu */}
                   <Link to={`/edit-class/${classs.id}`} className='link-icon'> 
                   <i class="bi bi-pencil-fill"></i>
@@ -96,7 +101,7 @@ const AllClasses = () => {
                 </Button>
                 </td>
                 <td>
-                <Button className='noback-button' onClick={() => showModalHandler(classs.id)}>
+                <Button className='noback-button' style={{ backgroundColor: 'transparent', marginRight: '10px', border: 'none' }} onClick={() => showModalHandler(classs.id)}>
                 ✖
                 </Button>
               </td>
