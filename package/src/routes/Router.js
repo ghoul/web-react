@@ -21,6 +21,7 @@ import FinishedAssignments from "../views/FinishedAssignments.js";
 import OneStudentStatistics  from "../views/OneStudentStatistics.js";
 import Profile from "../views/Profile.js";
 import Password from "../views/ChangePassword.js";
+import AssignmentTest from "../views/AssignmentTest.js";
 
 
 import Alerts from "../views/ui/Alerts";
@@ -61,6 +62,7 @@ const ThemeRoutes = [
       { path: "/statistics/:assignmentId/:studentId", element: <OneStudentStatistics/>},
       { path: "/profile", exact: true, element: <Profile /> },
       { path: "/password", exact: true, element: <Password /> },
+      { path: "/test/:assignmentId", element: <AssignmentTest/>},
 
 
       { path: "/alerts", exact: true, element: <Alerts /> },

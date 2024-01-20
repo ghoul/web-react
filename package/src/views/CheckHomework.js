@@ -27,13 +27,12 @@ export default function CheckHomework() {
     const { homeworkId } = useParams();
     const [homework, setHomework] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedHomeworkId, setSelectedHomeworkId] = useState(null);
   let token = localStorage.getItem('token'); 
   const navigate  = useNavigate();
   useEffect(() => {
     const fetchHomework = async () => {
       try {
-        const response = await fetch(`${BACKEND_URL}/handle_homework_id/${homeworkId}`, {
+        const response = await fetch(`${BACKEND_URL}/handle_homework_id/${homeworkId}/`, {
           method: 'GET',
           headers: {
             'Authorization' : `${token}`,

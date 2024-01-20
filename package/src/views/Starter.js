@@ -207,7 +207,8 @@ const Starter = () => {
                 <th>Pradžios data</th>
                 <th>Pabaigos data</th>
                 <th>Mokytojas</th>
-                <th>Pradėti</th>
+                <th>Žaisti</th>
+                <th>Testas</th>
               </tr>
             </thead>
             <tbody>
@@ -226,7 +227,17 @@ const Starter = () => {
                   {/* TODO: Į ŽAIDIMĄ LINKAS */}
                   <td>  <Button className='noback-button' style={{background:'transparent', border:'none'}}>
                     <span className="nav-link" style={{ color: '#a6d22c', textDecoration: 'none', fontWeight: 'bold' }}
-                     onClick={() => handleStartGame(tdata.id, user_email)}> ➔➔ </span></Button></td>
+                     onClick={() => handleStartGame(tdata.id, user_email)}> 
+                     <i class="bi bi-controller"></i>
+                      </span></Button></td>
+
+                  <td>  <Button className='noback-button' style={{background:'transparent', border:'none'}}>
+                  <Link to={`/test/${tdata.id}`} className="nav-link" 
+                  style={{ color: '#a6d22c', textDecoration: 'none', fontWeight: 'bold' }}>
+                    <i class="bi bi-clipboard-check"></i>
+                  </Link>
+                  </Button>
+                  </td>
                 </tr>
               )))}
             </tbody>
