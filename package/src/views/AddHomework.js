@@ -204,6 +204,8 @@ const AllHomework = () => {
   const [pairs, setPairs] = useState([{ type: 'select', question: '', options: [], answer: '', image: null, points: 0 }]);
   const [successMessage, setSuccessMessage] = useState('');
   const [correctOptionIndexes, setCorrectOptionIndexes] = useState(Array(pairs.length).fill(null));
+  //TODO: gali but daugiau nei pairs ilgis
+  const [multipleOptionIndexes, setMultipleOptionIndexes] = useState([]) //{qid: '', oid: ''} dic with question id and option id corrects multiple
   const navigate = useNavigate();
   let token = localStorage.getItem('token');
 
@@ -246,14 +248,18 @@ const AllHomework = () => {
   };
 
   const removeOption = (index, optionIndex) => {
+    correctOptionIndexes[index] = null;
     const updatedPairs = [...pairs];
     updatedPairs[index].options.splice(optionIndex, 1);
     setPairs(updatedPairs);
+
+    const updatedMultipleOptionIndexes = multipleOptionIndexes.filter(entry => !(entry.qid === index && entry.oid === optionIndex));
+    setMultipleOptionIndexes(updatedMultipleOptionIndexes);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (pairs.length > 0 && pairs.some(pair => pair.question.trim() !== '' && pair.answer.trim() !== '')) {
+    if (pairs.length > 0 && pairs.some(pair => pair.question.trim() !== '' )) { //&& pair.answer.trim() !== ''
       const formData = new FormData();
       formData.append('homeworkName', homeworkName);
 
@@ -275,16 +281,22 @@ const AllHomework = () => {
           });
       
         }
-      //   if (pair.type === 'select') {
-      //     formData.append(`pairs[${index}][correctOptionIndex]`, correctOptionIndexes[index]);
-  
-      //     // Ensure options array is present in the FormData
-      //     if (pair.options && pair.options.length > 0) {
-      //         for (let optionIndex = 0; optionIndex < pair.options.length; optionIndex++) {
-      //             formData.append(`pairs[${index}][options][${optionIndex}]`, pair.options[optionIndex]);
-      //         }
-      //     }
-      // }
+        if (pair.type === 'multiple') {
+          multipleOptionIndexes.forEach((pairIds, indexId) => {
+            if(pairIds.qid === index) //jei einamojo klausimo ats randa
+            {
+              formData.append(`pairs[${index}][multipleOptionIndex][${pairIds.oid}]`, multipleOptionIndexes[indexId].oid);
+            }
+            
+          })
+
+          pair.options.forEach((option, optionIndex) => {
+              formData.append(`pairs[${index}][options][${optionIndex}]`, option);
+              console.log("multiple: " + option);
+          });
+      
+        }
+
       });
 
       // Send formData to your backend (Django) using fetch or axios
@@ -326,6 +338,29 @@ const AllHomework = () => {
     setCorrectOptionIndexes(updatedCorrectOptionIndexes);
   };
 
+  const handleMultipleCorrectOptionChange = (index, value) => { //qid ir oid
+    const updatedMultipleOptionIndexes = [...multipleOptionIndexes];
+    const existingEntryIndex = checkCorrect(index,value)
+    if (existingEntryIndex) {
+      // If the entry exists, remove it (uncheck)
+      updatedMultipleOptionIndexes.splice(existingEntryIndex, 1);
+    } else {
+      // If the entry doesn't exist, add it (check)
+      updatedMultipleOptionIndexes.push({ qid: index, oid: value });
+    }
+
+    // updatedMultipleOptionIndexes.push({'qid' : index, 'oid' : value});
+    setMultipleOptionIndexes(updatedMultipleOptionIndexes);
+    console.log(multipleOptionIndexes);
+    console.log(pairs);
+  };
+
+  const checkCorrect = (qid, oid) =>{
+    const existingEntryIndex = multipleOptionIndexes.findIndex(entry => entry.qid === qid && entry.oid === oid);
+    return existingEntryIndex !== -1;
+  }
+
+
   const send = (event) => {
     navigate('/all-homework');
   };
@@ -366,7 +401,8 @@ const AllHomework = () => {
                         value={pair.type}
                         onChange={(e) => handlePairChange(index, 'type', e.target.value)}
                       >
-                        <option value="select">Pasirinkimo atsakymas</option>
+                        <option value="select">Vieno pasirinkimo atsakymas</option>
+                        <option value="multiple">Kelių pasirinkimų atsakymas</option>
                         <option value="write">Rašytinis atsakymas</option>
                       </Input>
                     </FormGroup>
@@ -384,7 +420,61 @@ const AllHomework = () => {
                         </FormGroup>
                         </Col>
                     </Row>
-                  
+{pair.type === 'multiple' && (
+  <div>
+    <FormGroup>
+      <Label for={`question${index}`}>Klausimas</Label>
+      <Input
+        type="text"
+        id={`question${index}`}
+        value={pair.question}
+        onChange={(e) => handlePairChange(index, 'question', e.target.value)}
+      />
+    </FormGroup>
+    <FormGroup>
+      <Row>
+      <Label>Atsakymas</Label>
+      </Row>
+      {pair.options.map((option, optionIndex) => (
+        <div key={optionIndex} className="option">
+          <Row  className="align-items-center">
+            <Col>
+              <Input
+                type="text"
+                value={option}
+                onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)}
+              />
+            </Col>
+            <Col>
+            <Label check>
+              <Input
+                type="checkbox"
+                name={`multipleOption${index}`}
+                style={{ display: 'none' }} 
+                checked={checkCorrect(index, optionIndex)}
+                onChange={() => handleMultipleCorrectOptionChange(index, optionIndex)}
+              />
+              {' '}
+              <i
+                className={`bi ${checkCorrect(index, optionIndex) ? 'bi-check-square-fill' : 'bi-check-square'}`}
+              ></i>
+            </Label>
+            </Col>
+            <Col style={{ textAlign: 'left', paddingLeft: '0' }}>
+              <Button type="button" style={{  border: 'none', background: 'transparent' }} onClick={() => removeOption(index, optionIndex)}>
+              ✖
+              </Button>
+            </Col>
+          </Row>
+        </div>
+      ))}
+      <Button type="button" style={{  border: 'none', background: 'transparent' , color: 'black'}}  onClick={() => addOption(index)}>
+      <i class="bi bi-plus-lg"></i> pasirinkimas
+      </Button>
+    </FormGroup>
+  </div>
+)}
+
   {pair.type === 'select' && (
   <div>
     <FormGroup>

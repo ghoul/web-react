@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Table } from 'reactstrap';
 import { Modal } from './Modal.js';
+import { Modal2 } from './Modal2.js';
 import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config.js';
-import './Style.css';
+// import './Style.css';
 const AllHomework = () => {
   const [homework, setHomework] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -32,6 +33,7 @@ const AllHomework = () => {
   }, []);
 
   const deleteHomework = () => {
+    console.log("delete homework start");
     fetch(`${BACKEND_URL}/handle_homework_id/${selectedHomeworkId}/`, {
       method: 'DELETE',
       headers: {
@@ -57,11 +59,14 @@ const AllHomework = () => {
 
   const showModalHandler = (homeworkId) => {
     setSelectedHomeworkId(homeworkId);
+    console.log("selectedid: " + selectedHomeworkId);
     setShowModal(true);
+    console.log("modal show true");
   };
 
   const hideModalHandler = () => {
     setShowModal(false);
+    console.log("modal show false");
   };
   const send = (event) => {
     navigate('/');
@@ -69,6 +74,7 @@ const AllHomework = () => {
   return (
     <div className="list">
       <Modal show={showModal} hide={hideModalHandler} onRemoveProduct={deleteHomework}></Modal>
+      {/* <Modal2 showModal={showModal} handleClose={hideModalHandler} /> */}
       <Button style={{ backgroundColor: '#171a1e', color: 'white', marginBottom: '10px', border: 'none' }} onClick={send}> ← Į pradžią</Button>
       <Button  style={{
     backgroundColor: '#a6d22c',

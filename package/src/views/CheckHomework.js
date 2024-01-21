@@ -40,7 +40,9 @@ export default function CheckHomework() {
           },
         });
         const data = await response.json();
+        console.log(data);
         setHomework(data.homework);
+        
       } catch (error) {
         console.error('Error fetching Homework:', error);
       }
@@ -67,16 +69,45 @@ export default function CheckHomework() {
       </CardSubtitle>
       </CardBody>
     </Card>
-        {homework.pairs &&
-          homework.pairs.map((pair, index) => (
-            <Card key={index} className="mb-3">
-              <CardBody>
-                <CardTitle tag="h5"> {index + 1}. {pair.question}</CardTitle>              
-                <p><strong>Atsakymas: </strong>{pair.answer}</p>
-                <p><strong>Taškai: </strong>{pair.points}</p>
-              </CardBody>
-            </Card>
-          ))}
+    {homework.pairs && homework.pairs.map((pair, index) => (
+        <Card key={index} className="mb-3">
+          <CardBody>
+            <CardTitle tag="h5">{index + 1}. {pair.question}</CardTitle>
+            <p>Taškai: {pair.points}</p>
+
+            {pair.type === 2 && (
+              <p><strong>Atsakymas: </strong>{pair.answer}</p>
+            )}
+
+            {pair.type === 1 && (
+              <>
+                {pair.options.map((option, optionIndex) => (
+                  <div key={optionIndex}>
+                    <i
+                      className={`bi ${pair.correct === option ? 'bi-check-circle-fill' : 'bi-check-circle'}`}
+                    ></i>
+                    {"  "}{option.text}
+                  </div>
+                ))}
+              </>
+            )}
+
+              {pair.type === 3 && (
+              <>
+                {pair.options.map((option, optionIndex) => (
+                  <div key={optionIndex}>
+                    <i
+                      className={`bi ${pair.correctMultiple.includes(optionIndex) ? 'bi-check-square-fill' : 'bi-check-square'}`}
+                    ></i>
+                    {"  "}{option}
+                  </div>
+                ))}
+              </>
+            )}
+          </CardBody>
+        </Card>
+      ))}
+
               <Button style={{ backgroundColor: 'orange', color: '#204963' }}>
                  <Link to={`/edit-homework/${homeworkId}`} className="nav-link" style={{ color: 'white' }}> Redaguoti</Link>
                  </Button>

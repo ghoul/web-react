@@ -33,6 +33,7 @@ export default function AssignmentTest() {
     //TODO: AR TIKRAI NORITE PATEIKTI?
   const [showModal, setShowModal] = useState(false);
   const [pairs, setPairs] = useState([]); //{questionId: 0, answer : ''}
+  const [multipleChoices, setmultipleChoices] = useState([]); //{questionId: 0, answer : ''}
 
 //   const [title, setTitle] = useState(null);
   let token = localStorage.getItem('token'); 
@@ -70,9 +71,32 @@ export default function AssignmentTest() {
 
   const handlePairChange = (index, field, value) => {
     const updatedPairs = [...pairs];
-    updatedPairs[index][field] = value;
-    console.log("field: " + field + " value: " + value);
-    setPairs(updatedPairs);
+    const updatedChoices = [...multipleChoices];
+    if(field==="multiple")
+    {
+      const existingIndex = updatedChoices.findIndex(
+        (entry) => entry.question === index && entry.option === value
+      );
+  
+      if (existingIndex !== -1) {
+        // Pair exists, remove it
+        updatedChoices.splice(existingIndex, 1);
+        console.log("removed choice: " + value);
+      } else {
+        // Pair doesn't exist, add it
+        updatedChoices.push({ question: index, option: value });
+        console.log("added choice: " + value);
+      }
+  
+      // Update state with the modified choices
+      setmultipleChoices(updatedChoices);
+    }
+    else{
+      updatedPairs[index][field] = value;
+      console.log("field: " + field + " value: " + value);
+      setPairs(updatedPairs);
+    }
+
   };
 
   useEffect(() => {
@@ -85,27 +109,35 @@ export default function AssignmentTest() {
     const elapsedTime = endTime - startTime;
     console.log(`Time elapsed: ${elapsedTime} milliseconds`);
     console.log("saveanswer");
-    for (const element of pairs) {
-        console.log(element.answer);
-      }
-    if (pairs.length > 0 && pairs.some(pair => pair.answer.trim() !== '')) {
+    // for (const element of pairs) {
+    //     console.log(element.answer);
+    //   }
+    if (pairs.length > 0 ) { //&& pairs.some(pair => pair.answer.trim() !== '')
       const formData = new FormData();
       formData.append('assignmentId', assignmentId);
       formData.append('time', elapsedTime);
 
       pairs.forEach((pair, index) => {
         formData.append(`pairs[${index}][questionId]`, pair.questionId);
-        formData.append(`pairs[${index}][answer]`, pair.answer);
-        console.log("answer: " + pair.answer);
-        // if (pair.type === 'select') {
-        //   formData.append(`pairs[${index}][correctOptionIndex]`, correctOptionIndexes[index]);
-  
-        //   pair.options.forEach((option, optionIndex) => {
-        //       formData.append(`pairs[${index}][options][${optionIndex}]`, option);
-        //       console.log("select: " + option);
-        //   });
+        //console.log("type: " + pair.type);
+        if (pair.answer === '') { //type===3?
+          multipleChoices.forEach((indexes, ind) =>{
+            if(indexes.question === index)
+            {
+              formData.append(`pairs[${index}][multipleIndex][${ind}]`, indexes.option); //iraso kurie is options index pasirinkti
+              console.log("index: "  + index);
+              console.log("ind: "  + ind);
+              console.log("optionindex: "  + indexes.option);
+            }
+            
+          })        
       
-        // }
+        }
+        else{
+          formData.append(`pairs[${index}][answer]`, pair.answer);
+        console.log("answer: " + pair.answer);
+        }
+        
       });
 
       // Send formData to your backend (Django) using fetch or axios
@@ -169,15 +201,15 @@ export default function AssignmentTest() {
       <CardBody>
         <CardTitle tag="h5">{index + 1}. {pair.question}</CardTitle>
         <p>Taškai: {pair.points}</p>
-        {console.log(pair.type)}
-        {pair.type === 2 ? (
+        {pair.type === 2 && (
           <Input
             type="text"
             id={`question${index}`}
             defaultValue={''}
             onChange={(e) => handlePairChange(index, 'answer', e.target.value)}
           />
-        ) : (
+        ) }
+        {pair.type === 1 && (
           <>
             {pair.options.map((option, optionIndex) => (
               <div key={optionIndex}>
@@ -187,13 +219,32 @@ export default function AssignmentTest() {
                   // style={{ display: 'none' }}
                   // checked={correctOptionIndexes[index] === optionIndex}
                  
-                  onChange={(e) => handlePairChange(index, 'answer', option.text)}
+                  onChange={(e) => handlePairChange(index, 'answer', option)}
                 />
-                {option.text}
+                {option}
               </div>
             ))}
           </>
         )}
+
+          {pair.type === 3 && (
+          <>
+            {pair.options.map((option, optionIndex) => (
+              <div key={optionIndex}>
+                <Input
+                  type="checkbox"
+                  name={`multipleOption${index}`}
+                  // style={{ display: 'none' }}
+                  // checked={correctOptionIndexes[index] === optionIndex}
+                 //TODO: issaugot multiple choices i atskira masyva gal indeksus?
+                  onChange={(e) => handlePairChange(index, 'multiple', optionIndex)}
+                />
+                {option}
+              </div>
+            ))}
+          </>
+        )}
+        
 
         
       </CardBody>

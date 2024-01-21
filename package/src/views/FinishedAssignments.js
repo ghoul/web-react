@@ -5,12 +5,21 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config';
 import './Style.css';
+import { jwtDecode } from 'jwt-decode';
 
 import { Card, CardBody, CardTitle, CardSubtitle, Table } from "reactstrap";
 const FinishedAssignments = () => {
   const [homeworkTeacher, setHomeworkTeacher] = useState([]);
   const [homeworkStudent, setHomeworkStudent] = useState([]);
   let token = localStorage.getItem('token'); 
+  let user_email = "";
+  let role = "";
+  if(token!=null)
+  {
+    const decodedToken = jwtDecode(token);
+    user_email = decodedToken.email;
+    role = decodedToken.role;
+  }
   //TODO: is token role ir pagal ja rodyt
   const navigate  = useNavigate();
   useEffect(() => {
@@ -56,7 +65,7 @@ const FinishedAssignments = () => {
             Statistika
           </CardSubtitle>
 
-          <Table className="no-wrap mt-3 align-middle" responsive borderless>
+          {role===2 && (<Table className="no-wrap mt-3 align-middle" responsive borderless>
             <thead>
               <tr>
                 <th>Pavadinimas</th>
@@ -92,10 +101,10 @@ const FinishedAssignments = () => {
                 </tr>
             )))}
             </tbody>
-          </Table>
+          </Table>)}
 
 
-          <Table className="no-wrap mt-3 align-middle" responsive borderless>
+          {role===1 && (<Table className="no-wrap mt-3 align-middle" responsive borderless>
             <thead>
               <tr>
                 <th>Pavadinimas</th>
@@ -121,7 +130,7 @@ const FinishedAssignments = () => {
                 </tr>
             )))}
             </tbody>
-          </Table>
+          </Table>)}
 
         </CardBody>
       </Card>
