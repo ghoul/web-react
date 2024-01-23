@@ -29,6 +29,7 @@ export default function AssignmentTest() {
     const [title, setTitle] = useState('');
     const [initialized, setInitialized] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
+    const [userId, setUserId] = useState('');
     const [startTime, setStartTime] = useState(null);
     //TODO: AR TIKRAI NORITE PATEIKTI?
   const [showModal, setShowModal] = useState(false);
@@ -59,6 +60,7 @@ export default function AssignmentTest() {
         setTitle(data.questions.title);
         const newPairs = data.questions.pairs.map(item => ({ questionId: item.qid, answer: '' }));
         setPairs(newPairs);
+        setUserId(data.uid);
         console.log("PO VISKO!!!");
 
       } catch (error) {
@@ -158,7 +160,9 @@ export default function AssignmentTest() {
           const data = await response.json();
           console.log('Response from Django:', data);
           if (data.success) {
-            setSuccessMessage(data.message); // Set the success message in state
+            setSuccessMessage("Testas atliktas"); // Set the success message in state
+            //TODO: REDIRECT I PERZIURA TESTO
+            navigate(`/statistics/${assignmentId}/${userId}`);
           }
           // Handle other actions on successful submission
         } else {

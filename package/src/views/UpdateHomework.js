@@ -19,11 +19,24 @@ import './Style.css';
 const UpdateHomework = () => {
 const {homeworkId }= useParams();
   const [homeworkName, setHomeworkName] = useState('');
-  const [pairs, setPairs] = useState([{ id: null, question: '', answer: '', image: null, points: 0 }]);
+  const [pairs, setPairs] = useState([{ id: null, type: 'write', question: '', answer: '', image: null, points: 0 }]);
   const [successMessage, setSuccessMessage] = useState('');
+  const [correctOptionIndexes, setCorrectOptionIndexes] = useState(Array(pairs.length).fill(null));
+const [multipleOptionIndexes, setMultipleOptionIndexes] = useState([]);
   const navigate = useNavigate();
   let token = localStorage.getItem('token');
-
+  const mapNumericToText = (numericType) => {
+    switch (numericType) {
+      case 1:
+        return 'select';
+      case 2:
+        return 'write';
+      case 3:
+        return 'multiple';
+      default:
+        return 'unknown';  // Handle any unexpected values
+    }
+  };
   useEffect(() => {
     const fetchHomeworkDetails = async () => {
       try {
@@ -43,12 +56,15 @@ const {homeworkId }= useParams();
 
             // Pre-fill question-answer pairs, if available
             if (data.homework.pairs && data.homework.pairs.length > 0) {
+              console.log(data.homework);
               setPairs(data.homework.pairs.map(pair => ({
                 id: pair.id,
+                type: mapNumericToText(pair.type),
                 question: pair.question,
                 answer: pair.answer,
                 image: pair.image,
                 points: pair.points,
+                options: pair.options || [], // Ensure options array is present
               })));
             }
           }
@@ -67,13 +83,25 @@ const {homeworkId }= useParams();
   const handleHomeworkNameChange = (e) => {
     setHomeworkName(e.target.value);
   };
-
   const handlePairChange = (index, field, value) => {
     const updatedPairs = [...pairs];
     updatedPairs[index][field] = value;
+    if (field === 'type') {
+      if (value === 'select' || value === 'write') {
+        setCorrectOptionIndexes(prevIndexes => {
+          const updatedIndexes = [...prevIndexes];
+          updatedIndexes[index] = null; // Reset correct option index for select questions
+          return updatedIndexes;
+        });
+      } else if (value === 'multiple') {
+        setMultipleOptionIndexes(prevIndexes => {
+          const updatedIndexes = prevIndexes.filter(entry => entry.qid !== index);
+          return updatedIndexes;
+        });
+      }
+    }
     setPairs(updatedPairs);
   };
-
   const handleImageChange = (index, event) => {
     const updatedPairs = [...pairs];
     updatedPairs[index].image = event.target.files[0];
@@ -89,45 +117,49 @@ const {homeworkId }= useParams();
     updatedPairs.splice(index, 1);
     setPairs(updatedPairs);
   };
-  
+  const handleTypeChange = (index, newType) => {
+    const updatedPairs = [...pairs];
+    updatedPairs[index].type = newType;
+
+    // Reset additional fields when changing the question type
+    if (newType === 'select' || newType === 'write') {
+      setCorrectOptionIndexes(prevIndexes => {
+        const updatedIndexes = [...prevIndexes];
+        updatedIndexes[index] = null;
+        return updatedIndexes;
+      });
+    } else if (newType === 'multiple') {
+      setMultipleOptionIndexes(prevIndexes => {
+        const updatedIndexes = prevIndexes.filter(entry => entry.qid !== index);
+        return updatedIndexes;
+      });
+    }
+
+    setPairs(updatedPairs);
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const formData = new FormData();
-    // formData.append('homeworkName', homeworkName);
-    // console.log("Homework Name: ", formData.get('homeworkName'));
 
-    // for (let pair of formData.entries()) {
-    //   console.log(pair[0], pair[1]); // Logs each key and value pair
-    // }
     if (pairs.length > 0 && pairs.some(pair => pair.question.trim() !== '' && pair.answer.trim() !== '')) {
-    //   pairs.forEach((pair, index) => {
-    //     formData.append(`pairs[${index}][question]`, pair.question);
-    //     console.log("question: " + pair.question);
-    //     formData.append(`pairs[${index}][answer]`, pair.answer);
-    //     console.log("answer: " + pair.answer);
-    //     formData.append(`pairs[${index}][points]`, pair.points);
-    //     if (pair.image) {
-    //       formData.append(`pairs[${index}][image]`, pair.image);
-    //     }
-    //   });
-    const dataToSend = {
-      homeworkName: homeworkName,
-      pairs: pairs.map(pair => ({
-        id: pair.id,
-        question: pair.question,
-        answer: pair.answer,
-        points: pair.points,
-        image: pair.image,
-      }))
-    };
+      const dataToSend = {
+        homeworkName: homeworkName,
+        pairs: pairs.map(pair => ({
+          id: pair.id,
+          type: pair.type,
+          question: pair.question,
+          answer: pair.answer,
+          points: pair.points,
+          image: pair.image,
+          options: pair.options,
+        }))
+      };
       try {
         const response = await fetch(`${BACKEND_URL}/handle_homework_id/${homeworkId}/`, {
           method: 'PUT',
           headers: {
             'Authorization': `${token}`,
           },
-          // body: formData,
-          body: JSON.stringify(dataToSend), 
+          body: JSON.stringify(dataToSend),
         });
 
         if (response.ok) {
@@ -145,7 +177,53 @@ const {homeworkId }= useParams();
       alert('Namų darbe privalo būti bent viena užduotis');
     }
   };
+  const handleOptionChange = (index, optionIndex, value) => {
+    const updatedPairs = [...pairs];
+    updatedPairs[index].options[optionIndex] = value;
+    setPairs(updatedPairs);
+  };
 
+  const checkCorrect = (qid, oid) =>{
+    const existingEntryIndex = multipleOptionIndexes.findIndex(entry => entry.qid === qid && entry.oid === oid);
+    return existingEntryIndex !== -1;
+  }
+  const handleCorrectOptionChange = (index, value) => {
+    const updatedCorrectOptionIndexes = [...correctOptionIndexes];
+    updatedCorrectOptionIndexes[index] = value;
+    setCorrectOptionIndexes(updatedCorrectOptionIndexes);
+  };
+
+  const handleMultipleCorrectOptionChange = (index, value) => { //qid ir oid
+    const updatedMultipleOptionIndexes = [...multipleOptionIndexes];
+    const existingEntryIndex = checkCorrect(index,value)
+    if (existingEntryIndex) {
+      // If the entry exists, remove it (uncheck)
+      updatedMultipleOptionIndexes.splice(existingEntryIndex, 1);
+    } else {
+      // If the entry doesn't exist, add it (check)
+      updatedMultipleOptionIndexes.push({ qid: index, oid: value });
+    }
+
+    // updatedMultipleOptionIndexes.push({'qid' : index, 'oid' : value});
+    setMultipleOptionIndexes(updatedMultipleOptionIndexes);
+    console.log(multipleOptionIndexes);
+    console.log(pairs);
+  };
+  const addOption = (index) => {
+    const updatedPairs = [...pairs];
+    updatedPairs[index].options.push('');
+    setPairs(updatedPairs);
+  };
+
+  const removeOption = (index, optionIndex) => {
+    correctOptionIndexes[index] = null;
+    const updatedPairs = [...pairs];
+    updatedPairs[index].options.splice(optionIndex, 1);
+    setPairs(updatedPairs);
+
+    const updatedMultipleOptionIndexes = multipleOptionIndexes.filter(entry => !(entry.qid === index && entry.oid === optionIndex));
+    setMultipleOptionIndexes(updatedMultipleOptionIndexes);
+  };
   const send = () => {
     navigate(`/check-homework/${homeworkId}`);
   };
@@ -174,48 +252,203 @@ const {homeworkId }= useParams();
 
               {pairs.map((pair, index) => (
                 <div key={index} className="pair">
-                  <FormGroup>
-                    <Label for={`question${index}`}>Klausimas nr. {index + 1}</Label>
-                    <Input
-                      type="text"
-                      id={`question${index}`}
-                      value={pair.question}
-                      onChange={(e) => handlePairChange(index, 'question', e.target.value)}
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for={`answer${index}`}>Atsakymas nr. {index + 1}</Label>
-                    <Input
-                      type="text"
-                      id={`answer${index}`}
-                      value={pair.answer}
-                      onChange={(e) => handlePairChange(index, 'answer', e.target.value)}
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for={`image${index}`}>Paveikslėlis (nebūtina)</Label>
-                    <Input
-                      type="file"
-                      id={`image${index}`}
-                      accept="image/*"
-                      onChange={(e) => handleImageChange(index, e)}
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for={`points${index}`}>Taškai nr. {index + 1}</Label>
-                    <Input
-                      type="number"
-                      id={`points${index}`}
-                      value={pair.points}
-                      onChange={(e) => handlePairChange(index, 'points', e.target.value)}
-                      min="0"
-                    />
-                  </FormGroup>
-                  <Button type="button" onClick={() => removePair(index)}>
-                    Ištrinti
-                  </Button>
+                  <Card key={index} className="pair-card">
+                    <CardBody>
+                      <Row>
+                        <Col>
+                          <FormGroup>
+                            <Label for={`type${index}`}>Užduotis nr. {index + 1}</Label>
+                            <Input
+                              type="select"
+                              id={`type${index}`}
+                              value={pair.type}
+                              onChange={(e) => handleTypeChange(index, e.target.value)}
+                            >
+                              <option value="select">Vieno pasirinkimo atsakymas</option>
+                              <option value="multiple">Kelių pasirinkimų atsakymas</option>
+                              <option value="write">Rašytinis atsakymas</option>
+                            </Input>
+                          </FormGroup>
+                        </Col>
+                        <Col>
+                          <FormGroup>
+                            <Label for={`points${index}`}>Taškai</Label>
+                            <Input
+                              type="number"
+                              id={`points${index}`}
+                              value={pair.points}
+                              onChange={(e) => handlePairChange(index, 'points', e.target.value)}
+                              min="0"
+                            />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <FormGroup>
+                            <Label for={`question${index}`}>Klausimas</Label>
+                            <Input
+                              type="text"
+                              id={`question${index}`}
+                              value={pair.question}
+                              onChange={(e) => handlePairChange(index, 'question', e.target.value)}
+                            />
+                          </FormGroup>
+                      {pair.type === 'write' && (
+                        
+                        <div>                   
+                          <FormGroup>
+                            <Label for={`answer${index}`}>Atsakymas</Label>
+                            <Input
+                              type="text"
+                              id={`answer${index}`}
+                              value={pair.answer}
+                              onChange={(e) => handlePairChange(index, 'answer', e.target.value)}
+                            />
+                          </FormGroup>
+                          <Button type="button" onClick={() => removePair(index)}>
+                            Ištrinti
+                          </Button>
+                        </div>
+                      )}
+
+                      {/* {pair.type === 'select' && (
+                        <FormGroup>
+                          <Label for={`correctOption${index}`}>Teisingas atsakymas</Label>
+                          <Input
+                            type="select"
+                            id={`correctOption${index}`}
+                            value={correctOptionIndexes[index]}
+                            onChange={(e) => handleCorrectOptionChange(index, e.target.value)}
+                          >
+                            {pair.options.map((option, optionIndex) => (
+                              <option key={optionIndex} value={optionIndex}>
+                                {`${option}`}
+                              </option>
+                            ))}
+                          </Input>
+                        </FormGroup>
+                      )} */}
+                        {pair.type === 'select' && (
+  <div>
+    <FormGroup>
+      <Row>
+      <Label>Atsakymas</Label>
+      </Row>
+      {pair.options.map((option, optionIndex) => (
+        <div key={optionIndex} className="option">
+          <Row  className="align-items-center">
+            <Col>
+              <Input
+                type="text"
+                value={option}
+                onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)}
+              />
+            </Col>
+            <Col>
+              <Label check>
+                <Input
+                  type="radio"
+                  name={`correctOption${index}`}
+                  style={{ display: 'none' }} 
+                  checked={correctOptionIndexes[index] === optionIndex}
+                  onChange={() => handleCorrectOptionChange(index, optionIndex)}
+                />{' '}
+                <i
+                className={`bi ${correctOptionIndexes[index] === optionIndex ? 'bi-check-circle-fill' : 'bi-check-circle'}`}
+              ></i>
+              </Label>
+            </Col>
+            <Col style={{ textAlign: 'left', paddingLeft: '0' }}>
+              <Button type="button" style={{  border: 'none', background: 'transparent' }} onClick={() => removeOption(index, optionIndex)}>
+              ✖
+              </Button>
+            </Col>
+          </Row>
+        </div>
+      ))}
+      <Button type="button" style={{  border: 'none', background: 'transparent' , color: 'black'}}  onClick={() => addOption(index)}>
+      <i class="bi bi-plus-lg"></i> pasirinkimas
+      </Button>
+    </FormGroup>
+    <Button type="button" onClick={() => removePair(index)}>
+                            Ištrinti
+                          </Button>
+  </div>
+)}
+
+                      {/* {pair.type === 'multiple' && (
+                        <FormGroup>
+                          {pair.options.map((option, optionIndex) => (
+                            <div key={optionIndex} className="option">
+                              <Label check>
+                                <Input
+                                  type="checkbox"
+                                  name={`multipleOption${index}`}
+                                  style={{ display: 'none' }}
+                                  checked={checkCorrect(index, optionIndex)}
+                                  onChange={() => handleMultipleCorrectOptionChange(index, optionIndex)}
+                                />{' '}
+                                {` ${option}`}
+                              </Label>
+                            </div>
+                          ))}
+                        </FormGroup>
+                      )}
+                    </CardBody>
+                  </Card>
                 </div>
-              ))}
+              ))} */}
+              {pair.type === 'multiple' && (
+  <div>
+    <FormGroup>
+      <Row>
+      <Label>Atsakymas</Label>
+      </Row>
+      {pair.options.map((option, optionIndex) => (
+        <div key={optionIndex} className="option">
+          <Row  className="align-items-center">
+            <Col>
+              <Input
+                type="text"
+                value={option}
+                onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)}
+              />
+            </Col>
+            <Col>
+            <Label check>
+              <Input
+                type="checkbox"
+                name={`multipleOption${index}`}
+                style={{ display: 'none' }} 
+                checked={checkCorrect(index, optionIndex)}
+                onChange={() => handleMultipleCorrectOptionChange(index, optionIndex)}
+              />
+              {' '}
+              <i
+                className={`bi ${checkCorrect(index, optionIndex) ? 'bi-check-square-fill' : 'bi-check-square'}`}
+              ></i>
+            </Label>
+            </Col>
+            <Col style={{ textAlign: 'left', paddingLeft: '0' }}>
+              <Button type="button" style={{  border: 'none', background: 'transparent' }} onClick={() => removeOption(index, optionIndex)}>
+              ✖
+              </Button>
+            </Col>
+          </Row>
+        </div>
+      ))}
+      <Button type="button" style={{  border: 'none', background: 'transparent' , color: 'black'}}  onClick={() => addOption(index)}>
+      <i class="bi bi-plus-lg"></i> pasirinkimas
+      </Button>
+    </FormGroup>
+    <Button type="button" onClick={() => removePair(index)}>
+                            Ištrinti
+                          </Button>
+  </div>
+)}
+</CardBody>
+</Card>
+</div>
+))} 
 
               <Button type="button" onClick={addPair} className="add-pair-button">
                 Pridėti klausimą
@@ -233,5 +466,6 @@ const {homeworkId }= useParams();
     </Row>
   );
 };
+
 
 export default UpdateHomework;

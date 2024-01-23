@@ -11,7 +11,7 @@ import user3 from "../assets/images/users/user3.jpg";
 import user4 from "../assets/images/users/user4.jpg";
 import user5 from "../assets/images/users/user5.jpg";
 import { useNavigate } from 'react-router-dom';
-import './Style.css';
+// import './Style.css';
 const Starter = () => {
   const {assignmentId} = useParams();
   const [students, setStudents] = useState([]);
@@ -77,6 +77,7 @@ const Starter = () => {
           <Table className="no-wrap mt-3 align-middle" responsive borderless>
             <thead>
               <tr>
+                <th style={{textAlign: 'center'}}>Vieta</th>
                 <th>Mokinys</th>
                 <th>Būsena</th>
                 <th>Data</th>
@@ -88,6 +89,14 @@ const Starter = () => {
             <tbody>
               {students.map((tdata, index) => (
                 <tr key={index} className="border-top">
+                  {index + 1 <= 3 ? (
+                  <td style={{textAlign: 'center'}}> 
+                <img style={{width : '40px'}} src={`./place${index + 1}.png`} alt={`medal`} />
+                </td>) : (
+                  <td style={{textAlign: 'center'}}>
+                <span ><strong>{index + 1}</strong></span>
+                </td>
+              )}
                   <td>
                     <div className="d-flex align-items-center p-2">
                       <img

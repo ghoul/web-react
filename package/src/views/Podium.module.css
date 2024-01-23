@@ -1,0 +1,56 @@
+/* src/components/Podium.module.css */
+
+.podium-container {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.podium-wrapper {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.podium {
+  position: relative;
+  text-align: center;
+  margin-right: 20px;
+  width: 33.33%;
+}
+
+.podium-1 {
+  order: 2;
+}
+
+.podium-2 {
+  order: 1;
+}
+
+.podium-3 {
+  order: 3;
+}
+
+.img-podium {
+  width: 10px;
+}
+
+.user-profile {
+  position: relative; /* Change to relative positioning */
+  text-align: center;
+  width: 100%;
+  margin-top: 10px; /* Add margin at the top to separate from the image */
+}
+
+.user-profile img {
+  width: 20px;
+  border-radius: 50%;
+}
+
+.list-container {
+  text-align: center;
+  margin-top: 20px; /* Add margin at the top of the list to separate from podium */
+  width: 100%;
+}

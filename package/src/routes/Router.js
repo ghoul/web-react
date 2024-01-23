@@ -22,6 +22,7 @@ import OneStudentStatistics  from "../views/OneStudentStatistics.js";
 import Profile from "../views/Profile.js";
 import Password from "../views/ChangePassword.js";
 import AssignmentTest from "../views/AssignmentTest.js";
+import Podium from "../views/PodiumAllTime.js";
 
 
 import Alerts from "../views/ui/Alerts";
@@ -63,6 +64,8 @@ const ThemeRoutes = [
       { path: "/profile", exact: true, element: <Profile /> },
       { path: "/password", exact: true, element: <Password /> },
       { path: "/test/:assignmentId", element: <AssignmentTest/>},
+
+      { path: "/podium", element: <Podium/>}, //TODO: aid ar kazkas
 
 
       { path: "/alerts", exact: true, element: <Alerts /> },

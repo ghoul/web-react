@@ -13,6 +13,11 @@ const navigation = [
     href: "/",
     icon: "bi bi-speedometer2",
   },
+  {
+    title: "Lyderių lentelė",
+    href: "/podium",
+    icon: "bi bi-trophy-fill",
+  },
   //TODO: ADMIN DALYKAI
 
   {
@@ -33,7 +38,7 @@ const navigation = [
   {
     title: "Mokytojai",
     href: "/all-teachers",
-    icon: "bi bi-people",
+    icon: "bi bi-people-fill",
   },
   {
     title: "Mokykla",
@@ -76,7 +81,10 @@ let role = "";
 
   const filteredNavigation = navigation.filter((navItem) => {
     if (role === 2) {
-      return navItem.title !== "Mokytojai";
+      return (
+        navItem.title !== "Mokytojai" &&
+        navItem.title !== "Lyderių lentelė"
+      );
     } else if (role === 1) {
       return (
         navItem.title !== "Mokiniai" &&
