@@ -154,7 +154,8 @@ const Starter = () => {
                 <th>Pabaigos data</th>
                 <th>Klasė</th>
                 <th>Būsena</th>
-                <th>Detaliau</th>
+                <th>Statistika</th>
+                <th>Keisti</th>
                 <th>Šalinti</th>
               </tr>
             </thead>
@@ -182,10 +183,10 @@ const Starter = () => {
                   <Button className='noback-button' style={{background:'transparent', border:'none'}}>
   <Link to={`/statistics/${tdata.id}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> ➔➔</Link>
 </Button>
-
-
-
 </td>
+<td><Button className='noback-button' style={{background:'transparent', border:'none'}}>
+<Link to={`/assignment/edit/${tdata.id}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> <i class="bi bi-pencil-fill"></i></Link>
+  </Button></td>
 <td>
   <Button className='noback-button' style={{background:'transparent', border:'none'}} onClick={() => showModalHandler(tdata.id)}>
   ✖
@@ -246,9 +247,9 @@ const Starter = () => {
 
         </CardBody>
       </Card>
-      <Button className="more-button" style={{background:'#a6d22c', border:'none'}} >
+      {/* <Button className="more-button" style={{background:'#a6d22c', border:'none'}} >
   <Link to={`/finished-assignments`} className="nav-link" style={{ color: 'white' }}>Užbaigti namų darbai →</Link>
-</Button>
+</Button> */}
     </div>
   );
 };

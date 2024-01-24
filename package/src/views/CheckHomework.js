@@ -26,6 +26,7 @@ import { useNavigate } from 'react-router-dom';
 export default function CheckHomework() {
     const { homeworkId } = useParams();
     const [homework, setHomework] = useState([]);
+    const [edit, setEdit] = useState(true);
   const [showModal, setShowModal] = useState(false);
   let token = localStorage.getItem('token'); 
   const navigate  = useNavigate();
@@ -42,6 +43,7 @@ export default function CheckHomework() {
         const data = await response.json();
         console.log(data);
         setHomework(data.homework);
+        setEdit(data.edit);
         
       } catch (error) {
         console.error('Error fetching Homework:', error);
@@ -126,9 +128,10 @@ export default function CheckHomework() {
         </Card>
       ))}
 
-              <Button style={{ backgroundColor: 'orange', color: '#204963', border: 'none' }}>
+              {edit && (<Button style={{ backgroundColor: 'orange', color: '#204963', border: 'none' }}>
                  <Link to={`/edit-homework/${homeworkId}`} className="nav-link" style={{ color: 'white' }}> Redaguoti</Link>
                  </Button>
+                 )}
       </Col>
   
     </Row>

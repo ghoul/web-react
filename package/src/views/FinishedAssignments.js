@@ -74,6 +74,7 @@ const FinishedAssignments = () => {
                 <th>Klasė</th>
                 <th>Būsena</th>
                 <th>Detaliau</th>
+                <th>Pratęsti</th>
               </tr>
             </thead>
             <tbody>
@@ -98,6 +99,9 @@ const FinishedAssignments = () => {
                     )}
                   </td>
                   <td> <Button style={{backgroundColor: 'transparent', border:'none'}}><Link to={`/statistics/${tdata.id}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> ➔➔ </Link></Button></td>
+                  <td><Button className='noback-button' style={{background:'transparent', border:'none'}}>
+                <Link to={`/assignment/edit/${tdata.id}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> <i class="bi bi-calendar-plus"></i></Link>
+                  </Button></td>
                 </tr>
             )))}
             </tbody>

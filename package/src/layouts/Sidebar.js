@@ -26,28 +26,38 @@ const navigation = [
     icon: "bi bi-book",
   },
   {
-    title: "Klasės",
-    href: "/all-classes",
-    icon: "bi bi-123",
+    title: "Užbaigti namų darbai",
+    href: "/finished-assignments",
+    icon: "bi bi-bookmark-check",
   },
-  {
-    title: "Mokiniai",
-    href: "/all-students",
-    icon: "bi bi-people",
-  },
-  {
-    title: "Mokytojai",
-    href: "/all-teachers",
-    icon: "bi bi-people-fill",
-  },
-  {
-    title: "Mokykla",
-    href: "/breadcrumbs",
-    icon: "bi bi-building",
-  },
+  // {
+  //   title: "Klasės",
+  //   href: "/all-classes",
+  //   icon: "bi bi-123",
+  // },
+  // {
+  //   title: "Mokiniai",
+  //   href: "/all-students",
+  //   icon: "bi bi-people",
+  // },
+  // {
+  //   title: "Mokytojai",
+  //   href: "/all-teachers",
+  //   icon: "bi bi-people-fill",
+  // },
+  // {
+  //   title: "Mokykla",
+  //   href: "/breadcrumbs",
+  //   icon: "bi bi-building",
+  // },
   {
     title: "Profilis",
     href: "/profile",
+    icon: "bi bi-person-circle",
+  },
+  {
+    title: "school",
+    href: "/add-school",
     icon: "bi bi-person-circle",
   }
 ];
@@ -82,13 +92,13 @@ let role = "";
   const filteredNavigation = navigation.filter((navItem) => {
     if (role === 2) {
       return (
-        navItem.title !== "Mokytojai" &&
+        // navItem.title !== "Mokytojai" &&
         navItem.title !== "Lyderių lentelė"
       );
     } else if (role === 1) {
       return (
-        navItem.title !== "Mokiniai" &&
-        navItem.title !== "Klasės" &&
+        // navItem.title !== "Mokiniai" &&
+        // navItem.title !== "Klasės" &&
         navItem.title !== "Namų darbai"
       );
     }

@@ -23,6 +23,8 @@ import Profile from "../views/Profile.js";
 import Password from "../views/ChangePassword.js";
 import AssignmentTest from "../views/AssignmentTest.js";
 import Podium from "../views/PodiumAllTime.js";
+import UpdateAssignment from "../views/UpdateAssignment.js";
+import AddSchool from "../views/AdminAddSchool.js";
 
 
 import Alerts from "../views/ui/Alerts";
@@ -64,6 +66,8 @@ const ThemeRoutes = [
       { path: "/profile", exact: true, element: <Profile /> },
       { path: "/password", exact: true, element: <Password /> },
       { path: "/test/:assignmentId", element: <AssignmentTest/>},
+      { path: "/assignment/edit/:assignmentId", element: <UpdateAssignment/>},
+      {path: "/add-school", element: <AddSchool/>},
 
       { path: "/podium", element: <Podium/>}, //TODO: aid ar kazkas
 
