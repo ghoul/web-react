@@ -105,13 +105,15 @@ export default function AssignHomework() {
       <Button style={{ backgroundColor: '#1b1c20', color: 'white', marginBottom: '10px' }} onClick={send}> ← Atgal</Button>
         <Card>
           <CardTitle tag="h6" className="border-bottom p-3 mb-0">
-            <i className="bi bi-arrow-through-heart-fill me-2"></i>
+          <i class="bi bi-calendar-plus-fill me-2"></i>
             Namų darbų skyrimas
           </CardTitle>
           <CardBody>
           {message && <div style={{ marginBottom: '10px', color: message.includes('Klaida') ? 'red' : 'green' }}>{message}</div>}
             <Form onSubmit={assignHomework}>
                {/* {% csrf_token %} */}
+               <Row>
+                <Col>
               <FormGroup>
                 <Label for="from_date">Pradžios data</Label>
                 <Input
@@ -124,6 +126,8 @@ export default function AssignHomework() {
                   onChange={(e) => setFromDateInput(e.target.value)}
                 />
               </FormGroup>
+              </Col>
+              <Col>
               <FormGroup>
                 <Label for="to_date">Pabaigos data</Label>
                 <Input
@@ -136,6 +140,8 @@ export default function AssignHomework() {
                   onChange={(e) => setToDateInput(e.target.value)}
                 />
               </FormGroup>
+              </Col>
+              </Row>
               <FormGroup>
                 <Label for="classs">Klasė</Label>
                 <Input
@@ -157,7 +163,7 @@ export default function AssignHomework() {
               )}
                 </Input>
               </FormGroup>
-              <Button style={{ backgroundColor: '#204963', color: 'white'}}>Įrašyti</Button>
+              <Button style={{ backgroundColor: '#a6d22c', color: 'white', border:'none' }}>Paskirti</Button>
             </Form>
           </CardBody>
         </Card>

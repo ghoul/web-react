@@ -58,7 +58,7 @@ const [multipleOptionIndexes, setMultipleOptionIndexes] = useState([]);
             if (data.homework.pairs && data.homework.pairs.length > 0) {
               console.log(data.homework);
               setPairs(data.homework.pairs.map(pair => ({
-                id: pair.id,
+                id: pair.qid,
                 type: mapNumericToText(pair.type),
                 question: pair.question,
                 answer: pair.answer,
@@ -66,6 +66,36 @@ const [multipleOptionIndexes, setMultipleOptionIndexes] = useState([]);
                 points: pair.points,
                 options: pair.options || [], // Ensure options array is present
               })));
+               // Set initial values for correctOptionIndexes and multipleOptionIndexes
+               const initialCorrectOptionIndexes = data.homework.pairs.map((pair, index) => {
+                if (pair.type === 1) { // Assuming 'select' is represented by type 1
+                  console.log(pair.correct);
+                  const correctOptionIndex = pair.options.findIndex(option => option === pair.correct);
+                  return correctOptionIndex !== -1 ? correctOptionIndex : null;
+                } else {
+                  return null; // For other types
+                }
+              });
+              
+              const initialMultipleOptionIndexes = data.homework.pairs.flatMap((pair, qid) => {
+                if (pair.type === 3) { // Assuming 'multiple' is represented by type 3
+                  console.log(pair.correctMultiple);
+                  return pair.options.map((option, oid) => ({
+                    qid,
+                    oid,
+                    selected: pair.correctMultiple.includes(oid),
+                  }))
+                  .filter((pair) => pair.selected);
+                  
+                } else {
+                  return [];
+                }
+              });
+              
+          //  console.log(multipleOptionIndexes);
+            setCorrectOptionIndexes(initialCorrectOptionIndexes);
+            setMultipleOptionIndexes(initialMultipleOptionIndexes);
+          
             }
           }
         } else {
@@ -139,18 +169,19 @@ const [multipleOptionIndexes, setMultipleOptionIndexes] = useState([]);
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (pairs.length > 0 && pairs.some(pair => pair.question.trim() !== '' && pair.answer.trim() !== '')) {
+    if (pairs.length > 0 && pairs.some(pair => pair.question.trim() !== '')) { //&& pair.answer.trim() !== ''
       const dataToSend = {
         homeworkName: homeworkName,
+        correct: correctOptionIndexes,
+        multiple: multipleOptionIndexes,
         pairs: pairs.map(pair => ({
-          id: pair.id,
+          qid: pair.id,
           type: pair.type,
           question: pair.question,
           answer: pair.answer,
           points: pair.points,
           image: pair.image,
-          options: pair.options,
+          options: pair.options   
         }))
       };
       try {
@@ -193,6 +224,7 @@ const [multipleOptionIndexes, setMultipleOptionIndexes] = useState([]);
     setCorrectOptionIndexes(updatedCorrectOptionIndexes);
   };
 
+  //TODO: KARTAIS GRYBAUJA
   const handleMultipleCorrectOptionChange = (index, value) => { //qid ir oid
     const updatedMultipleOptionIndexes = [...multipleOptionIndexes];
     const existingEntryIndex = checkCorrect(index,value)
@@ -206,8 +238,8 @@ const [multipleOptionIndexes, setMultipleOptionIndexes] = useState([]);
 
     // updatedMultipleOptionIndexes.push({'qid' : index, 'oid' : value});
     setMultipleOptionIndexes(updatedMultipleOptionIndexes);
-    console.log(multipleOptionIndexes);
-    console.log(pairs);
+ 
+    // console.log(pairs);
   };
   const addOption = (index) => {
     const updatedPairs = [...pairs];
@@ -304,160 +336,122 @@ const [multipleOptionIndexes, setMultipleOptionIndexes] = useState([]);
                               onChange={(e) => handlePairChange(index, 'answer', e.target.value)}
                             />
                           </FormGroup>
-                          <Button type="button" onClick={() => removePair(index)}>
-                            Ištrinti
-                          </Button>
+                          <Button type="button" style={{backgroundColor: '#bf1a2f', color: 'white', border: 'none'}} onClick={() => removePair(index)}>
+                    <i class="bi bi-dash-lg"></i> Ištrinti
+                    </Button>
                         </div>
                       )}
-
-                      {/* {pair.type === 'select' && (
-                        <FormGroup>
-                          <Label for={`correctOption${index}`}>Teisingas atsakymas</Label>
-                          <Input
-                            type="select"
-                            id={`correctOption${index}`}
-                            value={correctOptionIndexes[index]}
-                            onChange={(e) => handleCorrectOptionChange(index, e.target.value)}
-                          >
-                            {pair.options.map((option, optionIndex) => (
-                              <option key={optionIndex} value={optionIndex}>
-                                {`${option}`}
-                              </option>
-                            ))}
-                          </Input>
-                        </FormGroup>
-                      )} */}
                         {pair.type === 'select' && (
-  <div>
-    <FormGroup>
-      <Row>
-      <Label>Atsakymas</Label>
-      </Row>
-      {pair.options.map((option, optionIndex) => (
-        <div key={optionIndex} className="option">
-          <Row  className="align-items-center">
-            <Col>
-              <Input
-                type="text"
-                value={option}
-                onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)}
-              />
-            </Col>
-            <Col>
-              <Label check>
-                <Input
-                  type="radio"
-                  name={`correctOption${index}`}
-                  style={{ display: 'none' }} 
-                  checked={correctOptionIndexes[index] === optionIndex}
-                  onChange={() => handleCorrectOptionChange(index, optionIndex)}
-                />{' '}
-                <i
-                className={`bi ${correctOptionIndexes[index] === optionIndex ? 'bi-check-circle-fill' : 'bi-check-circle'}`}
-              ></i>
-              </Label>
-            </Col>
-            <Col style={{ textAlign: 'left', paddingLeft: '0' }}>
-              <Button type="button" style={{  border: 'none', background: 'transparent' }} onClick={() => removeOption(index, optionIndex)}>
-              ✖
-              </Button>
-            </Col>
-          </Row>
-        </div>
-      ))}
-      <Button type="button" style={{  border: 'none', background: 'transparent' , color: 'black'}}  onClick={() => addOption(index)}>
-      <i class="bi bi-plus-lg"></i> pasirinkimas
-      </Button>
-    </FormGroup>
-    <Button type="button" onClick={() => removePair(index)}>
-                            Ištrinti
-                          </Button>
-  </div>
-)}
-
-                      {/* {pair.type === 'multiple' && (
-                        <FormGroup>
-                          {pair.options.map((option, optionIndex) => (
-                            <div key={optionIndex} className="option">
-                              <Label check>
-                                <Input
-                                  type="checkbox"
-                                  name={`multipleOption${index}`}
-                                  style={{ display: 'none' }}
-                                  checked={checkCorrect(index, optionIndex)}
-                                  onChange={() => handleMultipleCorrectOptionChange(index, optionIndex)}
-                                />{' '}
-                                {` ${option}`}
-                              </Label>
-                            </div>
-                          ))}
-                        </FormGroup>
+                                <div>
+                                  <FormGroup>
+                                    <Row>
+                                    <Label>Atsakymas</Label>
+                                    </Row>
+                                    {pair.options.map((option, optionIndex) => (
+                                      <div key={optionIndex} className="option">
+                                        <Row  className="align-items-center">
+                                          <Col>
+                                            <Input
+                                              type="text"
+                                              value={option}
+                                              onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)}
+                                            />
+                                          </Col>
+                                          <Col>
+                                            <Label check>
+                                              <Input
+                                                type="radio"
+                                                name={`correctOption${index}`}
+                                                style={{ display: 'none' }} 
+                                               
+                                                checked={correctOptionIndexes[index] === optionIndex}
+                                                onChange={() => handleCorrectOptionChange(index, optionIndex)}
+                                              />{' '}
+                                               {console.log(correctOptionIndexes)}
+                                              <i
+                                              className={`bi ${correctOptionIndexes[index] === optionIndex ? 'bi-check-circle-fill' : 'bi-check-circle'}`}
+                                            ></i>
+                                            </Label>
+                                          </Col>
+                                          <Col style={{ textAlign: 'left', paddingLeft: '0' }}>
+                                            <Button type="button" style={{  border: 'none', background: 'transparent' }} onClick={() => removeOption(index, optionIndex)}>
+                                            ✖
+                                            </Button>
+                                          </Col>
+                                        </Row>
+                                      </div>
+                                    ))}
+                                    <Button type="button" style={{  border: 'none', background: 'transparent' , color: 'black'}}  onClick={() => addOption(index)}>
+                                    <i class="bi bi-plus-lg"></i> pasirinkimas
+                                    </Button>
+                                  </FormGroup>
+                                  <Button type="button" style={{backgroundColor: '#bf1a2f', color: 'white', border: 'none'}} onClick={() => removePair(index)}>
+                    <i class="bi bi-dash-lg"></i> Ištrinti
+                    </Button>
+                                </div>
+                              )}
+                       {pair.type === 'multiple' && (
+                        <div>
+                          <FormGroup>
+                            <Row>
+                            <Label>Atsakymas</Label>
+                            </Row>
+                            {pair.options.map((option, optionIndex) => (
+                              <div key={optionIndex} className="option">
+                                <Row  className="align-items-center">
+                                  <Col>
+                                    <Input
+                                      type="text"
+                                      value={option}
+                                      onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)}
+                                    />
+                                  </Col>
+                                  <Col>
+                                  <Label check>
+                                    <Input
+                                      type="checkbox"
+                                      name={`multipleOption${index}`}
+                                      style={{ display: 'none' }} 
+                                      checked={checkCorrect(index, optionIndex)}
+                                      onChange={() => handleMultipleCorrectOptionChange(index, optionIndex)}
+                                    />
+                                    {' '}
+                                    <i
+                                      className={`bi ${checkCorrect(index, optionIndex) ? 'bi-check-square-fill' : 'bi-check-square'}`}
+                                    ></i>
+                                  </Label>
+                                  </Col>
+                                  <Col style={{ textAlign: 'left', paddingLeft: '0' }}>
+                                    <Button type="button" style={{  border: 'none', background: 'transparent' }} onClick={() => removeOption(index, optionIndex)}>
+                                    ✖
+                                    </Button>
+                                  </Col>
+                                </Row>
+                              </div>
+                            ))}
+                            <Button type="button" style={{  border: 'none', background: 'transparent' , color: 'black'}}  onClick={() => addOption(index)}>
+                            <i class="bi bi-plus-lg"></i> pasirinkimas
+                            </Button>
+                          </FormGroup>
+                          <Button type="button" style={{backgroundColor: '#bf1a2f', color: 'white', border: 'none'}} onClick={() => removePair(index)}>
+                    <i class="bi bi-dash-lg"></i> Ištrinti
+                    </Button>
+                        </div>
                       )}
-                    </CardBody>
-                  </Card>
+                </CardBody>
+                </Card>
                 </div>
-              ))} */}
-              {pair.type === 'multiple' && (
-  <div>
-    <FormGroup>
-      <Row>
-      <Label>Atsakymas</Label>
-      </Row>
-      {pair.options.map((option, optionIndex) => (
-        <div key={optionIndex} className="option">
-          <Row  className="align-items-center">
-            <Col>
-              <Input
-                type="text"
-                value={option}
-                onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)}
-              />
-            </Col>
-            <Col>
-            <Label check>
-              <Input
-                type="checkbox"
-                name={`multipleOption${index}`}
-                style={{ display: 'none' }} 
-                checked={checkCorrect(index, optionIndex)}
-                onChange={() => handleMultipleCorrectOptionChange(index, optionIndex)}
-              />
-              {' '}
-              <i
-                className={`bi ${checkCorrect(index, optionIndex) ? 'bi-check-square-fill' : 'bi-check-square'}`}
-              ></i>
-            </Label>
-            </Col>
-            <Col style={{ textAlign: 'left', paddingLeft: '0' }}>
-              <Button type="button" style={{  border: 'none', background: 'transparent' }} onClick={() => removeOption(index, optionIndex)}>
-              ✖
-              </Button>
-            </Col>
-          </Row>
-        </div>
-      ))}
-      <Button type="button" style={{  border: 'none', background: 'transparent' , color: 'black'}}  onClick={() => addOption(index)}>
-      <i class="bi bi-plus-lg"></i> pasirinkimas
-      </Button>
-    </FormGroup>
-    <Button type="button" onClick={() => removePair(index)}>
-                            Ištrinti
-                          </Button>
-  </div>
-)}
-</CardBody>
-</Card>
-</div>
-))} 
+                ))} 
 
-              <Button type="button" onClick={addPair} className="add-pair-button">
-                Pridėti klausimą
+             
+              <Button type="button" style={{backgroundColor: '#a6d22c', color: 'white', border: 'none'}} onClick={addPair} className="add-pair-button">
+              <i class="bi bi-plus-lg"></i> Pridėti klausimą
               </Button>
-
               <FormGroup>
-                <Button type="submit" className="submit-button">
+                <Button type="submit"  style={{backgroundColor: 'black', color: 'white', border: 'none'}} className="submit-button">
                   Įrašyti
                 </Button>
+
               </FormGroup>
             </Form>
           </CardBody>

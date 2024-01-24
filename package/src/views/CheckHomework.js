@@ -72,11 +72,29 @@ export default function CheckHomework() {
     {homework.pairs && homework.pairs.map((pair, index) => (
         <Card key={index} className="mb-3">
           <CardBody>
+            <Row>
+              <Col>
             <CardTitle tag="h5">{index + 1}. {pair.question}</CardTitle>
-            <p>Taškai: {pair.points}</p>
+            </Col><Col>
+            <p><strong>Taškai:</strong> {pair.points}</p>
+            </Col>
+            </Row>
 
             {pair.type === 2 && (
-              <p><strong>Atsakymas: </strong>{pair.answer}</p>
+              <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+              <Label check>
+                <Row>
+                  <Col md={6}>
+                    <Input
+                      type="text"
+                      readOnly
+                      value={pair.answer}
+                      style={{ width: '100%' }}
+                    />
+                  </Col>
+                </Row>
+              </Label>
+            </div>
             )}
 
             {pair.type === 1 && (
@@ -86,7 +104,7 @@ export default function CheckHomework() {
                     <i
                       className={`bi ${pair.correct === option ? 'bi-check-circle-fill' : 'bi-check-circle'}`}
                     ></i>
-                    {"  "}{option.text}
+                    {"  "}{option}
                   </div>
                 ))}
               </>
@@ -108,7 +126,7 @@ export default function CheckHomework() {
         </Card>
       ))}
 
-              <Button style={{ backgroundColor: 'orange', color: '#204963' }}>
+              <Button style={{ backgroundColor: 'orange', color: '#204963', border: 'none' }}>
                  <Link to={`/edit-homework/${homeworkId}`} className="nav-link" style={{ color: 'white' }}> Redaguoti</Link>
                  </Button>
       </Col>
