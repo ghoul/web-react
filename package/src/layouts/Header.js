@@ -82,9 +82,9 @@ const Header = () => {
   <NavbarBrand href="/" className="mx-auto">
     <img src={logo} alt="logo" style={{ width: '100%' }} />
   </NavbarBrand>
-  <Button color="primary" className="d-lg-none" onClick={() => showMobilemenu()}>
+  {/* <Button color="primary" className="d-lg-none" onClick={() => showMobilemenu()}>
     <i className="bi bi-list"></i>
-  </Button>
+  </Button> */}
   {!logged && (
     <>
       <NavItem>

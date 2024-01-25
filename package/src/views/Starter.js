@@ -56,6 +56,21 @@ const Starter = () => {
       .catch(error => {
         console.error('Error fetching homeworks:', error);
       });
+
+      axios.post(`${BACKEND_URL}/get_user_id/`, {
+        user_email: user_email,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then(response => {
+        const userId = response.data.user_id; // Extract user ID from the response
+        console.log("User ID:", userId);
+        setUserid(userId);
+      }).catch(error => {
+        console.error('Error fetching user ID:', error);
+      });
+       
   };
   useEffect(() => {
     // Fetch homeworks data from your backend (assuming the endpoint is /api/homeworks)
@@ -97,37 +112,14 @@ const Starter = () => {
         }
       })
   };
-
+  
   const handleStartGame = async (assignmentId, studentEmail) => {
-    try {
-      const response = await fetch(`${BACKEND_URL}/get_user_id/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({         
-          user_email: studentEmail,
-        }),
-      });
-
-      if (response.ok) {
-        const responseData = await response.json(); // Parse response data to JSON
-        const userId = responseData.user_id; // Extract user ID from the response
-        
-        console.log("User ID:", userId); // Log the obtained user ID
-        // Game started successfully, redirect to the game
-        //window.location.href = 'http://localhost:8080'; // Assuming the game is served at this URL
-        setUserid(userId);
-       
+    try {    
         //console.log("user_id; " + user_id);
         const url = `http://localhost:8080/?student_id=${user_id}&assignment_id=${assignmentId}`; // Replace with the desired URL
         window.open(url, '_blank');
         //window.location.href = 'http://localhost:8080'; // Assuming the game is served at this URL
         console.log("startino zaidima");
-      } else {
-        // Handle any errors or failed response
-        console.error('Failed to start the game');
-      }
     } catch (error) {
       // Handle any network-related errors
       console.error('Network error:', error);

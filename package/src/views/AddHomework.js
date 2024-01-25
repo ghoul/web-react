@@ -468,7 +468,9 @@ const AllHomework = () => {
           </Row>
         </div>
       ))}
-      <Button type="button" style={{  border: 'none', background: 'transparent' , color: 'black'}}  onClick={() => addOption(index)}>
+      <Button type="button" style={{  border: 'none', background: 'transparent' , color: 'black'}} 
+       onClick={() => addOption(index)}
+       disabled={pairs[index].options.length >= 5}>
       <i class="bi bi-plus-lg"></i> pasirinkimas
       </Button>
     </FormGroup>
@@ -522,7 +524,9 @@ const AllHomework = () => {
           </Row>
         </div>
       ))}
-      <Button type="button" style={{  border: 'none', background: 'transparent' , color: 'black'}}  onClick={() => addOption(index)}>
+      <Button type="button" style={{  border: 'none', background: 'transparent' , color: 'black'}}
+        onClick={() => addOption(index)}
+        disabled={pairs[index].options.length >= 5}>
       <i class="bi bi-plus-lg"></i> pasirinkimas
       </Button>
     </FormGroup>
@@ -552,15 +556,19 @@ const AllHomework = () => {
                       
                       </div>
                     )}
-
-
                     <Button type="button" style={{backgroundColor: '#bf1a2f', color: 'white', border: 'none'}} onClick={() => removePair(index)}>
                     <i class="bi bi-dash-lg"></i> Ištrinti
                     </Button>
                   </CardBody>
                 </Card>
               ))}
-              <Button type="button" style={{backgroundColor: '#a6d22c', color: 'white', border: 'none'}} onClick={addPair} className="add-pair-button">
+            <Button
+                type="button"
+                style={{ backgroundColor: '#a6d22c', color: 'white', border: 'none' }}
+                onClick={addPair}
+                className="add-pair-button"
+                disabled={pairs.length >= 15}
+              >
               <i class="bi bi-plus-lg"></i> Pridėti klausimą
               </Button>
               <FormGroup>

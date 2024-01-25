@@ -40,7 +40,7 @@ export default function AssignHomework() {
 
   const getClasses = () => {
     fetch(
-      `${BACKEND_URL}/get_classes_by_teacher/`,
+      `${BACKEND_URL}/get_classes_by_school/`,
       {
         method: "GET",
         headers: {

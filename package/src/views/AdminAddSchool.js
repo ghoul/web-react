@@ -22,10 +22,10 @@ const AddSchool = () => {
   const [message, setMessage] = useState(''); 
   const navigate  = useNavigate();
   let token = localStorage.getItem('token'); 
-  const createSchool = (event) => {
-    event.preventDefault();
 
-    // const csrfToken = getCookie('csrftoken');
+  const createSchool = async (event) => {
+    event.preventDefault();
+ // const csrfToken = getCookie('csrftoken');
     // function getCookie(name) {
     //   const value = `; ${document.cookie}`;
     //   const parts = value.split(`; ${name}=`);
@@ -40,31 +40,45 @@ const AddSchool = () => {
     console.log(titleInput);
     console.log(licenseInput);
 
-    fetch(`${BACKEND_URL}/add_school/`, {
-      method: 'POST',
-      headers: {
-        'Authorization' : `${token}`,
-      },
-      body: formData,
-    })
-      .then((response) => {
+    try {
+        const response = await fetch(`${BACKEND_URL}/add_school/`, {
+            method: 'POST',
+            headers: {
+                'Authorization' : `${token}`,
+            },
+            body: formData,
+        });
+
         if (!response.ok) {
-          throw new Error('HTTP error ' + response.status);
+            throw new Error('HTTP error ' + response.status);
         }
-        return response.json();
-      })
-      .then((data) => {
-        console.log('Response Body: ', data);
-        setMessage(data.success ? 'Operacija sėkminga!' : 'Klaida! '+ data.error);
-        setTimeout(() => {
-          setMessage('');
-        }, 3000);
-      })
-      .catch((error) => {
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(new Blob([blob]));
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'login_credentials.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        // const data = await response.json();
+        // console.log('Response Body: ', data);
+        // if(blob){
+          setMessage(blob ? 'Operacija sėkminga!' : 'Klaida! ');
+          // setMessage(data.success ? 'Operacija sėkminga!' : 'Klaida! ' + data.error);
+          setTimeout(() => {
+              setMessage('');
+          }, 3000);
+        // }
+       
+        
+    } catch (error) {
         console.error(error);
         setMessage('Klaida!' + error.error);
-      });
-  };
+    }
+};
+
   const send = (event) => {
     navigate('/all-classes');
   }

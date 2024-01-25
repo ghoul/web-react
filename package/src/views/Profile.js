@@ -267,7 +267,7 @@ function Profile() {
             id="name"
             placeholder="Vardas..."
             value={name}
-            required
+            readOnly
             onChange={(e) => setName(e.target.value)}
           />
         </div>
@@ -281,7 +281,7 @@ function Profile() {
             id="surname"
             placeholder="Pavardė..."
             value={surname}
-            required
+            readOnly
             onChange={(e) => setSurname(e.target.value)}
           />
         </div>

@@ -75,17 +75,25 @@ const Podium = () => {
   const renderPodiumUser = (user, index) => (
     <div key={index} className={`${styles.podium} ${styles[`podium-${index + 1}`]}`}>
       <div>
-      {user.gender === 1 && (
+      {index === 0 && ( // {user.gender === 1 && (
           <img
-          src={`./mrgoose.png`}
+          src={`./pplace1.png`}
           alt={user.student}
           className="rounded-circle"
           width="120"
         />
         )}
-        {user.gender === 2 && (
+        {index === 1 && (
           <img
-          src={`./msgoose.png`}
+          src={`./pplace2.png`}
+          alt={user.student}
+          className="rounded-circle"
+          width="120"
+        />
+        )}
+          {index === 2 && (
+          <img
+          src={`./pplace3.png`}
           alt={user.student}
           className="rounded-circle"
           width="120"
@@ -95,7 +103,7 @@ const Podium = () => {
       <img style={{marginTop: '7px',  width : "150px"}} src={`./podium${index + 1}.png`} alt={`Podium ${index + 1}`} />
       <div className={styles['user-profile']}>
 
-        <p class="points-paragraph" style={{ backgroundColor: 'rgba(191, 26, 47, 0.8)', color: 'white', borderRadius: '10px', padding: '5px' }}><strong>
+        <p class="points-paragraph" style={{ backgroundColor: 'rgba(191, 26, 47, 0.8)', color: 'white', borderRadius: '10px', padding: '7px' }}><strong>
           {`${user.student}`}
           </strong></p>
         <p class="points-paragraph">{user.points}xp</p>
