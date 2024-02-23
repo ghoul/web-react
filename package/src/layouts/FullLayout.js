@@ -27,20 +27,37 @@ const FullLayout = () => {
   // // let token = localStorage.getItem('token') != null;
   //  console.log("token");
   //const token = CheckToken();
+  // const { isLoggedIn } = useAuth();
+  // const [isSidebarOpen, setSidebarOpen] = useState(false);
+  // const [isSidebarOpen, setSidebarOpen] = useState(false);
+  // const toggleSidebar = () => {
+  //   setSidebarOpen(!isSidebarOpen);
+  // };
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isLoggedIn } = useAuth();
+
+  // Function to toggle mobile menu visibility
+  const toggleMobileMenu = () => {
+    if (window.innerWidth < 1000) {
+      console.log("butto appear <1000");
+      setMobileMenuOpen(!isMobileMenuOpen);
+    }
+  };
   return (
     <main >  
       {/* style={{ backgroundColor: "black" }} */}
       {/********header**********/}
-      <Header />
+      <Header onToggleMobileMenu={toggleMobileMenu} isMobileMenuOpen={isMobileMenuOpen} /> {/* Pass isMobileMenuOpen state and toggleMobileMenu function as props */}
       <div className="pageWrapper d-lg-flex">
         {/********Sidebar**********/}
-        {isLoggedIn && (<aside className="sidebarArea shadow" id="sidebarArea" >
-          <Sidebar />
-        </aside>)
-}
+        {isLoggedIn && (
+          <aside className={`sidebarArea shadow ${isMobileMenuOpen ? 'showSidebar' : ''}`}>
+            <Sidebar isMobileMenuOpen={isMobileMenuOpen} />
+          </aside>
+        )}
         {/********Content Area**********/}
-        <div className="contentArea">
+        {/* <div className="contentArea" style={{ zIndex: 1 }}> */}
+        <div className={`contentArea ${isMobileMenuOpen ? 'overlay' : ''}`} style={{ zIndex: 900 }}>
           {/********Middle Content**********/}
           <Container className="p-4" fluid>
             <Outlet />

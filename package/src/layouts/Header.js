@@ -18,8 +18,9 @@ import user1 from "../assets/images/users/smile.png";
 import logo from "../assets/images/logos/goose.png";
 import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from './config';
+import './Sidebar.css'
 
-const Header = () => {
+const Header = ({ onToggleMobileMenu, isMobileMenuOpen }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const [categories, setCategories] = useState([]);
@@ -76,6 +77,23 @@ const Header = () => {
     navigate('/login');
     
   };
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth < 1000);
+    };
+
+    handleResize(); // Check initial screen width
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  // const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // const toggleMobileMenu = () => {
+  //   setMobileMenuOpen(!isMobileMenuOpen);
+  // };
 
   return (
 <Navbar style={{ backgroundColor: '#98d3de', width: 'fit-content', height: 'fit-content' }} className="fix-header justify-content-center">
@@ -85,6 +103,18 @@ const Header = () => {
   {/* <Button color="primary" className="d-lg-none" onClick={() => showMobilemenu()}>
     <i className="bi bi-list"></i>
   </Button> */}
+   {/* <Button className="mobileMenuButton" onClick={toggleMobileMenu}>
+        {isMobileMenuOpen ? 'X' : <i className="bi bi-list"></i>}
+      </Button> */}
+       {/* <Button onClick={onToggleSidebar}>
+        {isSidebarOpen ? 'Close Sidebar' : 'Open Sidebar'}
+      </Button> */}
+       {isSmallScreen && (
+         <Button className="mobileMenuButton" style={{ backgroundColor: "#bf1a2f", color: "white", border: "none" }} onClick={onToggleMobileMenu}>        
+          {isMobileMenuOpen ? <i class="bi bi-x-lg"></i> : <i className="bi bi-list"></i>}
+        </Button>
+      )}
+
   {!logged && (
     <>
       <NavItem>

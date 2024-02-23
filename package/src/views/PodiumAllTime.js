@@ -75,9 +75,9 @@ const Podium = () => {
   const renderPodiumUser = (user, index) => (
     <div key={index} className={`${styles.podium} ${styles[`podium-${index + 1}`]}`}>
       <div>
-      {index === 0 && ( // {user.gender === 1 && (
+      {index === 0 && (
           <img
-          src={`./pplace1.png`}
+          src={user.gender === 1 ? `./pplace1.png` : `./pplace1m.png`}
           alt={user.student}
           className="rounded-circle"
           width="120"
@@ -85,7 +85,7 @@ const Podium = () => {
         )}
         {index === 1 && (
           <img
-          src={`./pplace2.png`}
+          src={user.gender === 1 ? `./pplace2.png` : `./pplace2m.png`}
           alt={user.student}
           className="rounded-circle"
           width="120"
@@ -93,7 +93,7 @@ const Podium = () => {
         )}
           {index === 2 && (
           <img
-          src={`./pplace3.png`}
+          src={user.gender === 1 ? `./pplace3.png` : `./pplace3m.png`}
           alt={user.student}
           className="rounded-circle"
           width="120"

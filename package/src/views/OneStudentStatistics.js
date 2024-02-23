@@ -39,7 +39,8 @@ export default function OneStudentStatistics() {
         setGotPoints(gotPoints);
 
         const grade = Math.ceil((gotPoints * 10) / totalPoints);
-        setGrade(grade);
+        const cappedGrade = grade > 10 ? 10 : grade;
+        setGrade(cappedGrade);
       } catch (error) {
         console.error('Error fetching results:', error);
       }

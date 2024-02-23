@@ -15,7 +15,8 @@ import { useNavigate } from 'react-router-dom';
 const Starter = () => {
   const {assignmentId} = useParams();
   const [students, setStudents] = useState([]);
-  const [title, setTitle] = useState([]);
+  const [title, setTitle] = useState('');
+  const [classs, setClasss] = useState('');
   const [loggedId, setLoggedId] = useState('');
   let token = localStorage.getItem('token'); 
   const decodedToken = jwtDecode(token);
@@ -35,6 +36,7 @@ const Starter = () => {
         console.log("title" + response.title);
         setStudents(response.data.students);
         setTitle(response.data.title);
+        setClasss(response.data.classs);
         setLoggedId(response.data.id);
         console.log("loggedid: " + loggedId);
       })
@@ -61,6 +63,22 @@ const Starter = () => {
   const send = (event) => {
     navigate(`/`);
   }
+
+  const download = (event) => {
+    const sortedData = students.sort((a, b) => a.surname.localeCompare(b.surname));
+    const data = sortedData.map(student => `${student.surname} ${student.name}: ${student.grade}`).join('\n');
+    const blob = new Blob([data], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    const formattedTitle = title.toLowerCase().replace(/\s/g, '_');
+    const today = new Date();
+    const formattedDate = today.toISOString().slice(0,10); // Format: YYYY-MM-DD
+    link.setAttribute('download', `${formattedTitle}_${classs}_${formattedDate}.txt`);
+    document.body.appendChild(link);
+    link.click();
+  }
+
   console.log("loggedid2: " + loggedId);
   const typeOfData = typeof role;
   console.log(`The type of 'role' is: ${typeOfData}`);
@@ -69,7 +87,22 @@ const Starter = () => {
         <Row>
    <Card>
         <CardBody>
-          <CardTitle tag="h5">{title}</CardTitle>
+          <CardTitle tag="h5">
+            {title}
+            
+            {role === 2 && (<Button  style={{
+            backgroundColor: '#a6d22c',
+            border: 'none',
+            float: 'right', 
+            marginBottom: '10px',
+            color: 'white'
+          }}
+          onClick={download}>                        
+                 <i class="bi bi-file-earmark-arrow-down"></i> Parsisiųsti
+            </Button>
+            )}
+            </CardTitle>
+          
           <CardSubtitle className="mb-2 text-muted" tag="h6">
             Namų darbo suvestinė
           </CardSubtitle>
