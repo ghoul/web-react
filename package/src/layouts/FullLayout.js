@@ -6,6 +6,7 @@ import { Container } from "reactstrap";
 import { useState, useEffect } from "react";
 // import CheckToken from "../views/CheckToken";
 import { useAuth } from '../views/AuthContext';
+import "./Sidebar.css"
 
 const FullLayout = () => {
   // const [token, setToken] = useState(localStorage.getItem('token') != null);
@@ -57,7 +58,7 @@ const FullLayout = () => {
         )}
         {/********Content Area**********/}
         {/* <div className="contentArea" style={{ zIndex: 1 }}> */}
-        <div className={`contentArea ${isMobileMenuOpen ? 'overlay' : ''}`} style={{ zIndex: 900 }}>
+        <div className={`contentArea ${isMobileMenuOpen ? 'overlay2' : ''}`} style={{ zIndex: 900 }}>
           {/********Middle Content**********/}
           <Container className="p-4" fluid>
             <Outlet />

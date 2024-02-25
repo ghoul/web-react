@@ -156,7 +156,7 @@ const Starter = () => {
                   </td>
                   <td>{tdata.date}</td>                  
                   <td>{tdata.time}</td>
-                  <td>{tdata.points}</td>
+                  <td>{tdata.scored}</td>
                   {((((role===2 || role ===3)|| tdata.id === loggedId ) && (tdata.status !== "Bad")) && <td><Button style={{backgroundColor: 'transparent', border: 'none'}}><Link to={`/statistics/${assignmentId}/${tdata.id}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> ➔➔ </Link></Button></td> )}
                 </tr>
               ))}

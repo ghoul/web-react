@@ -16,6 +16,7 @@ export default function OneStudentStatistics() {
   const [grade, setGrade] = useState('');
   const navigate = useNavigate();
   let token = localStorage.getItem('token');
+ let tempGrade = 0;
 
   useEffect(() => {
     const fetchHomework = async () => {
@@ -37,9 +38,14 @@ export default function OneStudentStatistics() {
         setTotalPoints(totalPoints);
         const gotPoints = data.results.reduce((sum, result) => sum + result.points, 0);
         setGotPoints(gotPoints);
-
-        const grade = Math.ceil((gotPoints * 10) / totalPoints);
-        const cappedGrade = grade > 10 ? 10 : grade;
+        if(totalPoints>0) 
+        {
+          tempGrade = Math.ceil((gotPoints * 10) / totalPoints);
+        }
+        else{
+          tempGrade=0;
+        }
+        const cappedGrade = tempGrade > 10 ? 10 : tempGrade;
         setGrade(cappedGrade);
       } catch (error) {
         console.error('Error fetching results:', error);
