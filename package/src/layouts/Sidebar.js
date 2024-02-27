@@ -38,7 +38,7 @@ const navigation = [
     icon: "bi bi-person-circle",
   },
   {
-    title: "school",
+    title: "Mokyklų tvarkymas",
     href: "/add-school",
     icon: "bi bi-person-circle",
   }

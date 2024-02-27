@@ -24,7 +24,7 @@ import Password from "../views/ChangePassword.js";
 import AssignmentTest from "../views/AssignmentTest.js";
 import Podium from "../views/PodiumAllTime.js";
 import UpdateAssignment from "../views/UpdateAssignment.js";
-import AddSchool from "../views/AdminAddSchool.js";
+import AddSchool from "../views/AdminSchool.js";
 
 
 import Alerts from "../views/ui/Alerts";
@@ -52,7 +52,7 @@ const ThemeRoutes = [
       { path: "/all-homework", element: <AllHomework/>},
       { path: "/create-homework", element: <AddHomework/>},     
       { path: "/create-class", element: <AddClass/>},
-      { path: "/all-classes", element: <AllClasses/>},
+      // { path: "/all-classes", element: <AllClasses/>},
       { path: "/edit-class/:classsId", element: <UpdateClass/>},
       { path: "/add-students/:classsId", element: <AddStudents/>},
       { path: "/check-homework/:homeworkId", element: <CheckHomework/>},  
