@@ -193,27 +193,27 @@ export default function OneStudentStatistics() {
                   {pair.qtype === 1 && (
                     <>      
                     {pair.all_options.map((option, index) => (
-                            <div key={index} style={{ whiteSpace: 'pre' }}>
-                              <Label check>
-                                <Input
+                      <div key={index} style={{ whiteSpace: 'pre' }}>
+                          <Label check>
+                              <Input
                                   type="radio"
                                   name={`correctOption${index}`}
-                                  checked={pair.student_answer.includes(option)}
+                                  checked={pair.student_answer && pair.student_answer.includes(option)}
                                   readOnly
-                                />
-                                {'  '} {option} {" "}
-                                {pair.student_answer.includes(option) && pair.answer.includes(option) && (
-                                  <span className="text-success"><i class="bi bi-check-lg"></i></span>
-                                )}
-                                { pair.student_answer.includes(option) && !pair.answer.includes(option) && (
-                                  <span className="text-danger"><i class="bi bi-x-lg"></i></span>
-                                )}
-                                {!pair.student_answer.includes(option) && pair.answer.includes(option) && (
-                                  <span className="text-success"><i class="bi bi-check-lg"></i></span>
-                                )}
-                              </Label>
-                            </div>
-                          ))}
+                              />
+                              {'  '} {option} {" "}
+                              {pair.student_answer && pair.student_answer.includes(option) && pair.answer.includes(option) && (
+                                  <span className="text-success"><i className="bi bi-check-lg"></i></span>
+                              )}
+                              {pair.student_answer && pair.student_answer.includes(option) && !pair.answer.includes(option) && (
+                                  <span className="text-danger"><i className="bi bi-x-lg"></i></span>
+                              )}
+                              {(!pair.student_answer || !pair.student_answer.includes(option)) && pair.answer.includes(option) && (
+                                  <span className="text-success"><i className="bi bi-check-lg"></i></span>
+                              )}
+                          </Label>
+                      </div>
+                  ))}
                       
                     </>
                   )}
@@ -225,19 +225,19 @@ export default function OneStudentStatistics() {
                             <Label check>
                               <Input
                                 type="checkbox"
-                                checked={pair.student_answer.includes(option)}
+                                checked={pair.student_answer && pair.student_answer.includes(option)}
                                 readOnly
                               />
-                                {'  '} {option} {' '}
-                                {pair.student_answer.includes(option) && pair.answer.includes(option) && (
-                                  <span className="text-success"><i class="bi bi-check-lg"></i></span>
-                                )}
-                                { pair.student_answer.includes(option) && !pair.answer.includes(option) && (
-                                  <span className="text-danger"><i class="bi bi-x-lg"></i></span>
-                                )}
-                                {!pair.student_answer.includes(option) && pair.answer.includes(option) && (
-                                  <span className="text-success"><i class="bi bi-check-lg"></i></span>
-                                )}
+                                {'  '} {option} {" "}
+                              {pair.student_answer && pair.student_answer.includes(option) && pair.answer.includes(option) && (
+                                  <span className="text-success"><i className="bi bi-check-lg"></i></span>
+                              )}
+                              {pair.student_answer && pair.student_answer.includes(option) && !pair.answer.includes(option) && (
+                                  <span className="text-danger"><i className="bi bi-x-lg"></i></span>
+                              )}
+                              {(!pair.student_answer || !pair.student_answer.includes(option)) && pair.answer.includes(option) && (
+                                  <span className="text-success"><i className="bi bi-check-lg"></i></span>
+                              )}
                             </Label>
                           </div>
                         ))}
