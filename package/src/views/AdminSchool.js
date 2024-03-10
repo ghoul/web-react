@@ -18,6 +18,7 @@ import { Modal } from './Modal.js';
 import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config';
 import './Style.css';
+import Cookies from 'js-cookie';
 const AddSchool = () => {
   const [titleInput, setTitleInput] = useState('');
   const [fileInput, setFileInput] = useState(null);
@@ -30,7 +31,7 @@ const AddSchool = () => {
   const [fail, setFail] = useState('');
   const [message, setMessage] = useState(''); 
   const navigate  = useNavigate();
-  let token = localStorage.getItem('token'); 
+  let token = Cookies.get('token'); 
   const [showModal, setShowModal] = useState(false);
   const [schools, setSchools]  = useState([]);
 

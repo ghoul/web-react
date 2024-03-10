@@ -6,19 +6,22 @@ import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config';
 import './Style.css';
 import { jwtDecode } from 'jwt-decode';
-
+import Cookies from 'js-cookie';
 import { Card, CardBody, CardTitle, CardSubtitle, Table } from "reactstrap";
 const FinishedAssignments = () => {
   const [homeworkTeacher, setHomeworkTeacher] = useState([]);
   const [homeworkStudent, setHomeworkStudent] = useState([]);
-  let token = localStorage.getItem('token'); 
+  const token = Cookies.get('token'); 
+  const userString = Cookies.get('user');
+  const userData = JSON.parse(userString);
   let user_email = "";
   let role = "";
+  
   if(token!=null)
   {
-    const decodedToken = jwtDecode(token);
-    user_email = decodedToken.email;
-    role = decodedToken.role;
+    //const decodedToken = jwtDecode(token);
+    user_email = userData.email;
+    role = userData.role;
   }
   //TODO: is token role ir pagal ja rodyt
   const navigate  = useNavigate();

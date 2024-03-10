@@ -22,7 +22,7 @@ import {
 } from "reactstrap";
 import { useNavigate } from 'react-router-dom';
 import './Style.css';
-
+import Cookies from "js-cookie";
 export default function UpdateAssignment() {
    //get_classes_by_teacher
    const { assignmentId } = useParams();
@@ -36,7 +36,7 @@ export default function UpdateAssignment() {
    const [classes, setClasses] = useState([]); 
    const [assignment, setAssignment] = useState({}); 
    const [fail, setFail] = useState("");
-   let token = localStorage.getItem('token'); 
+   const token = Cookies.get('token'); 
  
    const getClasses = () => {
      fetch(

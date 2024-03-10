@@ -5,6 +5,8 @@ import BACKEND_URL from '../layouts/config';
 import './Style.css';
 // import CheckToken from './CheckToken';
 import { useAuth } from './AuthContext';
+import Cookies from 'js-cookie';
+
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -15,7 +17,7 @@ function LoginForm() {
   // const { handleLoginn } = CheckToken();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = Cookies.get('token'); 
     if (token) {
       setShowLoginForm(false); // Hide login form if user already logged in
     }
@@ -32,13 +34,16 @@ function LoginForm() {
       });
 
       const data = await response.json();
-      
 
-     
       if (response.ok) {
         // Token obtained successfully, store it in localStorage
-        localStorage.setItem('role', data.role);
+        // localStorage.setItem('role', 2); //data.role
+        // console.log("token: " + data.token);
         localStorage.setItem('token', data.token);
+        // localStorage.setItem('csrf_token', data.csrf_token);
+        Cookies.set('csrftoken', data.csrf_token, { secure: true, sameSite: 'strict' });
+        Cookies.set('token', data.token, { secure: true, sameSite: 'strict' });
+        Cookies.set('user', JSON.stringify(data.user),{ secure: true, sameSite: 'strict' });
         //handleLoginn(data.token);
 
         login(data.token); // This will set the isLoggedIn state to true

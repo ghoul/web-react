@@ -22,7 +22,7 @@ import {
   Input, Table, CardSubtitle
 } from "reactstrap";
 import { useNavigate } from 'react-router-dom';
-
+import Cookies from "js-cookie";
 export default function AssignmentTest() {
     const { assignmentId } = useParams();
     const [assignment, setAssignment] = useState([]);
@@ -37,7 +37,7 @@ export default function AssignmentTest() {
   const [multipleChoices, setmultipleChoices] = useState([]); //{questionId: 0, answer : ''}
 
 //   const [title, setTitle] = useState(null);
-  let token = localStorage.getItem('token'); 
+  const token = Cookies.get('token'); 
   const navigate  = useNavigate();
   const generateInitialPairs = (count) => {
     return Array(count).fill({ questionId: 0, answer: '' });

@@ -5,13 +5,14 @@ import BACKEND_URL from '../layouts/config';
 import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './Style.css';
+import Cookies from 'js-cookie';
 function Profile() {
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
   const [email, setEmail] = useState('');
   const [school, setSchool] = useState('');
   const [message, setMessage] = useState('');
-  let token = localStorage.getItem('token'); 
+  const token = Cookies.get('token'); 
 
   useEffect(() => {
     const fetchData = async () => {

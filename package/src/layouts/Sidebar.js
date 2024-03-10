@@ -9,6 +9,7 @@ import { jwtDecode } from 'jwt-decode';
 import { useAuth } from '../views/AuthContext';
 import {useState} from 'react'
 import './Sidebar.css'
+import Cookies from "js-cookie";
 const navigation = [
   {
     title: "Pagrindinis",
@@ -33,13 +34,13 @@ const navigation = [
     icon: "bi bi-bookmark-check",
   },
   {
-    title: "Profilis",
-    href: "/profile",
+    title: "Mokyklų tvarkymas",
+    href: "/add-school",
     icon: "bi bi-person-circle",
   },
   {
-    title: "Mokyklų tvarkymas",
-    href: "/add-school",
+    title: "Profilis",
+    href: "/profile",
     icon: "bi bi-person-circle",
   }
 ];
@@ -57,19 +58,28 @@ const Sidebar = ({ isMobileMenuOpen }) => {
   // };
 
   let location = useLocation();
-  let token = localStorage.getItem('token');
+  // let token =  Cookies.getJSON('user');//localStorage.getItem('token');
+  const userString = Cookies.get('user');
+  console.log(userString);
+  const userData = JSON.parse(userString);
   let name = "";
   let user;
-let surname="";
-let gender = 0;
-let role = "";
-  if(token!=null) {
-    const decodedToken = jwtDecode(token);
-    name = decodedToken.name;
-    surname = decodedToken.surname;
-    role = decodedToken.role;
-    console.log("role:) :   " + role);
-    gender = decodedToken.gender;
+  let surname="";
+  let gender = 0;
+  let role = "";
+  if(userData!=null) {
+    // const decodedToken = jwtDecode(token);
+
+// Access user attributes
+    name = userData.first_name;
+    surname = userData.last_name;
+    role = userData.role;
+    gender = userData.gender;
+    // name = decodedToken.name;
+    // surname = decodedToken.surname;
+    // role = decodedToken.role;
+    // console.log("role:) :   " + role);
+    // gender = decodedToken.gender;
     if(gender===1)
     {
       user = user1;
@@ -78,16 +88,25 @@ let role = "";
   }
 
   const filteredNavigation = navigation.filter((navItem) => {
-    if (role === 2) {
+    if (role === 3) { //admin
       return (
         // navItem.title !== "Mokytojai" &&
-        navItem.title !== "Lyderių lentelė"
+        navItem.title !== "Lyderių lentelė" &&
+        navItem.title !== "Užbaigti namų darbai" &&
+        navItem.title !== "Namų darbai" 
       );
-    } else if (role === 1) {
+    }else if (role === 2) { //teacher
+      return (
+        // navItem.title !== "Mokytojai" &&
+        navItem.title !== "Lyderių lentelė" &&
+        navItem.title !== "Mokyklų tvarkymas"
+      );
+    } else if (role === 1) { //student
       return (
         // navItem.title !== "Mokiniai" &&
         // navItem.title !== "Klasės" &&
-        navItem.title !== "Namų darbai"
+        navItem.title !== "Namų darbai" &&
+        navItem.title !== "Mokyklų tvarkymas"
       );
     }
     return true;
@@ -156,73 +175,6 @@ let role = "";
     </div>
   );
 };
-
-{/* <div className={`sidebarWrapper ${isMobileMenuOpen ? 'mobileMenuOpen' : ''}`}>
-  
-<div className="d-flex flex-column position-relative">
-<Button className="mobileMenuButton" onClick={toggleMobileMenu}>
-        {isMobileMenuOpen ? 'Close Menu' : 'Open Menu'}
-      </Button>
-  <div
-    className="profilebg position-relative"
-    style={{
-      background: `url(${probg}) no-repeat`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      width: '250px', // Set a fixed width
-      height: '250px', // Set a fixed height
-      position: 'relative', // Add this line to make sure the position is relative
-    }}
-  >
-    <div className="d-flex align-items-center justify-content-center position-absolute top-50 start-50 translate-middle">
-      <img src={user} alt="user" className="rounded-circle" width="150" style={{ marginTop: '-30px' }} />
-    </div>
-    <div className="bg-dark text-white p-2 position-absolute bottom-0 start-0 w-100" style={{ opacity: '0.8' }}>
-      {name} {surname}
-    </div>
-  </div>
-</div>
-<div className="p-3">
-  <Nav vertical className="sidebarNav">
-    {filteredNavigation.map((navi, index) => (
-      <NavItem key={index} className="sidenav-bg">
-        <Link
-          to={navi.href}
-          className={
-            location.pathname === navi.href
-              ? 'active nav-link py-3'
-              : 'nav-link text-secondary py-3'
-          }
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            color: 'inherit',
-            textDecoration: 'none',
-          }}
-        >
-          <i
-            className={navi.icon}
-            style={{ marginRight: '10px', fontSize: '1.2em' }}
-          ></i>
-          <span className="d-inline-block">{navi.title}</span>
-        </Link>
-      </NavItem>
-    ))}
-    <Button
-      style={{ backgroundColor: '#bf1a2f', border: 'none' }}
-      tag="a"
-      target="_blank"
-      className="mt-3"
-      onClick={handleLogout}
-    >
-      Atsijungti
-    </Button>
-  </Nav>
-</div>
-</div> */}
-
-//   );
-// };
 
 
 export default Sidebar;

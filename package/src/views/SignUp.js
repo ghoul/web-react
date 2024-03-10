@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import BACKEND_URL from '../layouts/config';
 import './Style.css';
+import Cookies from 'js-cookie';
+
 function SignupForm() {
-  const [name, setName] = useState('');
-  const [surname, setSurname] = useState('');
+  const [first_name, setName] = useState('');
+  const [last_name, setSurname] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('1');
   const [gender, setGender] = useState('1');
+  // const [csrfToken, setCsrfToken] = useState('');
   
 
   const handleSignup = async () => {
@@ -17,13 +20,16 @@ function SignupForm() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, surname, password, email, gender, role }),
+        body: JSON.stringify({ first_name, last_name, password, email, gender, role }),
       });
 
       const data = await response.json();
       if (response.ok) {
         // Signup successful, obtain JWT token and store it in localStorage
         localStorage.setItem('token', data.token);
+        // localStorage.setItem('csrf_token', data.csrf_token);
+        Cookies.set('csrftoken', data.csrf_token, { secure: true, sameSite: 'strict' });
+        Cookies.set('token', data.token, { secure: true, sameSite: 'strict' });
         // Redirect or update UI based on successful signup
         console.log('Signup successful!');
         console.log('token: ' + data.token);
@@ -63,14 +69,14 @@ function SignupForm() {
             <input
               type="text"
               placeholder="Vardas"
-              value={name}
+              value={first_name}
               onChange={(e) => setName(e.target.value)}
               style={{ margin: '10px', padding: '8px', borderRadius: '4px', width: '200px' }}
             />
             <input
               type="text"
               placeholder="Pavardė"
-              value={surname}
+              value={last_name}
               onChange={(e) => setSurname(e.target.value)}
               style={{ margin: '10px', padding: '8px', borderRadius: '4px', width: '200px' }}
             />

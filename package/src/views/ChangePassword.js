@@ -4,12 +4,13 @@ import BACKEND_URL from '../layouts/config';
 import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './Style.css';
+import Cookies from 'js-cookie';
 
 function ChangePassword() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
-  let token = localStorage.getItem('token');
+  const token = Cookies.get('token'); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,7 +24,7 @@ function ChangePassword() {
       const response = await fetch(`${BACKEND_URL}/change_password/`, {
         method: 'PUT',
         headers: {
-          'Authorization': `${token}`,
+          'Authorization': `Token ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ password }),

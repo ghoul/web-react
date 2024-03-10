@@ -11,6 +11,7 @@ import user3 from "../assets/images/users/user3.jpg";
 import user4 from "../assets/images/users/user4.jpg";
 import user5 from "../assets/images/users/user5.jpg";
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 // import './Style.css';
 const Starter = () => {
   const {assignmentId} = useParams();
@@ -18,9 +19,11 @@ const Starter = () => {
   const [title, setTitle] = useState('');
   const [classs, setClasss] = useState('');
   const [loggedId, setLoggedId] = useState('');
-  let token = localStorage.getItem('token'); 
-  const decodedToken = jwtDecode(token);
-  const role = decodedToken.role;
+  const token = Cookies.get('token'); 
+  //const decodedToken = jwtDecode(token);
+  const userString = Cookies.get('user');
+  const userData = JSON.parse(userString);
+  const role = userData.role;
   const navigate  = useNavigate();
 
   useEffect(() => {

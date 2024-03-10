@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Card, CardTitle, CardBody, Row, Col, CardSubtitle,Table , Label, Input} from "reactstrap";
 import { useNavigate, useParams } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config.js';
-
+import Cookies from "js-cookie";
 
 export default function OneStudentStatistics() {
   const { assignmentId, studentId } = useParams();
@@ -15,7 +15,7 @@ export default function OneStudentStatistics() {
   const [gotPoints, setGotPoints] = useState('');
   const [grade, setGrade] = useState('');
   const navigate = useNavigate();
-  let token = localStorage.getItem('token');
+  const token = Cookies.get('token'); 
  let tempGrade = 0;
 
   useEffect(() => {

@@ -18,7 +18,7 @@ import { useNavigate } from 'react-router-dom';
 import { Modal } from "./Modal.js";
 import { jwtDecode } from 'jwt-decode';
 import { useAuth } from '../views/AuthContext';
-
+import Cookies from 'js-cookie';
 const Podium = () => {
   const [podiumTeacher, setHomeworkTeacher] = useState([]);
   const [podiumStudents, setPodiumStudent] = useState([]);
@@ -26,14 +26,16 @@ const Podium = () => {
   const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
   const [classs, setClasss] =useState('');
   const { isLoggedIn } = useAuth();
-  let token = localStorage.getItem('token'); 
+  const token = Cookies.get('token'); 
+  const userString = Cookies.get('user');
+  const userData = JSON.parse(userString);
   let user_email = "";
   let role = "";
   if(token!=null)
   {
-    const decodedToken = jwtDecode(token);
-    user_email = decodedToken.email;
-    role = decodedToken.role;
+    //const decodedToken = jwtDecode(token);
+    user_email = userData.email;
+    role = userData.role;
   }
   const navigate  = useNavigate();
   const getPodium = () => {

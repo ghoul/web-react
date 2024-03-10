@@ -19,6 +19,7 @@ import logo from "../assets/images/logos/goose.png";
 import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from './config';
 import './Sidebar.css'
+import Cookies from "js-cookie";
 
 const Header = ({ onToggleMobileMenu, isMobileMenuOpen }) => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -26,10 +27,10 @@ const Header = ({ onToggleMobileMenu, isMobileMenuOpen }) => {
   const [categories, setCategories] = useState([]);
   const navigate  = useNavigate();
 
-  let admin = localStorage.getItem('admin');
-  admin = admin === 'true';
-  let token = localStorage.getItem('token'); 
-  let logged = localStorage.getItem('token') != null;
+  // let admin = localStorage.getItem('admin');
+  // admin = admin === 'true';
+  const token = Cookies.get('token');
+  let logged = token != null;
 
 
   // const fetchCategories = async () => {

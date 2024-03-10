@@ -22,7 +22,7 @@ import {
 } from "reactstrap";
 import { useNavigate } from 'react-router-dom';
 import './Style.css';
-
+import Cookies from "js-cookie";
 export default function UpdateClass() {
   const { classsId } = useParams();
   const navigate  = useNavigate();
@@ -34,7 +34,7 @@ export default function UpdateClass() {
   const [titleInput, settitleInput] = useState("");
   const [students, setStudents] = useState([]); 
   const [fail, setFail] = useState("");
-  let token = localStorage.getItem('token'); 
+  const token = Cookies.get('token'); 
 
   const getClass = (classsId) => {
     fetch(

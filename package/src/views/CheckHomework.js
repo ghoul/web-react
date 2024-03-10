@@ -22,13 +22,14 @@ import {
   Input, Table, CardSubtitle
 } from "reactstrap";
 import { useNavigate } from 'react-router-dom';
+import Cookies from "js-cookie";
 
 export default function CheckHomework() {
     const { homeworkId } = useParams();
     const [homework, setHomework] = useState([]);
     const [edit, setEdit] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  let token = localStorage.getItem('token'); 
+  const token = Cookies.get('token'); 
   const navigate  = useNavigate();
   useEffect(() => {
     const fetchHomework = async () => {

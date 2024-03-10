@@ -15,7 +15,7 @@ import './HomeworkForm.css';
 import BACKEND_URL from '../layouts/config';
 import { useNavigate, useParams } from 'react-router-dom';
 import './Style.css';
-
+import Cookies from 'js-cookie';
 const UpdateHomework = () => {
 const {homeworkId }= useParams();
   const [homeworkName, setHomeworkName] = useState('');
@@ -24,7 +24,7 @@ const {homeworkId }= useParams();
   const [correctOptionIndexes, setCorrectOptionIndexes] = useState(Array(pairs.length).fill(null));
 const [multipleOptionIndexes, setMultipleOptionIndexes] = useState([]);
   const navigate = useNavigate();
-  let token = localStorage.getItem('token');
+  const token = Cookies.get('token'); 
   const mapNumericToText = (numericType) => {
     switch (numericType) {
       case 1:

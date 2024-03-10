@@ -9,72 +9,78 @@ import { Modal } from "./Modal.js";
 import { jwtDecode } from 'jwt-decode';
 import './Style.css';
 import { useAuth } from '../views/AuthContext';
+import Cookies from 'js-cookie';
+
 const Starter = () => {
   const [homeworkTeacher, setHomeworkTeacher] = useState([]);
   const [homeworkStudent, setHomeworkStudent] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
-  const [user_id, setUserid] =useState('');
+  // const [user_id, setUserid] =useState('');
   const { isLoggedIn } = useAuth();
-  let token = localStorage.getItem('token'); 
+  const token = Cookies.get('token'); 
+  const userString = Cookies.get('user');
+  const userData = JSON.parse(userString);
   let user_email = "";
   let role = "";
-  if(token!=null)
+  let user_id = "";
+  if(userData!=null)
   {
-    const decodedToken = jwtDecode(token);
-    user_email = decodedToken.email;
-    role = decodedToken.role;
+    //const decodedToken = jwtDecode(token);
+    user_email = userData.email; //decodedToken.email;
+    role = userData.role; //decodedToken.role;
+   user_id = userData.id;
   }
 
 
   const navigate  = useNavigate();
   const getAssignments = () => {
-    axios.get(`${BACKEND_URL}/handle_assignments_teacher/`, {
-      method: 'GET',
+    axios.get(`${BACKEND_URL}/assignments/`, {
       headers: {
-        'Authorization' : `${token}`,
+        'Authorization' : `Token ${token}`,
         'Content-Type': 'application/json',
+        'X-CSRFToken': Cookies.get('csrftoken')
       },
-    }) // Replace with your actual endpoint
+    }) 
       .then(response => {
-        setHomeworkTeacher(response.data.data);
+        console.log(response.data);
+        setHomeworkTeacher(response.data);
       })
       .catch(error => {
         console.error('Error fetching homeworks:', error);
       });
 
-      axios.get(`${BACKEND_URL}/handle_assignments_student/`, {
-      method: 'GET',
-      headers: {
-        'Authorization' : `${token}`,
-        'Content-Type': 'application/json',
-      },
-    }) // Replace with your actual endpoint
-      .then(response => {
-        setHomeworkStudent(response.data.data);
-      })
-      .catch(error => {
-        console.error('Error fetching homeworks:', error);
-      });
+    //   axios.get(`${BACKEND_URL}/handle_assignments_student/`, {
+    //   headers: {
+    //     'Authorization' : `${token}`,
+    //     'Content-Type': 'application/json',
+    //     'X-CSRFToken': Cookies.get('csrftoken')
+    //   },
+    // }) // Replace with your actual endpoint
+    //   .then(response => {
+    //     setHomeworkStudent(response.data.data);
+    //   })
+    //   .catch(error => {
+    //     console.error('Error fetching homeworks:', error);
+    //   });
 
-      axios.post(`${BACKEND_URL}/get_user_id/`, {
-        user_email: user_email,
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }).then(response => {
-        const userId = response.data.user_id; // Extract user ID from the response
-        console.log("User ID:", userId);
-        setUserid(userId);
-      }).catch(error => {
-        console.error('Error fetching user ID:', error);
-      });
+    //   axios.post(`${BACKEND_URL}/get_user_id/`, {
+    //     user_email: user_email,
+    //   }, {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //   }).then(response => {
+    //     const userId = response.data.user_id; // Extract user ID from the response
+    //     console.log("User ID:", userId);
+    //     setUserid(userId);
+    //   }).catch(error => {
+    //     console.error('Error fetching user ID:', error);
+    //   });
        
   };
   useEffect(() => {
-    // Fetch homeworks data from your backend (assuming the endpoint is /api/homeworks)
-   getAssignments();
+    getAssignments();
   }, []);
 
   const showModalHandler = (assignmentId) => {
@@ -88,30 +94,26 @@ const Starter = () => {
 
   const deleteAssignment = () => {
     console.log("assid: " + selectedAssignmentId);
-    const assignment = {
-        id: selectedAssignmentId,
-      };
-    fetch(`${BACKEND_URL}/handle_assignments_teacher/`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization' : `${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(assignment),
+
+    axios.delete(`${BACKEND_URL}/assignments/${selectedAssignmentId}/`, {
+        headers: {
+            'Authorization': `Token ${token}`,
+            'Content-Type': 'application/json',
+            'X-CSRFToken': Cookies.get('csrftoken')
+        },
     })
-    .then((response) => {
-        if (response.ok) {
-        //   const updatedNotConfirmedStudents = notConfirmedStudents.filter(student => student.id !== studentId);
-        //   setNotConfirmedStudents(updatedNotConfirmedStudents);
-          hideModalHandler();
-          getAssignments();
-          console.log("pasalino assignment");
-        } else {
-          // Handle error scenario
-          console.error('Failed to add student');
-        }
-      })
-  };
+    .then(response => {
+        // Handle success response
+        hideModalHandler();
+        getAssignments();
+        console.log("Assignment deleted successfully");
+    })
+    .catch(error => {
+        // Handle error
+        console.error('Failed to delete assignment:', error);
+    });
+};
+
   
   const handleStartGame = async (assignmentId, studentEmail) => {
     try {    
@@ -158,10 +160,10 @@ const Starter = () => {
           </tr>
             ) : (homeworkTeacher.map((tdata, index) => (
                 <tr key={index} className="border-top">
-                  <td>{tdata.title}</td>
-                  <td>{tdata.fromDate}</td>
-                  <td>{tdata.toDate}</td>
-                  <td>{tdata.classs}</td>
+                  <td>{tdata.homework.title}</td>
+                  <td>{tdata.from_date}</td>
+                  <td>{tdata.to_date}</td>
+                  <td>{tdata.classs.title}</td>
                   <td>
                     {tdata.status === "Bad" ? (
                       <span className="p-2 rounded-circle d-inline-block ms-3" style={{ backgroundColor: '#bf1a2f' }}></span> 
