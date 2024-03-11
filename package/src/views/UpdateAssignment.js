@@ -23,12 +23,15 @@ import {
 import { useNavigate } from 'react-router-dom';
 import './Style.css';
 import Cookies from "js-cookie";
+import axios from "axios";
 export default function UpdateAssignment() {
    //get_classes_by_teacher
    const { assignmentId } = useParams();
    const navigate  = useNavigate();
    const [message, setMessage] = useState(''); 
    console.log("id: ", assignmentId);
+   const [title, setTitleInput] = useState('');
+   const [homework, setHomeworkInput] = useState('');
    const [fromDateInput, setFromDateInput] = useState('');
    const [toDateInput, setToDateInput] = useState('');
    const [classInput, setClassInput] = useState(''); 
@@ -38,50 +41,51 @@ export default function UpdateAssignment() {
    const [fail, setFail] = useState("");
    const token = Cookies.get('token'); 
  
-   const getClasses = () => {
-     fetch(
-       `${BACKEND_URL}/get_classes_by_school/`,
-       {
-         method: "GET",
-         headers: {
-           'Authorization' : `${token}`,
-           Accept: "application/json",
-           "Content-Type": "application/json",
-         },
-       }
-     )
-     .then((response) => response.json())
-     .then((data) => {
-       setClasses(data);
-       //if(data.length>0) setClassInput(data[0].id); 
-    //    console.log("grazino " + data[0].id);
-     });
-   };
+  //  const getClasses = () => {
+  //    axios.get(
+  //      `${BACKEND_URL}/classes/`,
+  //      {
+  //        headers: {
+  //          'Authorization' : `Token ${token}`,
+  //          Accept: "application/json",
+  //          "Content-Type": "application/json",
+  //          'X-CSRFToken': Cookies.get('csrftoken')
+  //        },
+  //      }
+  //    )
+  //    .then((response) => {
+  //     console.log("grazino klases");
+  //      setClasses(response.data);
+  //    });
+  //  };
+   //TODO: VEIKE PRIES AKIMIRKA, restart kompa?
    const getAssignment = () => {
-    fetch(
-      `${BACKEND_URL}/handle_assignment_update/${assignmentId}/`,
+    axios.get(
+      `${BACKEND_URL}/assignments/${assignmentId}/`,
       {
-        method: "GET",
         headers: {
-          'Authorization' : `${token}`,
-          Accept: "application/json",
+          'Authorization' : `Token ${token}`,
+          //  Accept: "application/json",
           "Content-Type": "application/json",
+          'X-CSRFToken': Cookies.get('csrftoken')
         },
       }
     )
-    .then((response) => response.json())
-    .then((data) => {
-        console.log(data.data);
-      setAssignment(data.data);
-      setFromDateInput(data.data.fromDate);
-      setToDateInput(data.data.toDate);
-      console.log(data.data.title);
-      setClassInput(data.data.classs);    
-      console.log("grazino ass class" + data.data.classs);
+    .then((response) =>  {
+      console.log("grazino assignment");
+        console.log(response.data);
+      setAssignment(response.data);
+      setFromDateInput(response.data.from_date);
+      setToDateInput(response.data.to_date);
+      setHomeworkInput(response.data.homework);
+      setTitleInput(response.data.homework.title);
+      setClassInput(response.data.classs);    
+     // console.log("grazino ass class" + data.data.classs);
     });
   };
+
    useEffect(() => { 
-    getClasses();
+    //getClasses();
     getAssignment();
    }, []);
    const saveAssignment = (event) => {
@@ -90,31 +94,31 @@ export default function UpdateAssignment() {
      console.log("from: " + fromDateInput);
      console.log("to: " + toDateInput);
      const assignment = {
-         fromDate : fromDateInput,
-         toDate : toDateInput,
-         class : classInput
+         from_date : fromDateInput,
+         to_date : toDateInput,
+         classs : classInput,
+         homework: homework
        };
-     fetch(`${BACKEND_URL}/handle_assignment_update/${assignmentId}/`, {
-       method: 'PUT',
+     axios.put(`${BACKEND_URL}/assignments/${assignmentId}/`, 
+     JSON.stringify(assignment), {
        headers: {
-         'Authorization' : `${token}`,
+         'Authorization' : `Token ${token}`,
          'Content-Type': 'application/json',
+         'X-CSRFToken': Cookies.get('csrftoken')
        },
-       body: JSON.stringify(assignment),
      })
      .then((response) => {
-         if (!response.ok) {
+      console.log(response);
+         if  (response.status !== 200) {
            throw new Error('HTTP error ' + response.satatus);
          }
-         return response.json();
-       })
-       .then((data) => {
-         console.log('Response Body: ', data);
-         setMessage(data.success ? 'Operacija sėkminga!' : 'Klaida! '+ data.error);
+         //return response.json();
+       else{
+         setMessage( 'Operacija sėkminga!');
          setTimeout(() => {
            setMessage('');
          }, 3000);
-       })
+       }})
        .catch((error) => {
          console.error(error);
          setMessage('Klaida!' + error.error);
@@ -134,7 +138,7 @@ export default function UpdateAssignment() {
              Namų darbo redagavimas
            </CardTitle>
            <CardTitle tag="h4" className="border-bottom p-3 mb-0">
-          {assignment.title}
+          {title}
            </CardTitle>
            <CardBody>
            {message && <div style={{ marginBottom: '10px', color: message.includes('Klaida') ? 'red' : 'green' }}>{message}</div>}

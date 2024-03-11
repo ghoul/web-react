@@ -6,6 +6,7 @@ import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './Style.css';
 import Cookies from 'js-cookie';
+import axios from 'axios';
 function Profile() {
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
@@ -13,53 +14,46 @@ function Profile() {
   const [school, setSchool] = useState('');
   const [message, setMessage] = useState('');
   const token = Cookies.get('token'); 
+  const userString = Cookies.get('user');
+  const user =JSON.parse(userString);
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${BACKEND_URL}/user_data/`, {
-          method: 'GET',
+        const response = await axios.get(`${BACKEND_URL}/user_profile/${user.id}/`, {
           headers: {
-            'Authorization' : `${token}`,
+            'Authorization': `Token ${token}`,
             'Content-Type': 'application/json',
+            'X-CSRFToken': Cookies.get('csrftoken')
           },
         });
-
-        if (!response.ok) {
-          throw new Error('Failed to fetch user data');
-        }
-
-        const userData = await response.json();
-        console.log(userData.data);
-        setName(userData.data.name);
-        setSurname(userData.data.surname);
-        setEmail(userData.data.email);
-        setSchool(userData.data.school);
-        console.log(name);
+        const userData = response.data;
+        setName(userData.first_name);
+        setSurname(userData.last_name);
+        setEmail(userData.email);
+        setSchool(userData.school_title);
       } catch (error) {
-        console.error('Error fetching user data', error);
+        console.error('Error fetching profile:', error);
       }
-    };
-
+    }
     fetchData();
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const updatedData = {
-      name,
-      surname,
       email
     };
-
+   console.log(JSON.stringify(updatedData));
     try {
-      const response = await fetch(`${BACKEND_URL}/user_data/`, {
-        method: 'PUT',
+      const response = await axios.patch(`${BACKEND_URL}/user_profile/${user.id}/`, //TODO: PATCH
+      JSON.stringify(updatedData), {
         headers: {
-          'Authorization' : `${token}`,
+          'Authorization' : `Token ${token}`,
           'Content-Type': 'application/json',
-        },
-          body: JSON.stringify(updatedData),
+          'X-CSRFToken': Cookies.get('csrftoken')
+        }
       });
 
       if (!response.ok) {

@@ -26,34 +26,37 @@ const FinishedAssignments = () => {
   //TODO: is token role ir pagal ja rodyt
   const navigate  = useNavigate();
   useEffect(() => {
+    if(role === 2){
     // Fetch homeworks data from your backend (assuming the endpoint is /api/homeworks)
-    axios.get(`${BACKEND_URL}/handle_assignments_teacher_finished/`, {
-      method: 'GET',
+    axios.get(`${BACKEND_URL}/assignments_teacher_finished/`, {
       headers: {
-        'Authorization' : `${token}`,
+        'Authorization' : `Token ${token}`,
         'Content-Type': 'application/json',
+        'X-CSRFToken': Cookies.get('csrftoken')
       },
     }) // Replace with your actual endpoint
       .then(response => {
-        setHomeworkTeacher(response.data.data);
+        setHomeworkTeacher(response.data);
       })
       .catch(error => {
-        console.error('Error fetching homeworks:', error);
+        console.error('Error fetching homeworks finished:', error);
       });
+    } else if (role === 1){
 
-      axios.get(`${BACKEND_URL}/handle_assignments_student_finished/`, {
-      method: 'GET',
+      axios.get(`${BACKEND_URL}/assignments_student_finished/`, {
       headers: {
-        'Authorization' : `${token}`,
+        'Authorization' : `Token ${token}`,
         'Content-Type': 'application/json',
+        'X-CSRFToken': Cookies.get('csrftoken')
       },
     }) // Replace with your actual endpoint
       .then(response => {
-        setHomeworkStudent(response.data.data);
+        setHomeworkStudent(response.data);
       })
       .catch(error => {
-        console.error('Error fetching homeworks:', error);
+        console.error('Error fetching homeworks finished:', error);
       });
+    }
   }, []);
   const send = (event) => {
     navigate(`/`);
@@ -88,10 +91,10 @@ const FinishedAssignments = () => {
             ) : (
               homeworkTeacher.map((tdata, index) => (
                 <tr key={index} className="border-top">
-                  <td>{tdata.title}</td>
-                  <td>{tdata.fromDate}</td>
-                  <td>{tdata.toDate}</td>
-                  <td>{tdata.classs}</td>
+                  <td>{tdata.homework.title}</td>
+                  <td>{tdata.from_date}</td>
+                  <td>{tdata.to_date}</td>
+                  <td>{tdata.classs.title}</td>
                   <td>
                     {tdata.status === "Bad" ? (
                       <span className="p-2 rounded-circle d-inline-block ms-3" style={{ backgroundColor: '#bf1a2f' }}></span> 
@@ -129,10 +132,10 @@ const FinishedAssignments = () => {
             ) : (
               homeworkStudent.map((tdata, index) => (
                 <tr key={index} className="border-top">
-                  <td>{tdata.title}</td>
-                  <td>{tdata.fromDate}</td>
-                  <td>{tdata.toDate}</td>
-                  <td>{tdata.teacher}</td>
+                  <td>{tdata.homework.title}</td>
+                  <td>{tdata.from_date}</td>
+                  <td>{tdata.to_date}</td>
+                  <td>{tdata.homework.teacher_first_name} {tdata.homework.teacher_last_name}</td>
                   <td> <Button style={{backgroundColor: 'transparent', border:'none'}}><Link to={`/statistics/${tdata.id}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> ➔➔ </Link></Button></td>
                 </tr>
             )))}

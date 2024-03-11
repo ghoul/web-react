@@ -20,7 +20,7 @@ const Starter = () => {
   const { isLoggedIn } = useAuth();
   const token = Cookies.get('token'); 
   const userString = Cookies.get('user');
-  const userData = JSON.parse(userString);
+  const userData = JSON.parse(userString); //"";//
   let user_email = "";
   let role = "";
   let user_id = "";
@@ -35,7 +35,8 @@ const Starter = () => {
 
   const navigate  = useNavigate();
   const getAssignments = () => {
-    axios.get(`${BACKEND_URL}/assignments/`, {
+    if (role === 2) {
+    axios.get(`${BACKEND_URL}/assignments_teacher/`, {
       headers: {
         'Authorization' : `Token ${token}`,
         'Content-Type': 'application/json',
@@ -49,35 +50,22 @@ const Starter = () => {
       .catch(error => {
         console.error('Error fetching homeworks:', error);
       });
+    } else if (role === 1){
+      axios.get(`${BACKEND_URL}/assignments_student/`, {
+      headers: {
+        'Authorization' : `Token ${token}`,
+        'Content-Type': 'application/json',
+        'X-CSRFToken': Cookies.get('csrftoken')
+      },
+    }) // Replace with your actual endpoint
+      .then(response => {
+        setHomeworkStudent(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching homeworks:', error);
+      });
+    }
 
-    //   axios.get(`${BACKEND_URL}/handle_assignments_student/`, {
-    //   headers: {
-    //     'Authorization' : `${token}`,
-    //     'Content-Type': 'application/json',
-    //     'X-CSRFToken': Cookies.get('csrftoken')
-    //   },
-    // }) // Replace with your actual endpoint
-    //   .then(response => {
-    //     setHomeworkStudent(response.data.data);
-    //   })
-    //   .catch(error => {
-    //     console.error('Error fetching homeworks:', error);
-    //   });
-
-    //   axios.post(`${BACKEND_URL}/get_user_id/`, {
-    //     user_email: user_email,
-    //   }, {
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //   }).then(response => {
-    //     const userId = response.data.user_id; // Extract user ID from the response
-    //     console.log("User ID:", userId);
-    //     setUserid(userId);
-    //   }).catch(error => {
-    //     console.error('Error fetching user ID:', error);
-    //   });
-       
   };
   useEffect(() => {
     getAssignments();
@@ -95,7 +83,7 @@ const Starter = () => {
   const deleteAssignment = () => {
     console.log("assid: " + selectedAssignmentId);
 
-    axios.delete(`${BACKEND_URL}/assignments/${selectedAssignmentId}/`, {
+    axios.delete(`${BACKEND_URL}/assignments_teacher/${selectedAssignmentId}/`, {
         headers: {
             'Authorization': `Token ${token}`,
             'Content-Type': 'application/json',
@@ -115,7 +103,7 @@ const Starter = () => {
 };
 
   
-  const handleStartGame = async (assignmentId, studentEmail) => {
+  const handleStartGame = async (assignmentId) => {
     try {    
         //console.log("user_id; " + user_id);
         const url = `http://localhost:8080/?student_id=${user_id}&assignment_id=${assignmentId}`; // Replace with the desired URL
@@ -215,14 +203,14 @@ const Starter = () => {
       
             ) : (homeworkStudent.map((tdata, index) => (
                 <tr key={index} className="border-top">
-                  <td>{tdata.title}</td>
-                  <td>{tdata.fromDate}</td>
-                  <td>{tdata.toDate}</td>
-                  <td>{tdata.teacher}</td>
+                  <td>{tdata.homework.title}</td>
+                  <td>{tdata.from_date}</td>
+                  <td>{tdata.to_date}</td>
+                  <td>{tdata.homework.teacher_first_name} {tdata.homework.teacher_last_name}</td>
                   {/* TODO: Į ŽAIDIMĄ LINKAS */}
                   <td>  <Button className='noback-button' style={{background:'transparent', border:'none'}}>
                     <span className="nav-link" style={{ color: '#a6d22c', textDecoration: 'none', fontWeight: 'bold' }}
-                     onClick={() => handleStartGame(tdata.id, user_email)}> 
+                     onClick={() => handleStartGame(tdata.id)}> 
                      <i class="bi bi-controller"></i>
                       </span></Button></td>
 

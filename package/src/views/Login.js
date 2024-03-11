@@ -34,16 +34,16 @@ function LoginForm() {
       });
 
       const data = await response.json();
-
       if (response.ok) {
         // Token obtained successfully, store it in localStorage
         // localStorage.setItem('role', 2); //data.role
         // console.log("token: " + data.token);
-        localStorage.setItem('token', data.token);
+        //localStorage.setItem('token', data.token);
         // localStorage.setItem('csrf_token', data.csrf_token);
         Cookies.set('csrftoken', data.csrf_token, { secure: true, sameSite: 'strict' });
         Cookies.set('token', data.token, { secure: true, sameSite: 'strict' });
         Cookies.set('user', JSON.stringify(data.user),{ secure: true, sameSite: 'strict' });
+        console.log("cookie: " + Cookies.get('user'));
         //handleLoginn(data.token);
 
         login(data.token); // This will set the isLoggedIn state to true
