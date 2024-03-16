@@ -39,18 +39,18 @@ const Podium = () => {
   }
   const navigate  = useNavigate();
   const getPodium = () => {
-    axios.get(`${BACKEND_URL}/get_class_statistics/`, {
-      method: 'GET',
+    axios.get(`${BACKEND_URL}/class_statistics/`, {
       headers: {
-        'Authorization' : `${token}`,
+        'Authorization' : `Token ${token}`,
         'Content-Type': 'application/json, charset=utf-8',
+        'X-CSRFToken': Cookies.get('csrftoken')
       },
     }) // Replace with your actual endpoint
       .then(response => {
-        console.log(response.data.data);
-        const parsedPodiumStudents = JSON.parse(response.data.data);
-        setPodiumStudent(parsedPodiumStudents);
-        setClasss(response.data.classs);
+        console.log(response.data.leaderboard);
+        // const parsedPodiumStudents = JSON.parse(response.data.leaderboard);
+        setPodiumStudent(response.data.leaderboard);
+        setClasss(response.data.class_title);
       })
       .catch(error => {
         console.error('Error fetching podium:', error);

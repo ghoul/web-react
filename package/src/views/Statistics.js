@@ -13,34 +13,35 @@ import user5 from "../assets/images/users/user5.jpg";
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 // import './Style.css';
-const Starter = () => {
+const Statistics = () => {
   const {assignmentId} = useParams();
   const [students, setStudents] = useState([]);
   const [title, setTitle] = useState('');
   const [classs, setClasss] = useState('');
-  const [loggedId, setLoggedId] = useState('');
+  // const [loggedId, setLoggedId] = useState('');
   const token = Cookies.get('token'); 
   //const decodedToken = jwtDecode(token);
   const userString = Cookies.get('user');
   const userData = JSON.parse(userString);
   const role = userData.role;
+  const loggedId = userData.id;
   const navigate  = useNavigate();
 
   useEffect(() => {
     // Fetch homeworks data from your backend (assuming the endpoint is /api/homeworks)
-    axios.get(`${BACKEND_URL}/get_assignment_statistics/${assignmentId}/`, {
-        method: 'GET',
+    axios.get(`${BACKEND_URL}/assignment_statistics/${assignmentId}/`, {
         headers: {
-          'Authorization' : `${token}`,
+          'Authorization' : `Token ${token}`,
           'Content-Type': 'application/json',
+          'X-CSRFToken': Cookies.get('csrftoken')
         },
       }) // Replace with your actual endpoint
       .then(response => {
-        console.log("title" + response.title);
-        setStudents(response.data.students);
-        setTitle(response.data.title);
-        setClasss(response.data.classs);
-        setLoggedId(response.data.id);
+        console.log("title" + response.data.assignment.title);
+        setStudents(response.data.assignment_results);
+        setTitle(response.data.assignment.title);
+        setClasss(response.data.assignment.class_title);
+        //setLoggedId(response.data.id);
         console.log("loggedid: " + loggedId);
       })
       .catch(error => {
@@ -136,15 +137,15 @@ const Starter = () => {
                   <td>
                     <div className="d-flex align-items-center p-2">
                       <img
-                        src={tdata.gender === 1 ? user1 : user2}
+                        src={tdata.student_gender === 1 ? user1 : user2}
                         className="rounded-circle"
                         alt="avatar"
                         width="45"
                         height="45"
                       />
                       <div className="ms-3">
-                        <h6 className="mb-0">{tdata.name}</h6>
-                        <span className="text-muted">{tdata.surname}</span>
+                        <h6 className="mb-0">{tdata.student_first_name}</h6>
+                        <span className="text-muted">{tdata.student_last_name}</span>
                       </div>
                     </div>
                   </td>
@@ -159,8 +160,8 @@ const Starter = () => {
                   </td>
                   <td>{tdata.date}</td>                  
                   <td>{tdata.time}</td>
-                  <td>{tdata.scored}</td>
-                  {((((role===2 || role ===3)|| tdata.id === loggedId ) && (tdata.status !== "Bad")) && <td><Button style={{backgroundColor: 'transparent', border: 'none'}}><Link to={`/statistics/${assignmentId}/${tdata.id}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> ➔➔ </Link></Button></td> )}
+                  <td>{tdata.points}</td>
+                  {((((role===2 || role ===3)|| tdata.student_id === loggedId ) && (tdata.status !== "Bad")) && <td><Button style={{backgroundColor: 'transparent', border: 'none'}}><Link to={`/statistics/${assignmentId}/${tdata.student_id}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> ➔➔ </Link></Button></td> )}
                 </tr>
               ))}
             </tbody>
@@ -173,4 +174,4 @@ const Starter = () => {
   );
 };
 
-export default Starter;
+export default Statistics;

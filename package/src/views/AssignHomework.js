@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useParams, Link } from 'react-router-dom';
 import { Modal } from "./Modal.js";
+import axios from 'axios';
 // import Forms from "./ui/Forms";
 import BACKEND_URL from '../layouts/config.js';
 import './Style.css';
@@ -22,7 +23,7 @@ import {
   Input, Table
 } from "reactstrap";
 import { useNavigate } from 'react-router-dom';
-
+import Cookies from "js-cookie";
 export default function AssignHomework() {
 
     //get_classes_by_teacher
@@ -36,17 +37,18 @@ export default function AssignHomework() {
 
   const [classes, setClasses] = useState([]); 
   const [fail, setFail] = useState("");
-  let token = localStorage.getItem('token'); 
+  let token = Cookies.get('token'); 
 
   const getClasses = () => {
-    fetch(
-      `${BACKEND_URL}/get_classes_by_school/`,
+    axios.get(
+      `${BACKEND_URL}/classes/`,
       {
         method: "GET",
         headers: {
-          'Authorization' : `${token}`,
-          Accept: "application/json",
+          'Authorization' : `Token ${token}`,
+          // Accept: "application/json",
           "Content-Type": "application/json",
+          'X-CSRFToken': Cookies.get('csrftoken')
         },
       }
     )
@@ -64,16 +66,17 @@ export default function AssignHomework() {
     event.preventDefault();
     console.log("classid: " + classInput);
     const assignment = {
-        homeworkId: homeworkId,
-        fromDate : fromDateInput,
-        toDate : toDateInput,
-        class : classInput
+        homework_id: homeworkId,
+        from_date : fromDateInput,
+        to_date : toDateInput,
+        classs : classInput
       };
-    fetch(`${BACKEND_URL}/handle_assign_homework/`, {
-      method: 'POST',
+    axios.post(`${BACKEND_URL}/assignments/`, {
+     
       headers: {
-        'Authorization' : `${token}`,
+        'Authorization' : `Token ${token}`,
         'Content-Type': 'application/json',
+        'X-CSRFToken': Cookies.get('csrftoken')
       },
       body: JSON.stringify(assignment),
     })

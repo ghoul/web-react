@@ -18,49 +18,49 @@ export default function OneStudentStatistics() {
   const token = Cookies.get('token'); 
  let tempGrade = 0;
 
-  useEffect(() => {
-    const fetchHomework = async () => {
-      try {
-        const response = await fetch(`${BACKEND_URL}/get_one_student_answers/${assignmentId}/${studentId}/`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        const data = await response.json();
-        console.log(data);
-        setResults(data.results);
-        setTitle(data.title);
-        setName(data.name);
-        setQuestionsCount(data.questions);
-        const totalPoints = data.results.reduce((sum, result) => sum + result.opoints, 0);
-        setTotalPoints(totalPoints);
-        const gotPoints = data.results.reduce((sum, result) => sum + result.points, 0);
-        setGotPoints(gotPoints);
-        if(totalPoints>0) 
-        {
-          tempGrade = Math.ceil((gotPoints * 10) / totalPoints);
-        }
-        else{
-          tempGrade=0;
-        }
-        const cappedGrade = tempGrade > 10 ? 10 : tempGrade;
-        setGrade(cappedGrade);
-      } catch (error) {
-        console.error('Error fetching results:', error);
-      }
-    };
+ useEffect(() => {
+  const fetchHomework = async () => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/one_student_answers/${assignmentId}/${studentId}/`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Token ${token}`,
+          'Content-Type': 'application/json',
+          'X-CSRFToken': Cookies.get('csrftoken')
+        },
+      });
+      const data = await response.json();
+      console.log(data);
 
-    fetchHomework();
-  }, []);
+      // Check if there are results
+      if (data.results.length > 0) {
+        setResults(data.results);
+        setTitle(data.results[0].question.homework.title);
+        console.log("titleeee: " + data.results[0].question.homework.title);
+        var fullName = `${data.results[0].student.first_name} ${data.results[0].student.last_name}`;
+        setName(fullName);
+        console.log("student name: " + data.results[0].student.first_name);
+        setQuestionsCount(data.results.length);
+        setTotalPoints(data.points);
+        setGotPoints(data.score);
+        setGrade(data.grade);
+      } else {
+        console.error('No results found');
+      }
+    } catch (error) {
+      console.error('Error fetching results:', error);
+    }
+  };
+
+  fetchHomework();
+}, [assignmentId, studentId, token]);
 
   const send = () => {
     navigate(`/statistics/${assignmentId}`);
   };
 
   const calculateCorrectAnswers = () => {
-    const correctAnswers = results.filter(pair => pair.answer === pair.student_answer);
+    const correctAnswers = results.filter(pair => pair.question.answer === pair.answer);
     return correctAnswers.length;
   };
   const calculatePercentage = () => {
@@ -142,16 +142,16 @@ export default function OneStudentStatistics() {
             <Card key={index} className="mb-3">
               <CardBody>
                 <Row> <Col>
-                <CardTitle tag="h5"> {index + 1}. {pair.question}</CardTitle> 
+                <CardTitle tag="h5"> {index + 1}. {pair.question.question}</CardTitle> 
                 </Col>
                 <Col>
                 <p className="card-text">
                         <strong>Taškai: </strong>
-                        {pair.points}/{pair.opoints}
+                        {pair.points}/{pair.question.points}
                     </p>
                 </Col>
                 </Row>
-                {pair.qtype===2 && (     
+                {pair.question.qtype===2 && (     
                   <>      
                  <div key={index} >
                               <Label check>
@@ -159,7 +159,7 @@ export default function OneStudentStatistics() {
                                 <Input
                                   type="text"
                                   readOnly
-                                  value={pair.answer}
+                                  value={pair.question.answer}
                                   style={{ width: '100%' }}
                                 />
                                 <p>{''}</p></Col></Row>
@@ -173,12 +173,12 @@ export default function OneStudentStatistics() {
                                       <Input
                                         type="text"
                                         readOnly
-                                        value={pair.student_answer}
+                                        value={pair.answer}
                                         style={{ width: '100%' }}
                                       />
                                     </Col>
                                     <Col md={6} className="d-flex align-items-center ">
-                                      {pair.student_answer === pair.answer ? (
+                                      {pair.answer === pair.question.answer ? (
                                         <span className="text-success"><i className="bi bi-check-lg"></i></span>
                                       ) : (
                                         <span className="text-danger"><i className="bi bi-x-lg"></i></span>
@@ -190,59 +190,42 @@ export default function OneStudentStatistics() {
                      
                     </>
                   )}  
-                  {pair.qtype === 1 && (
-                    <>      
-                    {pair.all_options.map((option, index) => (
-                      <div key={index} style={{ whiteSpace: 'pre' }}>
-                          <Label check>
-                              <Input
-                                  type="radio"
-                                  name={`correctOption${index}`}
-                                  checked={pair.student_answer && pair.student_answer.includes(option)}
-                                  readOnly
-                              />
-                              {'  '} {option} {" "}
-                              {pair.student_answer && pair.student_answer.includes(option) && pair.answer.includes(option) && (
-                                  <span className="text-success"><i className="bi bi-check-lg"></i></span>
-                              )}
-                              {pair.student_answer && pair.student_answer.includes(option) && !pair.answer.includes(option) && (
-                                  <span className="text-danger"><i className="bi bi-x-lg"></i></span>
-                              )}
-                              {(!pair.student_answer || !pair.student_answer.includes(option)) && pair.answer.includes(option) && (
-                                  <span className="text-success"><i className="bi bi-check-lg"></i></span>
-                              )}
-                          </Label>
-                      </div>
-                  ))}
-                      
-                    </>
-                  )}
 
-                  {pair.qtype === 3 && (     
-                    <>      
-                      {pair.all_options.map((option, index) => (
-                          <div key={index} style={{ whiteSpace: 'pre' }}>
-                            <Label check>
-                              <Input
-                                type="checkbox"
-                                checked={pair.student_answer && pair.student_answer.includes(option)}
-                                readOnly
-                              />
-                                {'  '} {option} {" "}
-                              {pair.student_answer && pair.student_answer.includes(option) && pair.answer.includes(option) && (
+                  {(pair.question.qtype === 1 || pair.question.qtype === 3) && (
+    <>
+        {pair.question.options.map((option, index) => {
+            // Filter selected options by student and question
+            const filteredOptions = pair.selected_options.filter(selectedOption => (
+                selectedOption.student == studentId && selectedOption.question == pair.question.id && selectedOption.option == option.id
+            ));
+
+            // Check if any filtered option matches the original option
+            const isSelected = filteredOptions.length > 0;
+            return (
+                <div key={index} style={{ whiteSpace: 'pre' }}>
+                    <Label check>
+                        <Input
+                            type={pair.question.qtype === 1 ? "radio" : "checkbox"}
+                            checked={isSelected}
+                            readOnly
+                        />
+                        {'  '} {option.text} {" "}
+
+                              {isSelected && pair.question.correct_options.some(correctOption => correctOption.option === option.id) && (
                                   <span className="text-success"><i className="bi bi-check-lg"></i></span>
                               )}
-                              {pair.student_answer && pair.student_answer.includes(option) && !pair.answer.includes(option) && (
+                              {isSelected && !pair.question.correct_options.some(correctOption => correctOption.option === option.id) && (
                                   <span className="text-danger"><i className="bi bi-x-lg"></i></span>
                               )}
-                              {(!pair.student_answer || !pair.student_answer.includes(option)) && pair.answer.includes(option) && (
+                              {!isSelected && pair.question.correct_options.some(correctOption => correctOption.option === option.id) && (
                                   <span className="text-success"><i className="bi bi-check-lg"></i></span>
                               )}
-                            </Label>
-                          </div>
-                        ))}
-                    </>
-                  )}
+                    </Label>
+                </div>
+            );
+        })}
+    </>
+)}
 
                               
               </CardBody>

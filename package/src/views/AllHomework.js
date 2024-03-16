@@ -5,12 +5,13 @@ import { Modal } from './Modal.js';
 import { Modal2 } from './Modal2.js';
 import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config.js';
+import Cookies from 'js-cookie';
 // import './Style.css';
 const AllHomework = () => {
   const [homework, setHomework] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedHomeworkId, setSelectedHomeworkId] = useState(null);
-  let token = localStorage.getItem('token'); 
+  let token = Cookies.get('token'); 
   const navigate  = useNavigate();
   useEffect(() => {
     const fetchHomework = async () => {
