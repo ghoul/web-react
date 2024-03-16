@@ -91,10 +91,10 @@ const FinishedAssignments = () => {
             ) : (
               homeworkTeacher.map((tdata, index) => (
                 <tr key={index} className="border-top">
-                  <td>{tdata.homework.title}</td>
+                  <td>{tdata.homework_title}</td>
                   <td>{tdata.from_date}</td>
                   <td>{tdata.to_date}</td>
-                  <td>{tdata.classs.title}</td>
+                  <td>{tdata.classs_title}</td>
                   <td>
                     {tdata.status === "Bad" ? (
                       <span className="p-2 rounded-circle d-inline-block ms-3" style={{ backgroundColor: '#bf1a2f' }}></span> 
@@ -132,10 +132,10 @@ const FinishedAssignments = () => {
             ) : (
               homeworkStudent.map((tdata, index) => (
                 <tr key={index} className="border-top">
-                  <td>{tdata.homework.title}</td>
+                  <td>{tdata.homework_title}</td>
                   <td>{tdata.from_date}</td>
                   <td>{tdata.to_date}</td>
-                  <td>{tdata.homework.teacher_first_name} {tdata.homework.teacher_last_name}</td>
+                  <td>{tdata.teacher_first_name} {tdata.teacher_last_name}</td>
                   <td> <Button style={{backgroundColor: 'transparent', border:'none'}}><Link to={`/statistics/${tdata.id}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> ➔➔ </Link></Button></td>
                 </tr>
             )))}

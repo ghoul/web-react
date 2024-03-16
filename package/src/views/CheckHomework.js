@@ -23,6 +23,7 @@ import {
 } from "reactstrap";
 import { useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
+import axios from 'axios';
 
 export default function CheckHomework() {
     const { homeworkId } = useParams();
@@ -34,21 +35,23 @@ export default function CheckHomework() {
   useEffect(() => {
     const fetchHomework = async () => {
       try {
-        const response = await fetch(`${BACKEND_URL}/handle_homework_id/${homeworkId}/`, {
-          method: 'GET',
+        const response = await axios.get(`${BACKEND_URL}/homework/${homeworkId}/`, {
           headers: {
-            'Authorization' : `${token}`,
+            'Authorization' : `Token ${token}`,
             'Content-Type': 'application/json',
+            'X-CSRFToken': Cookies.get('csrftoken')
           },
         });
-        const data = await response.json();
-        console.log(data);
-        setHomework(data.homework);
-        setEdit(data.edit);
+        
+        console.log(response.data);
+        setHomework(response.data);
+        setEdit(response.data.edit);
         
       } catch (error) {
         console.error('Error fetching Homework:', error);
       }
+
+  
     };
 
     fetchHomework();
@@ -83,7 +86,7 @@ export default function CheckHomework() {
             </Col>
             </Row>
 
-            {pair.type === 2 && (
+            {pair.qtype === 2 && (
               <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
               <Label check>
                 <Row>
@@ -100,27 +103,27 @@ export default function CheckHomework() {
             </div>
             )}
 
-            {pair.type === 1 && (
+            {pair.qtype === 1 && (
               <>
                 {pair.options.map((option, optionIndex) => (
                   <div key={optionIndex}>
                     <i
-                      className={`bi ${pair.correct === option ? 'bi-check-circle-fill' : 'bi-check-circle'}`}
+                      className={`bi ${pair.correct_options.some(correctOption => correctOption.option == option.id) ? 'bi-check-circle-fill' : 'bi-check-circle'}`}
                     ></i>
-                    {"  "}{option}
+                    {"  "}{option.text}
                   </div>
                 ))}
               </>
             )}
 
-              {pair.type === 3 && (
+              {pair.qtype === 3 && (
               <>
                 {pair.options.map((option, optionIndex) => (
                   <div key={optionIndex}>
                     <i
-                      className={`bi ${pair.correctMultiple.includes(optionIndex) ? 'bi-check-square-fill' : 'bi-check-square'}`}
+                      className={`bi ${pair.correct_options.some(correctOption => correctOption.option == option.id) ? 'bi-check-square-fill' : 'bi-check-square'}`}
                     ></i>
-                    {"  "}{option}
+                    {"  "}{option.text}
                   </div>
                 ))}
               </>

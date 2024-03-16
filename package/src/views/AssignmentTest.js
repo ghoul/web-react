@@ -23,13 +23,14 @@ import {
 } from "reactstrap";
 import { useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
+import axios from 'axios';
 export default function AssignmentTest() {
     const { assignmentId } = useParams();
     const [assignment, setAssignment] = useState([]);
     const [title, setTitle] = useState('');
     const [initialized, setInitialized] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
-    const [userId, setUserId] = useState('');
+    // const [userId, setUserId] = useState('');
     const [startTime, setStartTime] = useState(null);
     //TODO: AR TIKRAI NORITE PATEIKTI?
   const [showModal, setShowModal] = useState(false);
@@ -38,6 +39,9 @@ export default function AssignmentTest() {
 
 //   const [title, setTitle] = useState(null);
   const token = Cookies.get('token'); 
+  const userString = Cookies.get('user');
+  const userData = JSON.parse(userString);
+  const userId = userData.id;
   const navigate  = useNavigate();
   const generateInitialPairs = (count) => {
     return Array(count).fill({ questionId: 0, answer: '' });
@@ -47,20 +51,19 @@ export default function AssignmentTest() {
       try {
         // const delayInMilliseconds = 1000;
         // await new Promise(resolve => setTimeout(resolve, delayInMilliseconds));
-        const response = await fetch(`${BACKEND_URL}/handle_assignment_id/${assignmentId}/`, {
-          method: 'GET',
+        const response = await axios.get(`${BACKEND_URL}/test/${assignmentId}/`, {
           headers: {
-            'Authorization' : `${token}`,
+            'Authorization' : `Token ${token}`,
             'Content-Type': 'application/json',
+            'X-CSRFToken': Cookies.get('csrftoken')
           },
         });
-        const data = await response.json();
-        console.log(data);
-        setAssignment(data.questions.pairs);
-        setTitle(data.questions.title);
-        const newPairs = data.questions.pairs.map(item => ({ questionId: item.qid, answer: '' }));
+       
+        console.log(response.data);
+        setAssignment(response.data);
+        setTitle(response.data[0].homework_title);
+        const newPairs = response.data.map(item => ({ questionId: item.id, answer: '' }));
         setPairs(newPairs);
-        setUserId(data.uid);
         console.log("PO VISKO!!!");
 
       } catch (error) {
@@ -205,7 +208,7 @@ export default function AssignmentTest() {
       <CardBody>
         <CardTitle tag="h5">{index + 1}. {pair.question}</CardTitle>
         <p>Taškai: {pair.points}</p>
-        {pair.type === 2 && (
+        {pair.qtype === 2 && (
           <Input
             type="text"
             id={`question${index}`}
@@ -213,7 +216,7 @@ export default function AssignmentTest() {
             onChange={(e) => handlePairChange(index, 'answer', e.target.value)}
           />
         ) }
-        {pair.type === 1 && (
+        {pair.qtype === 1 && (
           <>
             {pair.options.map((option, optionIndex) => (
               <div key={optionIndex}>
@@ -223,15 +226,15 @@ export default function AssignmentTest() {
                   // style={{ display: 'none' }}
                   // checked={correctOptionIndexes[index] === optionIndex}
                  
-                  onChange={(e) => handlePairChange(index, 'answer', option)}
+                  onChange={(e) => handlePairChange(index, 'answer', option.id)}
                 />
-                {option}
+                {option.text}
               </div>
             ))}
           </>
         )}
 
-          {pair.type === 3 && (
+          {pair.qtype === 3 && (
           <>
             {pair.options.map((option, optionIndex) => (
               <div key={optionIndex}>
@@ -241,9 +244,9 @@ export default function AssignmentTest() {
                   // style={{ display: 'none' }}
                   // checked={correctOptionIndexes[index] === optionIndex}
                  //TODO: issaugot multiple choices i atskira masyva gal indeksus?
-                  onChange={(e) => handlePairChange(index, 'multiple', optionIndex)}
+                  onChange={(e) => handlePairChange(index, 'multiple', option.id)}
                 />
-                {option}
+                {option.text}
               </div>
             ))}
           </>

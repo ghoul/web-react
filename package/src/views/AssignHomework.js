@@ -39,64 +39,52 @@ export default function AssignHomework() {
   const [fail, setFail] = useState("");
   let token = Cookies.get('token'); 
 
-  const getClasses = () => {
-    axios.get(
-      `${BACKEND_URL}/classes/`,
-      {
-        method: "GET",
-        headers: {
-          'Authorization' : `Token ${token}`,
-          // Accept: "application/json",
-          "Content-Type": "application/json",
-          'X-CSRFToken': Cookies.get('csrftoken')
-        },
+  const getClasses = async() => {
+    try {
+      const response = await  axios.get(`${BACKEND_URL}/classes/`, {
+          headers: {
+              'Authorization': `Token ${token}`,
+              'Content-Type': 'application/json',
+              'X-CSRFToken': Cookies.get('csrftoken')
+          },
+      });
+      if (response.status !== 200) {
+          throw new Error('HTTP error ' + response.status);
       }
-    )
-    .then((response) => response.json())
-    .then((data) => {
-      setClasses(data);
-      if(data.length>0) setClassInput(data[0].id);    
-      console.log("grazino " + data[0].id);
-    });
+      console.log(response.data);
+      setClasses(response.data);
+      setClassInput(response.data[0].id)
+  } catch (error) {
+      console.error(error);
+      // Handle error here
+  }
   };
   useEffect(() => {
     getClasses();
   }, []);
-  const assignHomework = (event) => {
+  const assignHomework = async (event) => {
     event.preventDefault();
-    console.log("classid: " + classInput);
-    const assignment = {
-        homework_id: homeworkId,
-        from_date : fromDateInput,
-        to_date : toDateInput,
-        classs : classInput
-      };
-    axios.post(`${BACKEND_URL}/assignments/`, {
-     
-      headers: {
-        'Authorization' : `Token ${token}`,
-        'Content-Type': 'application/json',
-        'X-CSRFToken': Cookies.get('csrftoken')
-      },
-      body: JSON.stringify(assignment),
-    })
-    .then((response) => {
-        if (!response.ok) {
-          throw new Error('HTTP error ' + response.satatus);
+    try {
+      const response = await  axios.post(`${BACKEND_URL}/assignments/`, {
+        homework: homeworkId,
+        from_date: fromDateInput,
+        to_date: toDateInput,
+        classs: classInput
+    }, {
+        headers: {
+            'Authorization': `Token ${token}`,
+            'Content-Type': 'application/json',
+            'X-CSRFToken': Cookies.get('csrftoken')
         }
-        return response.json();
-      })
-      .then((data) => {
-        console.log('Response Body: ', data);
-        setMessage(data.success ? 'Operacija sėkminga!' : 'Klaida! '+ data.error);
-        setTimeout(() => {
-          setMessage('');
-        }, 3000);
-      })
-      .catch((error) => {
-        console.error(error);
-        setMessage('Klaida!' + error.error);
-      });
+    });
+      if (response.status !== 201) {
+          throw new Error('HTTP error ' + response.status);
+      }
+      setMessage(response.status===201 ? 'Operacija sėkminga!' : 'Klaida! ' + response.error);
+  } catch (error) {
+      console.error(error);
+      // Handle error here
+  }
   };
   
   const send = (event) => {
@@ -166,7 +154,7 @@ export default function AssignHomework() {
               )}
                 </Input>
               </FormGroup>
-              <Button style={{ backgroundColor: '#a6d22c', color: 'white', border:'none' }}>Paskirti</Button>
+              <Button   style={{ backgroundColor: '#a6d22c', color: 'white', border:'none' }}>Paskirti</Button>
             </Form>
           </CardBody>
         </Card>

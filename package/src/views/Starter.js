@@ -59,6 +59,7 @@ const Starter = () => {
       },
     }) // Replace with your actual endpoint
       .then(response => {
+        console.log(response.data);
         setHomeworkStudent(response.data);
       })
       .catch(error => {
@@ -148,10 +149,10 @@ const Starter = () => {
           </tr>
             ) : (homeworkTeacher.map((tdata, index) => (
                 <tr key={index} className="border-top">
-                  <td>{tdata.homework.title}</td>
+                  <td>{tdata.homework_title}</td>
                   <td>{tdata.from_date}</td>
                   <td>{tdata.to_date}</td>
-                  <td>{tdata.classs.title}</td>
+                  <td>{tdata.classs_title}</td>
                   <td>
                     {tdata.status === "Bad" ? (
                       <span className="p-2 rounded-circle d-inline-block ms-3" style={{ backgroundColor: '#bf1a2f' }}></span> 
@@ -203,10 +204,10 @@ const Starter = () => {
       
             ) : (homeworkStudent.map((tdata, index) => (
                 <tr key={index} className="border-top">
-                  <td>{tdata.homework.title}</td>
+                  <td>{tdata.homework_title}</td>
                   <td>{tdata.from_date}</td>
                   <td>{tdata.to_date}</td>
-                  <td>{tdata.homework.teacher_first_name} {tdata.homework.teacher_last_name}</td>
+                  <td>{tdata.teacher_first_name} {tdata.teacher_last_name}</td>
                   {/* TODO: Į ŽAIDIMĄ LINKAS */}
                   <td>  <Button className='noback-button' style={{background:'transparent', border:'none'}}>
                     <span className="nav-link" style={{ color: '#a6d22c', textDecoration: 'none', fontWeight: 'bold' }}

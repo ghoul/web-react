@@ -6,6 +6,7 @@ import { Modal2 } from './Modal2.js';
 import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config.js';
 import Cookies from 'js-cookie';
+import axios from 'axios';
 // import './Style.css';
 const AllHomework = () => {
   const [homework, setHomework] = useState([]);
@@ -15,46 +16,46 @@ const AllHomework = () => {
   const navigate  = useNavigate();
   useEffect(() => {
     const fetchHomework = async () => {
-      try {
-        const response = await fetch(`${BACKEND_URL}/handle_homework/`, {
-          method: 'GET',
-          headers: {
-            'Authorization' : `${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        const data = await response.json();
-        setHomework(data.homework);
-      } catch (error) {
-        console.error('Error fetching Homework:', error);
-      }
+        try {
+            const response = await axios.get(`${BACKEND_URL}/homework/`, {
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': Cookies.get('csrftoken')
+                },
+            });
+            if (response.status !== 200) {
+                throw new Error('HTTP error ' + response.status);
+            }
+            console.log(response.data);
+            setHomework(response.data);
+        } catch (error) {
+            console.error(error);
+            // Handle error here
+        }
     };
 
     fetchHomework();
-  }, []);
+}, []);
 
-  const deleteHomework = () => {
-    console.log("delete homework start");
-    fetch(`${BACKEND_URL}/handle_homework_id/${selectedHomeworkId}/`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization' : `${token}`,
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(response => response.json())
-      .then(data => {
-        // Handle success, update homework state, and close the modal
-        const updatedHomework = homework.filter(homework => homework.id !== selectedHomeworkId);
-        setHomework(updatedHomework);
-        hideModalHandler(); // Move hideModalHandler inside the .then() block
-        // window.location.reload();
-      })
-      .catch(error => {
-        // Handle error
-        // window.location.reload();
-        console.error('Error deleting homework:', error);
-      });
+  const deleteHomework = async () => {
+      try {
+        const response = await  axios.delete(`${BACKEND_URL}/homework/${selectedHomeworkId}/`, {
+          headers: {
+            'Authorization' : `Token ${token}`,
+            'Content-Type': 'application/json',
+            'X-CSRFToken': Cookies.get('csrftoken')
+          },
+        });
+        if (response.status !== 204) {
+            throw new Error('HTTP error ' + response.status);
+        }
+        setHomework(prevHomework => prevHomework.filter(homework => homework.id !== selectedHomeworkId));
+        hideModalHandler();
+    } catch (error) {
+        console.error(error);
+        // Handle error here
+    }
   };
   
 
@@ -107,7 +108,7 @@ const AllHomework = () => {
           homework.map((homework) => (
             <tr key={homework.id}>
               <td>{homework.title}</td>
-              <td>{homework.questions}</td>
+              <td>{homework.num_questions}</td>
               <td>
               <Button style={{ backgroundColor: 'transparent', marginRight: '10px', border: 'none' }}>
                 <Link to={`/check-homework/${homework.id}`} className="nav-link" style={{ color: 'black', fontWeight: 'bold' }}>
