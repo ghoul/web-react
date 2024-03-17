@@ -17,6 +17,7 @@ import BACKEND_URL from '../layouts/config';
 import './Style.css';
 // import CSRFToken from './CsrfToken';
 import Cookies from 'js-cookie';
+import axios from 'axios';
 
 
 const AllHomework = () => {
@@ -81,80 +82,135 @@ const AllHomework = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (pairs.length > 0 && pairs.some(pair => pair.question.trim() !== '' )) { //&& pair.answer.trim() !== ''
+    if (pairs.length > 0 && pairs.some(pair => pair.question.trim() !== '' )) {
       const formData = new FormData();
-      formData.append('homeworkName', homeworkName);
-
+      formData.append('title', homeworkName); // Use 'title' instead of 'homeworkName'
+  
       pairs.forEach((pair, index) => {
-        formData.append(`pairs[${index}][question]`, pair.question);
+        console.log("pair +1");
         formData.append(`pairs[${index}][qtype]`, pair.type);
-        console.log("type: " + pair.type);
-        formData.append(`pairs[${index}][answer]`, pair.answer);
+        formData.append(`pairs[${index}][question]`, pair.question);
         formData.append(`pairs[${index}][points]`, pair.points);
-        if (pair.image) {
-          formData.append(`pairs[${index}][image]`, pair.image);
+        formData.append(`pairs[${index}][answer]`, pair.answer);
+        if (pair.type === 'select' || pair.type === 'multiple') {
+          pair.options.forEach((option, optionIndex) => {
+            formData.append(`pairs[${index}][options][${optionIndex}]`, option);
+          });
         }
         if (pair.type === 'select') {
           formData.append(`pairs[${index}][correctOptionIndex]`, correctOptionIndexes[index]);
-  
-          pair.options.forEach((option, optionIndex) => {
-              formData.append(`pairs[${index}][options][${optionIndex}]`, option);
-              console.log("select: " + option);
-          });
-      
         }
         if (pair.type === 'multiple') {
-          multipleOptionIndexes.forEach((pairIds, indexId) => {
-            if(pairIds.qid === index) //jei einamojo klausimo ats randa
-            {
-              formData.append(`pairs[${index}][multipleOptionIndex][${pairIds.oid}]`, multipleOptionIndexes[indexId].oid);
+          multipleOptionIndexes.forEach(({ qid, oid }) => {
+            if (qid === index) {
+              formData.append(`pairs[${index}][multipleOptionIndex][${oid}]`, oid);
             }
-            
-          })
-
-          pair.options.forEach((option, optionIndex) => {
-              formData.append(`pairs[${index}][options][${optionIndex}]`, option);
-              console.log("multiple: " + option);
           });
-      
         }
-
       });
-
-      // Send formData to your backend (Django) using fetch or axios
-      console.log('Data to be sent:', formData);
-      // Perform further actions like API request
+  
       try {
-        console.log(formData.homeworkName);
-        const response = await fetch(`${BACKEND_URL}/handle_homework/`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `${token}`,
-            'Content-Type': 'application/json',
-            'X-CSRFToken': csrftoken,
-          },
-          body: formData, // Send formData directly
+        const response = await axios.post(`${BACKEND_URL}/homework/`, formData, {
+            headers: {
+                'Authorization': `Token ${token}`,
+                'X-CSRFToken': Cookies.get('csrftoken')
+            },
         });
     
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Response from Django:', data);
-          if (data.success) {
-            setSuccessMessage(data.message); // Set the success message in state
-          }
-          // Handle other actions on successful submission
-        } else {
-          // Handle errors
-          console.error('Failed to submit homework');
-        
-        }
-      } catch (error) {
-        console.error('Error:', error);
+        // Handle response
+        if (response.status === 201) {
+          const data = response.data;
+          console.log('Homework creation successful:', data);
+          // Handle the successful creation, if needed
+      } else {
+          console.error('Failed to create homework');
+          // Handle the failure case
       }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+  
     } else {
       alert('Namų darbe privalo būti bent viena užduotis');
     }
   };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (pairs.length > 0 && pairs.some(pair => pair.question.trim() !== '' )) { //&& pair.answer.trim() !== ''
+  //     const formData = new FormData();
+  //     formData.append('homeworkName', homeworkName);
+
+  //     pairs.forEach((pair, index) => {
+  //       formData.append(`pairs[${index}][question]`, pair.question);
+  //       formData.append(`pairs[${index}][qtype]`, pair.type);
+  //       console.log("type: " + pair.type);
+  //       formData.append(`pairs[${index}][answer]`, pair.answer);
+  //       formData.append(`pairs[${index}][points]`, pair.points);
+  //       if (pair.image) {
+  //         formData.append(`pairs[${index}][image]`, pair.image);
+  //       }
+  //       if (pair.type === 'select') {
+  //         formData.append(`pairs[${index}][correctOptionIndex]`, correctOptionIndexes[index]);
+  
+  //         pair.options.forEach((option, optionIndex) => {
+  //             formData.append(`pairs[${index}][options][${optionIndex}]`, option);
+  //             console.log("select: " + option);
+  //         });
+      
+  //       }
+  //       if (pair.type === 'multiple') {
+  //         multipleOptionIndexes.forEach((pairIds, indexId) => {
+  //           if(pairIds.qid === index) //jei einamojo klausimo ats randa
+  //           {
+  //             formData.append(`pairs[${index}][multipleOptionIndex][${pairIds.oid}]`, multipleOptionIndexes[indexId].oid);
+  //           }
+            
+  //         })
+
+  //         pair.options.forEach((option, optionIndex) => {
+  //             formData.append(`pairs[${index}][options][${optionIndex}]`, option);
+  //             console.log("multiple: " + option);
+  //         });
+      
+  //       }
+
+  //     });
+
+  //     // Send formData to your backend (Django) using fetch or axios
+  //     console.log('Data to be sent:', formData);
+  //     // Perform further actions like API request
+  //     try {
+  //       console.log(formData.homeworkName);
+  //       const response = await fetch(`${BACKEND_URL}/handle_homework/`, {
+  //         method: 'POST',
+  //         headers: {
+  //           'Authorization': `${token}`,
+  //           'Content-Type': 'application/json',
+  //           'X-CSRFToken': csrftoken,
+  //         },
+  //         body: formData, // Send formData directly
+  //       });
+    
+  //       if (response.ok) {
+  //         const data = await response.json();
+  //         console.log('Response from Django:', data);
+  //         if (data.success) {
+  //           setSuccessMessage(data.message); // Set the success message in state
+  //         }
+  //         // Handle other actions on successful submission
+  //       } else {
+  //         // Handle errors
+  //         console.error('Failed to submit homework');
+        
+  //       }
+  //     } catch (error) {
+  //       console.error('Error:', error);
+  //     }
+  //   } else {
+  //     alert('Namų darbe privalo būti bent viena užduotis');
+  //   }
+  // };
 
   const handleCorrectOptionChange = (index, value) => {
     const updatedCorrectOptionIndexes = [...correctOptionIndexes];

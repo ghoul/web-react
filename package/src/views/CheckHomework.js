@@ -108,7 +108,7 @@ export default function CheckHomework() {
                 {pair.options.map((option, optionIndex) => (
                   <div key={optionIndex}>
                     <i
-                      className={`bi ${pair.correct_options.some(correctOption => correctOption.option == option.id) ? 'bi-check-circle-fill' : 'bi-check-circle'}`}
+                      className={`bi ${pair.correct_options.some(correctOption => correctOption.id == option.id) ? 'bi-check-circle-fill' : 'bi-check-circle'}`}
                     ></i>
                     {"  "}{option.text}
                   </div>
@@ -121,7 +121,7 @@ export default function CheckHomework() {
                 {pair.options.map((option, optionIndex) => (
                   <div key={optionIndex}>
                     <i
-                      className={`bi ${pair.correct_options.some(correctOption => correctOption.option == option.id) ? 'bi-check-square-fill' : 'bi-check-square'}`}
+                      className={`bi ${pair.correct_options.some(correctOption => correctOption.id == option.id) ? 'bi-check-square-fill' : 'bi-check-square'}`}
                     ></i>
                     {"  "}{option.text}
                   </div>

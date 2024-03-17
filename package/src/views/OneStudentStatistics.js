@@ -14,6 +14,7 @@ export default function OneStudentStatistics() {
   const [totalPoints, setTotalPoints] = useState('');
   const [gotPoints, setGotPoints] = useState('');
   const [grade, setGrade] = useState('');
+  const [answered, setAnswered] = useState('0');
   const navigate = useNavigate();
   const token = Cookies.get('token'); 
  let tempGrade = 0;
@@ -44,6 +45,8 @@ export default function OneStudentStatistics() {
         setTotalPoints(data.points);
         setGotPoints(data.score);
         setGrade(data.grade);
+        const correctAnswers = data.results.filter(pair => pair.points === pair.question.points).length;
+        setAnswered(correctAnswers);
       } else {
         console.error('No results found');
       }
@@ -58,14 +61,13 @@ export default function OneStudentStatistics() {
   const send = () => {
     navigate(`/statistics/${assignmentId}`);
   };
-
+//TODO: grazint is django arba pagal points kiek gavo
   const calculateCorrectAnswers = () => {
     const correctAnswers = results.filter(pair => pair.question.answer === pair.answer);
     return correctAnswers.length;
   };
   const calculatePercentage = () => {
-    const correct = calculateCorrectAnswers();
-    const percentage = (correct / questionsCount) * 100;
+    const percentage = (answered / questionsCount) * 100;
     return percentage;
   };
 
@@ -105,7 +107,7 @@ export default function OneStudentStatistics() {
   <div className="d-flex flex-row align-items-center">
     <span className="flex-shrink-0 text-end me-2">Atsakymai:</span>
     <div className={`p-2 ${getColorClass()}`} style={{ width: '50px', borderRadius: '10px', color: 'white', textAlign: 'center' }}>
-      {calculateCorrectAnswers()}/{questionsCount}
+      {answered}/{questionsCount}
     </div>
   </div>
 
@@ -211,13 +213,13 @@ export default function OneStudentStatistics() {
                         />
                         {'  '} {option.text} {" "}
 
-                              {isSelected && pair.question.correct_options.some(correctOption => correctOption.option === option.id) && (
+                              {isSelected && pair.question.correct_options.some(correctOption => correctOption.id === option.id) && (
                                   <span className="text-success"><i className="bi bi-check-lg"></i></span>
                               )}
-                              {isSelected && !pair.question.correct_options.some(correctOption => correctOption.option === option.id) && (
+                              {isSelected && !pair.question.correct_options.some(correctOption => correctOption.id === option.id) && (
                                   <span className="text-danger"><i className="bi bi-x-lg"></i></span>
                               )}
-                              {!isSelected && pair.question.correct_options.some(correctOption => correctOption.option === option.id) && (
+                              {!isSelected && pair.question.correct_options.some(correctOption => correctOption.id === option.id) && (
                                   <span className="text-success"><i className="bi bi-check-lg"></i></span>
                               )}
                     </Label>

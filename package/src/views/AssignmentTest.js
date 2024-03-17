@@ -75,6 +75,7 @@ export default function AssignmentTest() {
   }, []); 
 
   const handlePairChange = (index, field, value) => {
+    console.log("handlepairchangeee");
     const updatedPairs = [...pairs];
     const updatedChoices = [...multipleChoices];
     if(field==="multiple")
@@ -119,7 +120,6 @@ export default function AssignmentTest() {
     //   }
     if (pairs.length > 0 ) { //&& pairs.some(pair => pair.answer.trim() !== '')
       const formData = new FormData();
-      formData.append('assignmentId', assignmentId);
       formData.append('time', elapsedTime);
 
       pairs.forEach((pair, index) => {
@@ -150,36 +150,31 @@ export default function AssignmentTest() {
       // Perform further actions like API request
       try {
 
-        console.log(formData.assignmentId);
-        const response = await fetch(`${BACKEND_URL}/handle_test_answers/`, {
-          method: 'POST',
+        const response = await axios.post(`${BACKEND_URL}/test/${assignmentId}/`, formData, {
           headers: {
-            'Authorization': `${token}`,
-          },
-          body: formData, // Send formData directly
+            'Authorization': `Token ${token}`,
+            'X-CSRFToken': Cookies.get('csrftoken')
+          }
         });
     
-        if (response.ok) {
-          const data = await response.json();
-          console.log('Response from Django:', data);
-          if (data.success) {
-            setSuccessMessage("Testas atliktas"); // Set the success message in state
-            //TODO: REDIRECT I PERZIURA TESTO
-            navigate(`/statistics/${assignmentId}/${userId}`);
-          }
-          // Handle other actions on successful submission
-        } else {
-          // Handle errors
-          console.error('Failed to submit homework');
+        if (response.status !== 201) {
+          throw new Error('HTTP error ' + response.status);
+        }else{
         
+          navigate(`/statistics/${assignmentId}/${userId}`);
         }
       } catch (error) {
-        console.error('Error:', error);
+          console.error(error);
+         
+          // Handle error here
       }
-    } else {
-      alert('Neatsakyta į visus klausimus');
-    }
+     
   }
+  else{
+    alert('Neatsakyta į visus klausimus');
+  }
+}
+ 
 
 
   const send = (event) => {
@@ -208,6 +203,7 @@ export default function AssignmentTest() {
       <CardBody>
         <CardTitle tag="h5">{index + 1}. {pair.question}</CardTitle>
         <p>Taškai: {pair.points}</p>
+
         {pair.qtype === 2 && (
           <Input
             type="text"

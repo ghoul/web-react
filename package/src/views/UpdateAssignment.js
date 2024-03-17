@@ -78,7 +78,7 @@ export default function UpdateAssignment() {
       setFromDateInput(response.data.from_date);
       setToDateInput(response.data.to_date);
       setHomeworkInput(response.data.homework);
-      setTitleInput(response.data.homework.title);
+      setTitleInput(response.data.homework_title);
       setClassInput(response.data.classs);    
      // console.log("grazino ass class" + data.data.classs);
     });
@@ -99,30 +99,57 @@ export default function UpdateAssignment() {
          classs : classInput,
          homework: homework
        };
-     axios.put(`${BACKEND_URL}/assignments/${assignmentId}/`, 
-     JSON.stringify(assignment), {
-       headers: {
-         'Authorization' : `Token ${token}`,
-         'Content-Type': 'application/json',
-         'X-CSRFToken': Cookies.get('csrftoken')
-       },
-     })
-     .then((response) => {
-      console.log(response);
-         if  (response.status !== 200) {
-           throw new Error('HTTP error ' + response.satatus);
-         }
-         //return response.json();
-       else{
-         setMessage( 'Operacija sėkminga!');
-         setTimeout(() => {
-           setMessage('');
-         }, 3000);
-       }})
-       .catch((error) => {
-         console.error(error);
-         setMessage('Klaida!' + error.error);
-       });
+       fetch(`${BACKEND_URL}/assignments/${assignmentId}/`, {
+        method: 'PATCH',
+        headers: {
+            'Authorization': `Token ${token}`,
+            'Content-Type': 'application/json',
+            'X-CSRFToken': Cookies.get('csrftoken')
+        },
+        body: JSON.stringify(assignment) // Serialize data to JSON
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('HTTP error ' + response.status);
+        }
+        // Handle successful response here
+        return response.json(); // Parse response JSON
+    })
+    .then(data => {
+        // Handle response data if needed
+        setMessage('Operacija sėkminga!');
+        setTimeout(() => {
+            setMessage('');
+        }, 3000);
+    })
+    .catch(error => {
+        console.error(error);
+        setMessage('Klaida!' + error.message);
+    });
+    
+    //    axios.patch(`${BACKEND_URL}/assignments/${assignmentId}/`, assignment, {
+    //     headers: {
+    //       'Authorization': `Token ${token}`,
+    //       'Content-Type': 'application/json',
+    //       'X-CSRFToken': Cookies.get('csrftoken')
+    //     },
+    //   })
+    //  .then((response) => {
+    //   console.log(response);
+    //      if  (response.status !== 200) {
+    //        throw new Error('HTTP error ' + response.satatus);
+    //      }
+    //      //return response.json();
+    //    else{
+    //      setMessage( 'Operacija sėkminga!');
+    //      setTimeout(() => {
+    //        setMessage('');
+    //      }, 3000);
+    //    }})
+    //    .catch((error) => {
+    //      console.error(error);
+    //      setMessage('Klaida!' + error.error);
+    //    });
    };
    
    const send = (event) => {

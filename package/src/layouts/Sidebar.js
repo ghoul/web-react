@@ -60,7 +60,10 @@ const Sidebar = ({ isMobileMenuOpen }) => {
   let location = useLocation();
   // let token =  Cookies.getJSON('user');//localStorage.getItem('token');
   const userString = Cookies.get('user');
-  const userData = JSON.parse(userString);
+  var userData ='';
+  if(userString) {
+    userData =JSON.parse(userString); 
+  }
   let name = "";
   let user;
   let surname="";
