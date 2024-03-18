@@ -23,7 +23,7 @@ const Starter = () => {
   var userData ='';
   if(userString) {
     userData =JSON.parse(userString); 
-  }//"";// 
+  }
   let user_email = "";
   let role = "";
   let user_id = "";

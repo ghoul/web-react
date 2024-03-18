@@ -96,24 +96,19 @@ export default function UpdateAssignment() {
      const assignment = {
          from_date : fromDateInput,
          to_date : toDateInput,
-         classs : classInput,
-         homework: homework
+         classs : classInput
        };
-       fetch(`${BACKEND_URL}/assignments/${assignmentId}/`, {
-        method: 'PATCH',
+       axios.put(`${BACKEND_URL}/assignments/${assignmentId}/`, assignment, {
         headers: {
             'Authorization': `Token ${token}`,
             'Content-Type': 'application/json',
             'X-CSRFToken': Cookies.get('csrftoken')
-        },
-        body: JSON.stringify(assignment) // Serialize data to JSON
+        }
     })
     .then(response => {
-        if (!response.ok) {
+        if (response.status !== 200) {
             throw new Error('HTTP error ' + response.status);
         }
-        // Handle successful response here
-        return response.json(); // Parse response JSON
     })
     .then(data => {
         // Handle response data if needed
