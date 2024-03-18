@@ -6,6 +6,7 @@ import './Style.css';
 // import CheckToken from './CheckToken';
 import { useAuth } from './AuthContext';
 import Cookies from 'js-cookie';
+import axios from 'axios';
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -25,28 +26,22 @@ function LoginForm() {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch(`${BACKEND_URL}/login/`, {
-        method: 'POST',
+      const response = await axios.post(`${BACKEND_URL}/login/`,
+      {email: email,
+      password: password}, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
       });
 
-      const data = await response.json();
-      if (response.ok) {
-        // Token obtained successfully, store it in localStorage
-        // localStorage.setItem('role', 2); //data.role
-        // console.log("token: " + data.token);
-        //localStorage.setItem('token', data.token);
-        // localStorage.setItem('csrf_token', data.csrf_token);
-        Cookies.set('csrftoken', data.csrf_token, { secure: true, sameSite: 'strict' });
-        Cookies.set('token', data.token, { secure: true, sameSite: 'strict' });
-        Cookies.set('user', JSON.stringify(data.user),{ secure: true, sameSite: 'strict' });
+      if (response.status === 200) {
+        Cookies.set('csrftoken', response.data.csrf_token, { secure: true, sameSite: 'strict' });
+        Cookies.set('token', response.data.token, { secure: true, sameSite: 'strict' });
+        Cookies.set('user', JSON.stringify(response.data.user),{ secure: true, sameSite: 'strict' });
         console.log("cookie: " + Cookies.get('user'));
         //handleLoginn(data.token);
 
-        login(data.token); // This will set the isLoggedIn state to true
+        login(response.data.token); // This will set the isLoggedIn state to true
         
         console.log('Login successful!'); setShowLoginForm(false); // Hide the login form on successful login
         // Navigate after a brief delay to allow for the transition
@@ -55,7 +50,7 @@ function LoginForm() {
         }, 500);
       } else {
         // Handle login error
-        setError(data.error || 'Nepavyko prisijungti');
+        setError(response.data.error || 'Nepavyko prisijungti');
       }
     } catch (error) {
       // Handle network errors or other exceptions

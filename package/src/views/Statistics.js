@@ -69,8 +69,9 @@ const Statistics = () => {
   }
 
   const download = (event) => {
-    const sortedData = students.sort((a, b) => a.surname.localeCompare(b.surname));
-    const data = sortedData.map(student => `${student.surname} ${student.name}: ${student.grade}`).join('\n');
+    console.log(students);
+    const sortedData = students.sort((a, b) => a.student_last_name.localeCompare(b.student_last_name));
+    const data = sortedData.map(student => `${student.student_last_name} ${student.student_first_name}: ${student.grade}`).join('\n');
     const blob = new Blob([data], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');

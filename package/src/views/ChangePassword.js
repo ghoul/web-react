@@ -5,13 +5,19 @@ import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './Style.css';
 import Cookies from 'js-cookie';
+import axios from 'axios';
 
 function ChangePassword() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
   const token = Cookies.get('token'); 
-
+  const userString = Cookies.get('user');
+  var userData ='';
+  if(userString) {
+    userData =JSON.parse(userString); 
+  }
+const userId = userData.id;
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -21,26 +27,27 @@ function ChangePassword() {
     }
 
     try {
-      const response = await fetch(`${BACKEND_URL}/change_password/`, {
-        method: 'PUT',
+      console.log(password);
+       const response = await axios.put(`${BACKEND_URL}/password/${userId}/`, 
+       {password: password
+      }, {
         headers: {
           'Authorization': `Token ${token}`,
           'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ password }),
+          'X-CSRFToken': Cookies.get('csrftoken')
+        }
       });
 
-      if (!response.ok) {
+      if (response.status !== 200) {
+        setMessage(response.error);
         throw new Error('Failed to change password');
+        
       }
 
-      const result = await response.json();
-      console.log("result: " + result);
-    if (result.success) {
+     
+    else {
       setMessage('Slaptažodis pakeistas sėkmingai');
-    } else {
-      setMessage(result.error);
-    }
+    } 
       setTimeout(() => {
         setMessage('');
       }, 5000);

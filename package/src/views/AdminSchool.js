@@ -19,6 +19,8 @@ import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config';
 import './Style.css';
 import Cookies from 'js-cookie';
+import axios
+ from 'axios';
 const AddSchool = () => {
   const [titleInput, setTitleInput] = useState('');
   const [fileInput, setFileInput] = useState(null);
@@ -44,28 +46,28 @@ const AddSchool = () => {
     if (activeTab !== tab) setActiveTab(tab);
   }
 
-  useEffect(() => {
-    const fetchSchools = async () => {
-      try {
-        const response = await fetch(`${BACKEND_URL}/handle_school/`, {
-          method: 'GET',
-          headers: {
-            'Authorization' : `${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-        const data = await response.json();
-        setSchools(data.schools);
-        setSchoolIdUpdate(data.schools[0].id)
-        console.log("schoolid0: " + data.schools[0].id);
-        //TODO: SYNC nes cia nespeja pakeist kai jau reikia rofyt kodel? 
-        setLicenseInputUpdate(data.schools[0].license)
-        console.log("license: " + data.schools[0].license);
-      } catch (error) {
-        console.error('Error fetching schools:', error);
-      }
-    };
+  const fetchSchools = async () => {
+    try {
+      const response = await axios.get(`${BACKEND_URL}/school/`, {
+        headers: {
+          'Authorization' : `Token ${token}`,
+          'Content-Type': 'application/json',
+          'X-CSRFToken': Cookies.get('csrftoken')
+        },
+      });
+      const data = response.data;
+      setSchools(data);
+      setSchoolIdUpdate(data[0].id)
+      console.log("schoolid0: " + data[0].id);
+      //TODO: SYNC nes cia nespeja pakeist kai jau reikia rofyt kodel? 
+      setLicenseInputUpdate(data[0].license_end)
+      console.log("license: " + data[0].license_end);
+    } catch (error) {
+      console.error('Error fetching schools:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchSchools();
   }, []);
 
@@ -87,10 +89,11 @@ const AddSchool = () => {
     console.log(licenseInput);
 
     try {
-        const response = await fetch(`${BACKEND_URL}/handle_school/`, {
+        const response = await fetch(`${BACKEND_URL}/school/`, {
             method: 'POST',
             headers: {
-                'Authorization' : `${token}`,
+              'Authorization' : `Token ${token}`,
+              'X-CSRFToken': Cookies.get('csrftoken')
             },
             body: formData,
         });
@@ -113,6 +116,7 @@ const AddSchool = () => {
         // console.log('Response Body: ', data);
         // if(blob){
           setMessage(blob ? 'Operacija sėkminga!' : 'Klaida! ');
+          fetchSchools();
           // setMessage(data.success ? 'Operacija sėkminga!' : 'Klaida! ' + data.error);
           setTimeout(() => {
               setMessage('');
@@ -138,10 +142,11 @@ const updateSchool = async (event) => {
   console.log(licenseInputUpdate);
 
   try {
-      const response = await fetch(`${BACKEND_URL}/handle_school_id/${schoolIdUpdate}/`, {
+      const response = await fetch(`${BACKEND_URL}/school/update/${schoolIdUpdate}/`, {
           method: 'POST',
           headers: {
-              'Authorization' : `${token}`,
+            'Authorization' : `Token ${token}`,
+            'X-CSRFToken': Cookies.get('csrftoken')
           },
           body: formData2,
       });
@@ -182,14 +187,13 @@ const deleteSchool = async (event) => {
   event.preventDefault();
 
   try {
-      fetch(`${BACKEND_URL}/handle_school_id/${schoolIdDelete}/`, {
-          method: 'DELETE',
+      axios.delete(`${BACKEND_URL}/school/${schoolIdDelete}/`, {
           headers: {
-              'Authorization' : `${token}`,
+              'Authorization' : `Token ${token}`,
               'Content-Type': 'application/json',
+              'X-CSRFToken': Cookies.get('csrftoken')
           }
-      }).then(response => response.json())
-      .then(data => {
+      }).then(response => {
         // Handle success, update homework state, and close the modal
         const updatedSchools = schools.filter(school => school.id !== schoolIdDelete);
         setSchools(updatedSchools);
@@ -436,6 +440,7 @@ const hideModalHandler = () => {
         <thead>
           <tr>
             <th>Pavadinimas</th>
+            <th>Licenzija iki</th>
             <th>Šalinti</th>
           </tr>
         </thead>
@@ -448,6 +453,7 @@ const hideModalHandler = () => {
           schools.map((school) => (
             <tr key={school.id}>
               <td>{school.title}</td>
+              <td>{school.license_end}</td>
             
               <td>
              <Button style={{  border: 'none', background: 'transparent' }} onClick={() => showModalHandler(school.id)}>             
