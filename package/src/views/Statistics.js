@@ -145,22 +145,23 @@ const Statistics = () => {
                         height="45"
                       />
                       <div className="ms-3">
-                        <h6 className="mb-0">{tdata.student_first_name}</h6>
-                        <span className="text-muted">{tdata.student_last_name}</span>
+                        <h6 className="mb-0"> {tdata.student_first_name || tdata.first_name}</h6>
+                        <span className="text-muted">{tdata.student_last_name || tdata.last_name}</span>
                       </div>
                     </div>
                   </td>
                   <td>
-                    {tdata.status === "Bad" ? (
-                      <span className="p-2 rounded-circle d-inline-block ms-3" style={{ backgroundColor: '#bf1a2f' }}></span> 
+                    {tdata.status === "Good" ? (
+                      <span className="p-2 rounded-circle d-inline-block ms-3" style={{ backgroundColor: '#a6d82b' }}></span>
+                      
                     ) : tdata.status === "Average" ? (
                       <span className="p-2 rounded-circle d-inline-block ms-3"  style={{ backgroundColor: '#f3943c' }}></span> 
                     ) : (
-                      <span className="p-2 rounded-circle d-inline-block ms-3" style={{ backgroundColor: '#a6d82b' }}></span>
+                      <span className="p-2 rounded-circle d-inline-block ms-3" style={{ backgroundColor: '#bf1a2f' }}></span> 
                     )}
                   </td>
                   <td>{tdata.date}</td>                  
-                  <td>{tdata.time}</td>
+                  <td>{tdata.time.slice(0, 8)}</td>
                   <td>{tdata.points}</td>
                   {((((role===2 || role ===3)|| tdata.student_id === loggedId ) && (tdata.status !== "Bad")) && <td><Button style={{backgroundColor: 'transparent', border: 'none'}}><Link to={`/statistics/${assignmentId}/${tdata.student_id}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> ➔➔ </Link></Button></td> )}
                 </tr>
