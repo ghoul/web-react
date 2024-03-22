@@ -13,7 +13,6 @@ export default function CheckHomework() {
   const { homeworkId } = useParams();
   const [homework, setHomework] = useState([]);
   const [edit, setEdit] = useState(true);
-  const [showModal, setShowModal] = useState(false);
   const token = Cookies.get('token'); 
   const navigate  = useNavigate();
   useEffect(() => {
@@ -36,7 +35,7 @@ export default function CheckHomework() {
     };
 
     fetchHomework();
-  }, []);
+  });
 
   const send = (event) => {
     navigate(`/all-homework`);

@@ -37,7 +37,7 @@ const Statistics = () => {
       .catch(error => {
         console.error('Error fetching homeworks:', error);
       });
-  }, []);
+  });
 
   const send = (event) => {
     navigate(`/`);

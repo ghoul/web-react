@@ -33,7 +33,7 @@ const AllHomework = () => {
     };
 
     fetchHomework();
-}, []);
+});
 
   const deleteHomework = async () => {
       try {
@@ -68,7 +68,7 @@ const AllHomework = () => {
   }
   return (
     <div className="list">
-      <Modal show={showModal} hide={hideModalHandler} onRemoveProduct={deleteHomework}></Modal>
+      <Modal show={showModal} hide={hideModalHandler} onConfirm={deleteHomework}></Modal>
       <Button style={{ backgroundColor: '#171a1e', color: 'white', marginBottom: '10px', border: 'none' }} onClick={send}> ← Į pradžią</Button>
       <Button  style={{backgroundColor: '#a6d22c', border: 'none', float: 'right', marginBottom: '10px',}}>
             <Link to={`/create-homework`} className="nav-link" style={{ color: 'black' }}>

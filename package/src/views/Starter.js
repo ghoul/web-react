@@ -58,7 +58,7 @@ const Starter = () => {
   };
   useEffect(() => {
     getAssignments();
-  }, []);
+  });
 
   const showModalHandler = (assignmentId) => {
     setSelectedAssignmentId(assignmentId);

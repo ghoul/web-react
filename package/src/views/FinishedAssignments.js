@@ -46,7 +46,7 @@ const FinishedAssignments = () => {
         console.error('Error fetching homeworks finished:', error);
       });
     }
-  }, []);
+  });
   const send = (event) => {
     navigate(`/`);
   }
@@ -101,7 +101,7 @@ const FinishedAssignments = () => {
             )))}
             </tbody>
           </Table>)}
-          
+
           {role===1 && (<Table className="no-wrap mt-3 align-middle" responsive borderless>
             <thead>
               <tr>

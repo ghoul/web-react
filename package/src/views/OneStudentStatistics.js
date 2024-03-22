@@ -10,7 +10,6 @@ export default function OneStudentStatistics() {
   const [title, setTitle] = useState('');
   const [name, setName] = useState('');
   const [questionsCount, setQuestionsCount] = useState('');
-  const [showModal, setShowModal] = useState(false);
   const [totalPoints, setTotalPoints] = useState('');
   const [gotPoints, setGotPoints] = useState('');
   const [grade, setGrade] = useState('');
@@ -30,9 +29,7 @@ export default function OneStudentStatistics() {
         },
       });
       const data = await response.json();
-      console.log(data);
-
-      // Check if there are results
+      
       if (data.results.length > 0) {
         setResults(data.results);
         setTitle(data.results[0].question.homework.title);

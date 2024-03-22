@@ -28,7 +28,7 @@ const Podium = () => {
   };
   useEffect(() => {
    getPodium();
-  }, []);
+  });
 
   const renderPodiumUser = (user, index) => (
     <div key={index} className={`${styles.podium} ${styles[`podium-${index + 1}`]}`}>

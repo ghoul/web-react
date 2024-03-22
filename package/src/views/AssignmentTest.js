@@ -48,7 +48,7 @@ export default function AssignmentTest() {
     };
 
     fetchAssignment();
-  }, []); 
+  }); 
 
   const handlePairChange = (index, field, value) => {
     const updatedPairs = [...pairs];

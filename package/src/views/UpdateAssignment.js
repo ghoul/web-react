@@ -40,7 +40,7 @@ export default function UpdateAssignment() {
 
    useEffect(() => { 
     getAssignment();
-   }, []);
+   });
    const saveAssignment = (event) => {
      event.preventDefault();
      const assignment = {

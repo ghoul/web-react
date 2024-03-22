@@ -50,7 +50,7 @@ const AddSchool = () => {
 
   useEffect(() => {
     fetchSchools();
-  }, []);
+  });
 
   const createSchool = async (event) => {
     event.preventDefault();
@@ -372,7 +372,7 @@ const hideModalHandler = () => {
           {message && <div style={{ marginBottom: '10px', color: message.includes('Klaida') ? 'red' : 'green' }}>{message}</div>}
            
           <div className="list">
-            <Modal show={showModal} hide={hideModalHandler} onRemoveProduct={deleteSchool}></Modal>
+            <Modal show={showModal} hide={hideModalHandler} onConfirm={deleteSchool}></Modal>
             <Table>
               <thead>
                 <tr>

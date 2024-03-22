@@ -37,7 +37,7 @@ function Profile() {
       }
     }
     fetchData();
-  }, []);
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();

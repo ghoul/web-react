@@ -12,13 +12,12 @@ const AllHomework = () => {
   const [pairs, setPairs] = useState([{ type: 'select', question: '', options: [], answer: '', image: null, points: 0 }]);
   const [successMessage, setSuccessMessage] = useState('');
   const [correctOptionIndexes, setCorrectOptionIndexes] = useState(Array(pairs.length).fill(null));
-  //TODO: gali but daugiau nei pairs ilgis
-  const [multipleOptionIndexes, setMultipleOptionIndexes] = useState([]) //{qid: '', oid: ''} dic with question id and option id corrects multiple
+
+  const [multipleOptionIndexes, setMultipleOptionIndexes] = useState([]) 
   const navigate = useNavigate();
   let token = Cookies.get('token');
 
   const handleHomeworkNameChange = (e) => {
-    console.log(e.target.value);
     setHomeworkName(e.target.value);
   };
 
@@ -75,8 +74,6 @@ const AllHomework = () => {
     }
 
     setMultipleOptionIndexes(updatedMultipleOptionIndexes);
-    console.log(multipleOptionIndexes);
-    console.log(pairs);
   };
 
   const checkCorrect = (qid, oid) =>{

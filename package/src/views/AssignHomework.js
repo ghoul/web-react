@@ -40,7 +40,7 @@ export default function AssignHomework() {
   };
   useEffect(() => {
     getClasses();
-  }, []);
+  });
 
   const assignHomework = async (event) => {
     event.preventDefault();
