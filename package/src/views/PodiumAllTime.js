@@ -5,7 +5,7 @@ import podium3 from '../assets/images/podium3.png';
 
 import user1 from '../assets/images/users/mrgoose.png'; // Import your podium images
 import user2 from '../assets/images/users/msgoose.png';
-import user3 from '../assets/images/users/user3.jpg';
+
 
 import styles from './Podium.module.css';
 import React, { useEffect, useState } from 'react';

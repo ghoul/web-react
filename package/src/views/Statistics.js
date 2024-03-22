@@ -7,9 +7,6 @@ import BACKEND_URL from '../layouts/config';
 import { Card, CardBody, CardTitle, CardSubtitle, Table } from "reactstrap";
 import user1 from "../assets/images/users/mrgoose.png";
 import user2 from "../assets/images/users/msgoose.png";
-import user3 from "../assets/images/users/user3.jpg";
-import user4 from "../assets/images/users/user4.jpg";
-import user5 from "../assets/images/users/user5.jpg";
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 // import './Style.css';
@@ -37,6 +34,7 @@ const Statistics = () => {
         },
       }) // Replace with your actual endpoint
       .then(response => {
+        console.log(response.data);
         console.log("title" + response.data.assignment.title);
         setStudents(response.data.assignment_results);
         setTitle(response.data.assignment.title);
@@ -163,7 +161,7 @@ const Statistics = () => {
                   <td>{tdata.date}</td>                  
                   <td>{tdata.time.slice(0, 8)}</td>
                   <td>{tdata.points}</td>
-                  {((((role===2 || role ===3)|| tdata.student_id === loggedId ) && (tdata.status !== "Bad")) && <td><Button style={{backgroundColor: 'transparent', border: 'none'}}><Link to={`/statistics/${assignmentId}/${tdata.student_id}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> ➔➔ </Link></Button></td> )}
+                  {((((role===2 || role ===3)|| tdata.student === loggedId ) && (tdata.status !== "Bad")) && <td><Button style={{backgroundColor: 'transparent', border: 'none'}}><Link to={`/statistics/${assignmentId}/${tdata.student}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> ➔➔ </Link></Button></td> )}
                 </tr>
               ))}
             </tbody>

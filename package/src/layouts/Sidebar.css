@@ -6,8 +6,8 @@
         position: fixed;
         top: 0;
         left: 0;
-        width: 250px; /* Set a fixed width for the sidebar */
-        height: 100%; /* Make sidebar full height */
+        width: 250px;
+        height: 100%; 
         background-color: #fff;
         z-index: 1000;
         overflow-y: auto;
@@ -20,7 +20,7 @@
       }
       
       .sidebarNav {
-        flex-grow: 1; /* Allow sidebar navigation to grow and occupy remaining space */
+        flex-grow: 1;
       }
       
       .mobileMenuButton {
@@ -35,19 +35,7 @@
       
       .profilebg {
         width: 100%;
-        height: 200px; /* Adjust height as needed */
-      }
-
-       /* .overlay2 {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5); 
-        z-index: 999;
-      }  */
-      
-    
+        height: 200px;
+      } 
 }  
    

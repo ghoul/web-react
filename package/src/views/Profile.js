@@ -29,6 +29,7 @@ function Profile() {
           },
         });
         const userData = response.data;
+        console.log(userData);
         setName(userData.first_name);
         setSurname(userData.last_name);
         setEmail(userData.email);
@@ -43,26 +44,20 @@ function Profile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const updatedData = {
-      email
+      email : email
     };
    console.log(JSON.stringify(updatedData));
     try {
-      const response = await axios.patch(`${BACKEND_URL}/user_profile/${user.id}/`, //TODO: PATCH
-      JSON.stringify(updatedData), {
+      const response = await axios.put(`${BACKEND_URL}/user_profile/${user.id}/`, //TODO: PATCH
+      updatedData, {
         headers: {
           'Authorization' : `Token ${token}`,
           'Content-Type': 'application/json',
           'X-CSRFToken': Cookies.get('csrftoken')
         }
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to update profile');
-      }
-
-      const result = await response.json();
-      localStorage.setItem('token', result.token);
-      setMessage(result.success ? 'Profile updated successfully' : 'Failed to update profile');
+      console.log(response.status);
+      setMessage(response.status == 200 ? 'Profile updated successfully' : 'Failed to update profile');
       setTimeout(() => {
         setMessage('');
       }, 3000);

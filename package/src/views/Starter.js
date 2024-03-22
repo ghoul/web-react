@@ -20,10 +20,7 @@ const Starter = () => {
   const { isLoggedIn } = useAuth();
   const token = Cookies.get('token'); 
   const userString = Cookies.get('user');
-  var userData ='';
-  if(userString) {
-    userData =JSON.parse(userString); 
-  }
+  var userData = userString ? JSON.parse(userString) : ''
   let user_email = "";
   let role = "";
   let user_id = "";

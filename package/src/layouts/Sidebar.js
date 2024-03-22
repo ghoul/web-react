@@ -4,12 +4,10 @@ import user2 from "../assets/images/users/msgoose.png";
 import user1 from "../assets/images/users/mrgoose.png";
 import probg from "../assets/images/bg/fonas2.png";
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
-// import CheckToken from "../views/CheckToken";
 import { useAuth } from '../views/AuthContext';
-import {useState} from 'react'
 import './Sidebar.css'
 import Cookies from "js-cookie";
+
 const navigation = [
   {
     title: "Pagrindinis",
@@ -21,8 +19,6 @@ const navigation = [
     href: "/podium",
     icon: "bi bi-trophy-fill",
   },
-  //TODO: ADMIN DALYKAI
-
   {
     title: "Namų darbai",
     href: "/all-homework",
@@ -46,67 +42,38 @@ const navigation = [
 ];
 
 const Sidebar = ({ isMobileMenuOpen }) => {
-  //const { handleLogoutt } = CheckToken();
   const { logout } = useAuth();
-  const showMobilemenu = () => {
-    document.getElementById("sidebarArea").classList.toggle("showSidebar");
-  };
-  // const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  // const toggleMobileMenu = () => {
-  //   setMobileMenuOpen(!isMobileMenuOpen);
-  // };
 
   let location = useLocation();
-  // let token =  Cookies.getJSON('user');//localStorage.getItem('token');
   const userString = Cookies.get('user');
-  var userData ='';
-  if(userString) {
-    userData =JSON.parse(userString); 
-  }
+  var userData = userString ? JSON.parse(userString) : ''
   let name = "";
-  let user;
+  let user = user1;
   let surname="";
   let gender = 0;
   let role = "";
   if(userData!=null) {
-    // const decodedToken = jwtDecode(token);
-
-// Access user attributes
     name = userData.first_name;
     surname = userData.last_name;
     role = userData.role;
     gender = userData.gender;
-    // name = decodedToken.name;
-    // surname = decodedToken.surname;
-    // role = decodedToken.role;
-    // console.log("role:) :   " + role);
-    // gender = decodedToken.gender;
-    if(gender===1)
-    {
-      user = user1;
-    }
-    else user = user2;
+    user = gender === 1 ? user1 : user2;
   }
 
   const filteredNavigation = navigation.filter((navItem) => {
     if (role === 3) { //admin
       return (
-        // navItem.title !== "Mokytojai" &&
         navItem.title !== "Lyderių lentelė" &&
         navItem.title !== "Užbaigti namų darbai" &&
         navItem.title !== "Namų darbai" 
       );
     }else if (role === 2) { //teacher
       return (
-        // navItem.title !== "Mokytojai" &&
         navItem.title !== "Lyderių lentelė" &&
         navItem.title !== "Mokyklų tvarkymas"
       );
     } else if (role === 1) { //student
       return (
-        // navItem.title !== "Mokiniai" &&
-        // navItem.title !== "Klasės" &&
         navItem.title !== "Namų darbai" &&
         navItem.title !== "Mokyklų tvarkymas"
       );
@@ -117,29 +84,22 @@ const Sidebar = ({ isMobileMenuOpen }) => {
 
   const navigate  = useNavigate();
   const handleLogout = () => {
-    localStorage.clear(); // Clear all items from localStorage
-   // handleLogoutt(null);
+    localStorage.clear(); 
     logout();
     navigate('/login');
-    
   };
-
 
   return (
     <div className={`sidebarWrapper ${isMobileMenuOpen ? 'mobileMenuOpen' : ''}`}>
-      {/* <Button className="mobileMenuButton" onClick={toggleMobileMenu}>
-        {isMobileMenuOpen ? 'Close Menu' : 'Open Menu'}
-      </Button> */}
-       
       <div className="d-flex flex-column position-relative">
         <div className="profilebg position-relative" 
         style={{
       background: `url(${probg}) no-repeat` ,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
-      width: '250px', // Set a fixed width
-      height: '250px', // Set a fixed height
-      position: 'relative', // Add this line to make sure the position is relative
+      width: '250px', 
+      height: '250px', 
+      position: 'relative',
       }}>
           <div className="d-flex align-items-center justify-content-center position-absolute top-50 start-50 translate-middle">
       <img src={user} alt="user" className="rounded-circle" width="170" style={{ marginTop: '-30px' }} />
@@ -177,6 +137,5 @@ const Sidebar = ({ isMobileMenuOpen }) => {
     </div>
   );
 };
-
 
 export default Sidebar;
