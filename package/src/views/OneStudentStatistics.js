@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Card, CardTitle, CardBody, Row, Col, CardSubtitle,Table , Label, Input} from "reactstrap";
+import { Button, Card, CardTitle, CardBody, Row, Col, CardSubtitle, Label, Input} from "reactstrap";
 import { useNavigate, useParams } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config.js';
 import Cookies from "js-cookie";
@@ -17,7 +17,6 @@ export default function OneStudentStatistics() {
   const [answered, setAnswered] = useState('0');
   const navigate = useNavigate();
   const token = Cookies.get('token'); 
- let tempGrade = 0;
 
  useEffect(() => {
   const fetchHomework = async () => {
@@ -37,10 +36,8 @@ export default function OneStudentStatistics() {
       if (data.results.length > 0) {
         setResults(data.results);
         setTitle(data.results[0].question.homework.title);
-        console.log("titleeee: " + data.results[0].question.homework.title);
         var fullName = `${data.results[0].student.first_name} ${data.results[0].student.last_name}`;
         setName(fullName);
-        console.log("student name: " + data.results[0].student.first_name);
         setQuestionsCount(data.results.length);
         setTotalPoints(data.points);
         setGotPoints(data.score);
@@ -61,11 +58,7 @@ export default function OneStudentStatistics() {
   const send = () => {
     navigate(`/statistics/${assignmentId}`);
   };
-//TODO: grazint is django arba pagal points kiek gavo
-  const calculateCorrectAnswers = () => {
-    const correctAnswers = results.filter(pair => pair.question.answer === pair.answer);
-    return correctAnswers.length;
-  };
+
   const calculatePercentage = () => {
     const percentage = (answered / questionsCount) * 100;
     return percentage;
@@ -104,33 +97,28 @@ export default function OneStudentStatistics() {
             </Col>
 
             <Col md={4} className="d-flex flex-column justify-content-between">
-  <div className="d-flex flex-row align-items-center">
-    <span className="flex-shrink-0 text-end me-2">Atsakymai:</span>
-    <div className={`p-2 ${getColorClass()}`} style={{ width: '50px', borderRadius: '10px', color: 'white', textAlign: 'center' }}>
-      {answered}/{questionsCount}
-    </div>
-  </div>
+              <div className="d-flex flex-row align-items-center">
+                <span className="flex-shrink-0 text-end me-2">Atsakymai:</span>
+                <div className={`p-2 ${getColorClass()}`} style={{ width: '50px', borderRadius: '10px', color: 'white', textAlign: 'center' }}>
+                  {answered}/{questionsCount}
+                </div>
+              </div>
 
-  <div className="d-flex flex-row align-items-center mt-2">
-    <span className="flex-shrink-0 text-end me-2">Taškai:</span>
-    <div className={`p-2 ${getColorClass()}`} style={{ borderRadius: '10px', color: 'white',textAlign: 'center'  }}>
-      {gotPoints}/{totalPoints}
-    </div>
-  </div>
-</Col>
+              <div className="d-flex flex-row align-items-center mt-2">
+                <span className="flex-shrink-0 text-end me-2">Taškai:</span>
+                <div className={`p-2 ${getColorClass()}`} style={{ borderRadius: '10px', color: 'white',textAlign: 'center'  }}>
+                  {gotPoints}/{totalPoints}
+                </div>
+              </div>
+            </Col>
 
 
             <Col md={4} className="d-flex align-items-center justify-content-center">
             <span
                 className={` points-paragraph rounded-circle p-2 ms-2 ${getColorClass()}`}
-                style={{
-                  display: 'inline-flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  width: '80px',
-                  height: '80px',
-                  color: 'white',
-                  fontSize: '40px'
+                style={{display: 'inline-flex',justifyContent: 'center',
+                  alignItems: 'center',width: '80px', height: '80px',
+                  color: 'white', fontSize: '40px'
                 }}
               >
                 {grade}
@@ -148,9 +136,9 @@ export default function OneStudentStatistics() {
                 </Col>
                 <Col>
                 <p className="card-text">
-                        <strong>Taškai: </strong>
-                        {pair.points}/{pair.question.points}
-                    </p>
+                      <strong>Taškai: </strong>
+                      {pair.points}/{pair.question.points}
+                </p>
                 </Col>
                 </Row>
                 {pair.question.qtype===2 && (     
@@ -193,47 +181,43 @@ export default function OneStudentStatistics() {
                     </>
                   )}  
 
-                  {(pair.question.qtype === 1 || pair.question.qtype === 3) && (
-    <>
-        {pair.question.options.map((option, index) => {
-            // Filter selected options by student and question
-            const filteredOptions = pair.selected_options.filter(selectedOption => (
-                selectedOption.student == studentId && selectedOption.question == pair.question.id && selectedOption.option == option.id
-            ));
+          {(pair.question.qtype === 1 || pair.question.qtype === 3) && (
+            <>
+            {pair.question.options.map((option, index) => {
+                const filteredOptions = pair.selected_options.filter(selectedOption => (
+                    selectedOption.student == studentId && selectedOption.question == pair.question.id && selectedOption.option == option.id
+                ));
 
-            // Check if any filtered option matches the original option
-            const isSelected = filteredOptions.length > 0;
-            return (
-                <div key={index} style={{ whiteSpace: 'pre' }}>
-                    <Label check>
-                        <Input
-                            type={pair.question.qtype === 1 ? "radio" : "checkbox"}
-                            checked={isSelected}
-                            readOnly
-                        />
-                        {'  '} {option.text} {" "}
+                const isSelected = filteredOptions.length > 0;
+                return (
+                    <div key={index} style={{ whiteSpace: 'pre' }}>
+                        <Label check>
+                            <Input
+                                type={pair.question.qtype === 1 ? "radio" : "checkbox"}
+                                checked={isSelected}
+                                readOnly
+                            />
+                                  {'  '} {option.text} {" "}
 
-                              {isSelected && pair.question.correct_options.some(correctOption => correctOption.id === option.id) && (
-                                  <span className="text-success"><i className="bi bi-check-lg"></i></span>
-                              )}
-                              {isSelected && !pair.question.correct_options.some(correctOption => correctOption.id === option.id) && (
-                                  <span className="text-danger"><i className="bi bi-x-lg"></i></span>
-                              )}
-                              {!isSelected && pair.question.correct_options.some(correctOption => correctOption.id === option.id) && (
-                                  <span className="text-success"><i className="bi bi-check-lg"></i></span>
-                              )}
-                    </Label>
-                </div>
-            );
-        })}
-    </>
-)}
-
-                              
-              </CardBody>
-            </Card>
-          ))}
-      </Col>
+                                  {isSelected && pair.question.correct_options.some(correctOption => correctOption.id === option.id) && (
+                                      <span className="text-success"><i className="bi bi-check-lg"></i></span>
+                                  )}
+                                  {isSelected && !pair.question.correct_options.some(correctOption => correctOption.id === option.id) && (
+                                      <span className="text-danger"><i className="bi bi-x-lg"></i></span>
+                                  )}
+                                  {!isSelected && pair.question.correct_options.some(correctOption => correctOption.id === option.id) && (
+                                      <span className="text-success"><i className="bi bi-check-lg"></i></span>
+                                  )}
+                        </Label>
+                    </div>
+                      );
+                  })}
+              </>
+          )}                         
+            </CardBody>
+          </Card>
+        ))}
+    </Col>
   
     </Row>
   );

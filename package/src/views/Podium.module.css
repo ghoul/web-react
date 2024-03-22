@@ -1,5 +1,3 @@
-/* src/components/Podium.module.css */
-
 .podium-container {
   margin-top: 30px;
   display: flex;
@@ -38,10 +36,10 @@
 }
 
 .user-profile {
-  position: relative; /* Change to relative positioning */
+  position: relative; 
   text-align: center;
   width: 100%;
-  margin-top: 10px; /* Add margin at the top to separate from the image */
+  margin-top: 10px;
 }
 
 .user-profile img {
@@ -51,6 +49,6 @@
 
 .list-container {
   text-align: center;
-  margin-top: 20px; /* Add margin at the top of the list to separate from podium */
+  margin-top: 20px; 
   width: 100%;
 }

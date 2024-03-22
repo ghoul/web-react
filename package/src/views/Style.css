@@ -51,9 +51,9 @@
 
   .link-icon {
     background: transparent;
-    color: black; /* Updated color */
-    text-decoration: none; /* Updated text decoration */
-    font-weight: bold; /* Updated font weight */
+    color: black; 
+    text-decoration: none; 
+    font-weight: bold; 
     border: none;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -61,15 +61,15 @@
 
   .link-add {
     background: transparent;
-    color: black; /* Updated color */
-    text-decoration: none; /* Updated text decoration */
+    color: black; 
+    text-decoration: none;
     border: none;
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
 
   .circle-button {
-    width: 50px; /* Set the width and height as needed */
+    width: 50px;
     height: 50px;
     background: #a6d22c;
     color: white;
@@ -77,6 +77,5 @@
     padding: 8px 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    border-radius: 50%; /* Makes the button a perfect circle */
-  }
-  
+    border-radius: 50%; 
+  }  

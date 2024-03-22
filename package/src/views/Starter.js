@@ -4,11 +4,8 @@ import { Button } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config.js';
 import { Card, CardBody, CardTitle, CardSubtitle, Table } from "reactstrap";
-import { useNavigate } from 'react-router-dom';
 import { Modal } from "./Modal.js";
-import { jwtDecode } from 'jwt-decode';
 import './Style.css';
-import { useAuth } from '../views/AuthContext';
 import Cookies from 'js-cookie';
 
 const Starter = () => {
@@ -16,24 +13,17 @@ const Starter = () => {
   const [homeworkStudent, setHomeworkStudent] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
-  // const [user_id, setUserid] =useState('');
-  const { isLoggedIn } = useAuth();
   const token = Cookies.get('token'); 
   const userString = Cookies.get('user');
   var userData = userString ? JSON.parse(userString) : ''
-  let user_email = "";
   let role = "";
   let user_id = "";
-  if(userData!=null)
+  if(userData !== '')
   {
-    //const decodedToken = jwtDecode(token);
-    user_email = userData.email; //decodedToken.email;
-    role = userData.role; //decodedToken.role;
-   user_id = userData.id;
+    role = userData.role; 
+    user_id = userData.id;
   }
 
-
-  const navigate  = useNavigate();
   const getAssignments = () => {
     if (role === 2) {
     axios.get(`${BACKEND_URL}/assignments_teacher/`, {
@@ -44,7 +34,6 @@ const Starter = () => {
       },
     }) 
       .then(response => {
-        console.log(response.data);
         setHomeworkTeacher(response.data);
       })
       .catch(error => {
@@ -57,9 +46,8 @@ const Starter = () => {
         'Content-Type': 'application/json',
         'X-CSRFToken': Cookies.get('csrftoken')
       },
-    }) // Replace with your actual endpoint
+    })
       .then(response => {
-        console.log(response.data);
         setHomeworkStudent(response.data);
       })
       .catch(error => {
@@ -82,8 +70,6 @@ const Starter = () => {
   };
 
   const deleteAssignment = () => {
-    console.log("assid: " + selectedAssignmentId);
-
     axios.delete(`${BACKEND_URL}/assignments_teacher/${selectedAssignmentId}/`, {
         headers: {
             'Authorization': `Token ${token}`,
@@ -92,27 +78,19 @@ const Starter = () => {
         },
     })
     .then(response => {
-        // Handle success response
         hideModalHandler();
         getAssignments();
-        console.log("Assignment deleted successfully");
     })
     .catch(error => {
-        // Handle error
         console.error('Failed to delete assignment:', error);
     });
 };
 
-  
   const handleStartGame = async (assignmentId) => {
     try {    
-        //console.log("user_id; " + user_id);
-        const url = `http://localhost:8080/?student_id=${user_id}&assignment_id=${assignmentId}`; // Replace with the desired URL
+        const url = `http://localhost:8080/?student_id=${user_id}&assignment_id=${assignmentId}`;
         window.open(url, '_blank');
-        //window.location.href = 'http://localhost:8080'; // Assuming the game is served at this URL
-        console.log("startino zaidima");
     } catch (error) {
-      // Handle any network-related errors
       console.error('Network error:', error);
     }
   };
@@ -164,19 +142,17 @@ const Starter = () => {
                   </td>
                   <td>
                   <Button className='noback-button' style={{background:'transparent', border:'none'}}>
-  <Link to={`/statistics/${tdata.id}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> ➔➔</Link>
-</Button>
-</td>
-<td><Button className='noback-button' style={{background:'transparent', border:'none'}}>
-<Link to={`/assignment/edit/${tdata.id}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> <i class="bi bi-pencil-fill"></i></Link>
-  </Button></td>
-<td>
-  <Button className='noback-button' style={{background:'transparent', border:'none'}} onClick={() => showModalHandler(tdata.id)}>
-  ✖
-  </Button>
-</td>
-
-
+                    <Link to={`/statistics/${tdata.id}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> ➔➔</Link>
+                  </Button>
+                  </td>
+                  <td><Button className='noback-button' style={{background:'transparent', border:'none'}}>
+                  <Link to={`/assignment/edit/${tdata.id}`} className="nav-link" style={{ color: 'black', textDecoration: 'none', fontWeight: 'bold' }}> <i class="bi bi-pencil-fill"></i></Link>
+                    </Button></td>
+                  <td>
+                    <Button className='noback-button' style={{background:'transparent', border:'none'}} onClick={() => showModalHandler(tdata.id)}>
+                    ✖
+                    </Button>
+                  </td>
                 </tr>
               )))}
             </tbody>
@@ -197,30 +173,30 @@ const Starter = () => {
             </thead>
             <tbody>
             {homeworkStudent.length === 0 ? (
-              
-        <tr className="border-top">
-        <td colSpan="6" style={{ textAlign: 'center', fontStyle: 'italic', color: '#888' }}>Neatliktų namų darbų nėra</td>
-      </tr>
-      
+                <tr className="border-top">
+                  <td colSpan="6" style={{ textAlign: 'center', fontStyle: 'italic', color: '#888' }}>Neatliktų namų darbų nėra</td>
+                </tr>
             ) : (homeworkStudent.map((tdata, index) => (
                 <tr key={index} className="border-top">
                   <td>{tdata.homework_title}</td>
                   <td>{tdata.from_date}</td>
                   <td>{tdata.to_date}</td>
                   <td>{tdata.teacher_first_name} {tdata.teacher_last_name}</td>
-                  {/* TODO: Į ŽAIDIMĄ LINKAS */}
-                  <td>  <Button className='noback-button' style={{background:'transparent', border:'none'}}>
+
+                  <td>
+                    <Button className='noback-button' style={{background:'transparent', border:'none'}}>
                     <span className="nav-link" style={{ color: '#a6d22c', textDecoration: 'none', fontWeight: 'bold' }}
                      onClick={() => handleStartGame(tdata.id)}> 
                      <i class="bi bi-controller"></i>
-                      </span></Button></td>
-
-                  <td>  <Button className='noback-button' style={{background:'transparent', border:'none'}}>
-                  <Link to={`/test/${tdata.id}`} className="nav-link" 
-                  style={{ color: '#a6d22c', textDecoration: 'none', fontWeight: 'bold' }}>
-                    <i class="bi bi-clipboard-check"></i>
-                  </Link>
-                  </Button>
+                    </span></Button>
+                    </td>
+                  <td>
+                    <Button className='noback-button' style={{background:'transparent', border:'none'}}>
+                     <Link to={`/test/${tdata.id}`} className="nav-link" 
+                      style={{ color: '#a6d22c', textDecoration: 'none', fontWeight: 'bold' }}>
+                      <i class="bi bi-clipboard-check"></i>
+                     </Link>
+                   </Button>
                   </td>
                 </tr>
               )))}
@@ -230,9 +206,6 @@ const Starter = () => {
 
         </CardBody>
       </Card>
-      {/* <Button className="more-button" style={{background:'#a6d22c', border:'none'}} >
-  <Link to={`/finished-assignments`} className="nav-link" style={{ color: 'white' }}>Užbaigti namų darbai →</Link>
-</Button> */}
     </div>
   );
 };

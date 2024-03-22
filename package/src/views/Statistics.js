@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button, Col, Row } from 'reactstrap';
 import { Link, useParams } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
 import BACKEND_URL from '../layouts/config';
 import { Card, CardBody, CardTitle, CardSubtitle, Table } from "reactstrap";
 import user1 from "../assets/images/users/mrgoose.png";
@@ -15,9 +14,7 @@ const Statistics = () => {
   const [students, setStudents] = useState([]);
   const [title, setTitle] = useState('');
   const [classs, setClasss] = useState('');
-  // const [loggedId, setLoggedId] = useState('');
   const token = Cookies.get('token'); 
-  //const decodedToken = jwtDecode(token);
   const userString = Cookies.get('user');
   const userData = JSON.parse(userString);
   const role = userData.role;
@@ -25,42 +22,22 @@ const Statistics = () => {
   const navigate  = useNavigate();
 
   useEffect(() => {
-    // Fetch homeworks data from your backend (assuming the endpoint is /api/homeworks)
     axios.get(`${BACKEND_URL}/assignment_statistics/${assignmentId}/`, {
         headers: {
           'Authorization' : `Token ${token}`,
           'Content-Type': 'application/json',
           'X-CSRFToken': Cookies.get('csrftoken')
         },
-      }) // Replace with your actual endpoint
+      })
       .then(response => {
-        console.log(response.data);
-        console.log("title" + response.data.assignment.title);
         setStudents(response.data.assignment_results);
         setTitle(response.data.assignment.title);
         setClasss(response.data.assignment.class_title);
-        //setLoggedId(response.data.id);
-        console.log("loggedid: " + loggedId);
       })
       .catch(error => {
         console.error('Error fetching homeworks:', error);
       });
   }, []);
-
-  const handleEdit = (id) => {
-    // Handle edit button click
-    console.log('Edit homework with ID:', id);
-  };
-
-  const handleDelete = (id) => {
-    // Handle delete button click
-    console.log('Delete homework with ID:', id);
-  };
-
-  const handleAssign = (id) => {
-    // Handle assign button click
-    console.log('Assign homework with ID:', id);
-  };
 
   const send = (event) => {
     navigate(`/`);
@@ -76,32 +53,22 @@ const Statistics = () => {
     link.href = url;
     const formattedTitle = title.toLowerCase().replace(/\s/g, '_');
     const today = new Date();
-    const formattedDate = today.toISOString().slice(0,10); // Format: YYYY-MM-DD
+    const formattedDate = today.toISOString().slice(0,10);
     link.setAttribute('download', `${formattedTitle}_${classs}_${formattedDate}.txt`);
     document.body.appendChild(link);
     link.click();
   }
 
-  console.log("loggedid2: " + loggedId);
-  const typeOfData = typeof role;
-  console.log(`The type of 'role' is: ${typeOfData}`);
   return (
     <div>
-        <Row>
-   <Card>
+      <Row>
+        <Card>
         <CardBody>
           <CardTitle tag="h5">
             {title}
-            
-            {role === 2 && (<Button  style={{
-            backgroundColor: '#a6d22c',
-            border: 'none',
-            float: 'right', 
-            marginBottom: '10px',
-            color: 'white'
-          }}
-          onClick={download}>                        
-                 <i class="bi bi-file-earmark-arrow-down"></i> Parsisiųsti
+            {role === 2 && (<Button  style={{backgroundColor: '#a6d22c',border: 'none',float: 'right', marginBottom: '10px', color: 'white'}}
+              onClick={download}>                        
+              <i class="bi bi-file-earmark-arrow-down"></i> Parsisiųsti
             </Button>
             )}
             </CardTitle>

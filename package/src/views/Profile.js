@@ -17,7 +17,6 @@ function Profile() {
   const userString = Cookies.get('user');
   const user =JSON.parse(userString);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -29,7 +28,6 @@ function Profile() {
           },
         });
         const userData = response.data;
-        console.log(userData);
         setName(userData.first_name);
         setSurname(userData.last_name);
         setEmail(userData.email);
@@ -46,9 +44,9 @@ function Profile() {
     const updatedData = {
       email : email
     };
-   console.log(JSON.stringify(updatedData));
+
     try {
-      const response = await axios.put(`${BACKEND_URL}/user_profile/${user.id}/`, //TODO: PATCH
+      const response = await axios.put(`${BACKEND_URL}/user_profile/${user.id}/`,
       updatedData, {
         headers: {
           'Authorization' : `Token ${token}`,
@@ -56,13 +54,11 @@ function Profile() {
           'X-CSRFToken': Cookies.get('csrftoken')
         }
       });
-      console.log(response.status);
       setMessage(response.status == 200 ? 'Profile updated successfully' : 'Failed to update profile');
       setTimeout(() => {
         setMessage('');
       }, 3000);
     } catch (error) {
-      console.error('Error updating profile', error);
       setMessage('Failed to update profile');
     }
   };

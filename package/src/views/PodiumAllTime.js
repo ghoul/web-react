@@ -1,43 +1,15 @@
-// src/components/Podium.js
-import podium1 from '../assets/images/podium1.png'; // Import your podium images
-import podium2 from '../assets/images/podium2.png';
-import podium3 from '../assets/images/podium3.png';
-
-import user1 from '../assets/images/users/mrgoose.png'; // Import your podium images
-import user2 from '../assets/images/users/msgoose.png';
-
-
 import styles from './Podium.module.css';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button } from 'reactstrap';
-import { Link } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config.js';
-import { Card, CardBody, CardTitle, CardSubtitle, Table } from "reactstrap";
-import { useNavigate } from 'react-router-dom';
-import { Modal } from "./Modal.js";
-import { jwtDecode } from 'jwt-decode';
-import { useAuth } from '../views/AuthContext';
+import { Table } from "reactstrap";
 import Cookies from 'js-cookie';
+
 const Podium = () => {
-  const [podiumTeacher, setHomeworkTeacher] = useState([]);
   const [podiumStudents, setPodiumStudent] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
   const [classs, setClasss] =useState('');
-  const { isLoggedIn } = useAuth();
   const token = Cookies.get('token'); 
-  const userString = Cookies.get('user');
-  const userData = JSON.parse(userString);
-  let user_email = "";
-  let role = "";
-  if(token!=null)
-  {
-    //const decodedToken = jwtDecode(token);
-    user_email = userData.email;
-    role = userData.role;
-  }
-  const navigate  = useNavigate();
+
   const getPodium = () => {
     axios.get(`${BACKEND_URL}/class_statistics/`, {
       headers: {
@@ -45,30 +17,14 @@ const Podium = () => {
         'Content-Type': 'application/json, charset=utf-8',
         'X-CSRFToken': Cookies.get('csrftoken')
       },
-    }) // Replace with your actual endpoint
+    })
       .then(response => {
-        console.log(response.data.leaderboard);
-        // const parsedPodiumStudents = JSON.parse(response.data.leaderboard);
         setPodiumStudent(response.data.leaderboard);
         setClasss(response.data.class_title);
       })
       .catch(error => {
         console.error('Error fetching podium:', error);
       });
-
-    //   axios.get(`${BACKEND_URL}/handle_assignments_student/`, {
-    //   method: 'GET',
-    //   headers: {
-    //     'Authorization' : `${token}`,
-    //     'Content-Type': 'application/json',
-    //   },
-    // }) // Replace with your actual endpoint
-    //   .then(response => {
-    //     setHomeworkStudent(response.data.data);
-    //   })
-    //   .catch(error => {
-    //     console.error('Error fetching homeworks:', error);
-    //   });
   };
   useEffect(() => {
    getPodium();
@@ -114,7 +70,6 @@ const Podium = () => {
   );
   
   
-
   const renderListUsers = (students) => (
     <Table className="no-wrap mt-3 align-middle" responsive borderless>
     <thead>
@@ -135,7 +90,6 @@ const Podium = () => {
     </tbody>
   </Table>
   );
-
 
   const renderUsers = () => {
     const topUsers = podiumStudents.slice(0, 3);
