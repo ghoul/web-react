@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Table } from 'reactstrap';
 import { Modal } from './Modal.js';
-import { Modal2 } from './Modal2.js';
 import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config.js';
 import Cookies from 'js-cookie';
@@ -27,11 +26,9 @@ const AllHomework = () => {
             if (response.status !== 200) {
                 throw new Error('HTTP error ' + response.status);
             }
-            console.log(response.data);
             setHomework(response.data);
         } catch (error) {
             console.error(error);
-            // Handle error here
         }
     };
 
@@ -54,21 +51,17 @@ const AllHomework = () => {
         hideModalHandler();
     } catch (error) {
         console.error(error);
-        // Handle error here
     }
   };
   
 
   const showModalHandler = (homeworkId) => {
     setSelectedHomeworkId(homeworkId);
-    console.log("selectedid: " + selectedHomeworkId);
     setShowModal(true);
-    console.log("modal show true");
   };
 
   const hideModalHandler = () => {
     setShowModal(false);
-    console.log("modal show false");
   };
   const send = (event) => {
     navigate('/');
@@ -76,19 +69,12 @@ const AllHomework = () => {
   return (
     <div className="list">
       <Modal show={showModal} hide={hideModalHandler} onRemoveProduct={deleteHomework}></Modal>
-      {/* <Modal2 showModal={showModal} handleClose={hideModalHandler} /> */}
       <Button style={{ backgroundColor: '#171a1e', color: 'white', marginBottom: '10px', border: 'none' }} onClick={send}> ← Į pradžią</Button>
-      <Button  style={{
-    backgroundColor: '#a6d22c',
-    border: 'none',
-    float: 'right', // Align to the right
-    marginBottom: '10px',
-  }}>
-                  <Link to={`/create-homework`} className="nav-link" style={{ color: 'black' }}>
-                  <i class="bi bi-plus"></i>  Kurti naują
-                   
-                  </Link>
-                </Button>
+      <Button  style={{backgroundColor: '#a6d22c', border: 'none', float: 'right', marginBottom: '10px',}}>
+            <Link to={`/create-homework`} className="nav-link" style={{ color: 'black' }}>
+            <i class="bi bi-plus"></i>  Kurti naują 
+            </Link>
+      </Button>
       <Table>
         <thead>
           <tr>
@@ -129,9 +115,7 @@ const AllHomework = () => {
                 </Button>
                </td>
             </tr>
-        ))
-        )}
-        
+        )))}
         </tbody>
       </Table>
     

@@ -1,34 +1,18 @@
 import React from "react";
-import { Redirect } from "react-router";
 import { useState } from "react";
 import { useEffect } from "react";
-// import { useAlert } from "react-alert";
-import { useLocation } from "react-router-dom";
 import { useParams, Link } from 'react-router-dom';
-import { Modal } from "./Modal.js";
 import BACKEND_URL from '../layouts/config.js';
 import './Style.css';
-// import Forms from "./ui/Forms";
-import {
-  Card,
-  Row,
-  Col,
-  CardTitle,
-  CardBody,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input, Table, CardSubtitle
-} from "reactstrap";
+import {Row, Col, Card, CardTitle, CardBody, Button, CardSubtitle, Input, Label} from 'reactstrap'; 
 import { useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
 import axios from 'axios';
 
 export default function CheckHomework() {
-    const { homeworkId } = useParams();
-    const [homework, setHomework] = useState([]);
-    const [edit, setEdit] = useState(true);
+  const { homeworkId } = useParams();
+  const [homework, setHomework] = useState([]);
+  const [edit, setEdit] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const token = Cookies.get('token'); 
   const navigate  = useNavigate();
@@ -43,15 +27,12 @@ export default function CheckHomework() {
           },
         });
         
-        console.log(response.data);
         setHomework(response.data);
         setEdit(response.data.edit);
         
       } catch (error) {
         console.error('Error fetching Homework:', error);
       }
-
-  
     };
 
     fetchHomework();
@@ -127,17 +108,16 @@ export default function CheckHomework() {
                   </div>
                 ))}
               </>
-            )}
-          </CardBody>
-        </Card>
-      ))}
+              )}
+            </CardBody>
+          </Card>
+        ))}
 
-              {edit && (<Button style={{ backgroundColor: 'orange', color: '#204963', border: 'none' }}>
-                 <Link to={`/edit-homework/${homeworkId}`} className="nav-link" style={{ color: 'white' }}> Redaguoti</Link>
-                 </Button>
-                 )}
+        {edit && (<Button style={{ backgroundColor: 'orange', color: '#204963', border: 'none' }}>
+            <Link to={`/edit-homework/${homeworkId}`} className="nav-link" style={{ color: 'white' }}> Redaguoti</Link>
+            </Button>
+        )}
       </Col>
-  
     </Row>
   );
 };

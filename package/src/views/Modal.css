@@ -13,24 +13,6 @@
   align-items: center;
 }
 
-/* .modall {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 3;
-  border: 1px solid #eee;
-  background-color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  border-radius: 14px;
-  padding: 25px;
-  text-align: center;
-  box-sizing: border-box;
-  width: 50%;
-  cursor: default;
-  font-weight: bold;
-  font-size: 20px;
-} */
 .modall {
   position: fixed;
   top: 50%;
@@ -49,9 +31,9 @@
   font-weight: bold;
   font-size: 20px;
   display: flex;
-  flex-direction: column; /* Set flex direction to column */
-  justify-content: center; /* Vertically center content */
-  align-items: center; /* Horizontally center content */
+  flex-direction: column; 
+  justify-content: center; 
+  align-items: center; 
 }
 
 @media (max-width: 760px) {
@@ -68,11 +50,7 @@
 .hide {
   display: none;
 }
-/* .button-container {
-  display: flex;
-  flex-direction: column;
-  margin-top: 10px; /* Adjust the margin as needed 
-} */
+
 .button {
   cursor: pointer;
   background-color: black;

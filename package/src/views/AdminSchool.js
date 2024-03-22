@@ -1,26 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Card,
-  Row,
-  Col,
-  CardTitle,
-  CardBody,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Table,
-  Input,
-  TabContent, TabPane, Nav, NavItem, NavLink
-} from 'reactstrap';
-import { Link } from 'react-router-dom';
+import {Row, Col, Card, CardTitle, CardBody, Button, Form, FormGroup, Label, Input, Table, TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
 import { Modal } from './Modal.js';
 import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config';
 import './Style.css';
 import Cookies from 'js-cookie';
-import axios
- from 'axios';
+import axios from 'axios';
 const AddSchool = () => {
   const [titleInput, setTitleInput] = useState('');
   const [fileInput, setFileInput] = useState(null);
@@ -30,18 +15,17 @@ const AddSchool = () => {
   const [titleInputUpdate, setTitleInputUpdate] = useState('');
   const [fileInputUpdate, setFileInputUpdate] = useState(null);
 
-  const [fail, setFail] = useState('');
   const [message, setMessage] = useState(''); 
-  const navigate  = useNavigate();
-  let token = Cookies.get('token'); 
   const [showModal, setShowModal] = useState(false);
-  const [schools, setSchools]  = useState([]);
 
+  const [schools, setSchools]  = useState([]);
   const [schoolIdDelete, setSchoolIdDelete]  = useState(1);
   const [schoolIdUpdate, setSchoolIdUpdate]  = useState(1);
 
   const [activeTab, setActiveTab] = useState('add');
+  const navigate  = useNavigate();
 
+  let token = Cookies.get('token'); 
   const toggleTab = (tab) => {
     if (activeTab !== tab) setActiveTab(tab);
   }
@@ -58,10 +42,7 @@ const AddSchool = () => {
       const data = response.data;
       setSchools(data);
       setSchoolIdUpdate(data[0].id)
-      console.log("schoolid0: " + data[0].id);
-      //TODO: SYNC nes cia nespeja pakeist kai jau reikia rofyt kodel? 
       setLicenseInputUpdate(data[0].license_end)
-      console.log("license: " + data[0].license_end);
     } catch (error) {
       console.error('Error fetching schools:', error);
     }
@@ -73,20 +54,10 @@ const AddSchool = () => {
 
   const createSchool = async (event) => {
     event.preventDefault();
- // const csrfToken = getCookie('csrftoken');
-    // function getCookie(name) {
-    //   const value = `; ${document.cookie}`;
-    //   const parts = value.split(`; ${name}=`);
-    //   if (parts.length === 2) return parts.pop().split(';').shift();
-    // }
     const formData = new FormData();
     formData.append('title', titleInput);
     formData.append('file', fileInput);
     formData.append('license', licenseInput);
-
-    console.log('Request Body: ', formData);
-    console.log(titleInput);
-    console.log(licenseInput);
 
     try {
         const response = await fetch(`${BACKEND_URL}/school/`, {
@@ -106,22 +77,17 @@ const AddSchool = () => {
         const url = window.URL.createObjectURL(new Blob([blob]));
         const a = document.createElement('a');
         a.href = url;
-        const formattedTitle = response.headers.get('FormattedTitle'); // Access formatted title from response
+        const formattedTitle = response.headers.get('FormattedTitle') ? response.headers.get('FormattedTitle'): titleInput+".txt";
         a.download = `${formattedTitle}`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
 
-        // const data = await response.json();
-        // console.log('Response Body: ', data);
-        // if(blob){
-          setMessage(blob ? 'Operacija sėkminga!' : 'Klaida! ');
-          fetchSchools();
-          // setMessage(data.success ? 'Operacija sėkminga!' : 'Klaida! ' + data.error);
-          setTimeout(() => {
-              setMessage('');
-          }, 3000);
-        // }
+        setMessage(blob ? 'Operacija sėkminga!' : 'Klaida! ');
+        fetchSchools();
+        setTimeout(() => {
+            setMessage('');
+        }, 3000);
        
         
     } catch (error) {
@@ -135,11 +101,6 @@ const updateSchool = async (event) => {
   formData2.append('title', titleInputUpdate);
   formData2.append('file', fileInputUpdate);
   formData2.append('license', licenseInputUpdate);
-
-
-  console.log('Request Body: ', formData2);
-  console.log(titleInputUpdate);
-  console.log(licenseInputUpdate);
 
   try {
       const response = await fetch(`${BACKEND_URL}/school/update/${schoolIdUpdate}/`, {
@@ -166,16 +127,11 @@ const updateSchool = async (event) => {
       a.click();
       document.body.removeChild(a);
 
-      // const data = await response.json();
-      // console.log('Response Body: ', data);
-      // if(blob){
-        setMessage(blob ? 'Operacija sėkminga!' : 'Klaida! ');
-        // setMessage(data.success ? 'Operacija sėkminga!' : 'Klaida! ' + data.error);
-        setTimeout(() => {
-            setMessage('');
-        }, 3000);
-      // }
-     
+      setMessage(blob ? 'Operacija sėkminga!' : 'Klaida! ');
+      setTimeout(() => {
+          setMessage('');
+      }, 3000);
+          
       
   } catch (error) {
       console.error(error);
@@ -194,15 +150,11 @@ const deleteSchool = async (event) => {
               'X-CSRFToken': Cookies.get('csrftoken')
           }
       }).then(response => {
-        // Handle success, update homework state, and close the modal
         const updatedSchools = schools.filter(school => school.id !== schoolIdDelete);
         setSchools(updatedSchools);
-        hideModalHandler(); // Move hideModalHandler inside the .then() block
-        // window.location.reload();
+        hideModalHandler(); 
       })
       .catch(error => {
-        // Handle error
-        // window.location.reload();
         console.error('Error deleting school:', error);
       });
      
@@ -218,24 +170,18 @@ const handleSchoolChange = (selectedSchoolId) => {
   if (selectedSchool) {
     setLicenseInputUpdate(selectedSchool.license);
   } else {
-    setLicenseInputUpdate(''); // Reset license input if no school is selected
+    setLicenseInputUpdate(''); 
   }
-  console.log("license setted: " + licenseInputUpdate);
-  console.log("name setted: " + titleInputUpdate);
 }
 
 const showModalHandler = (schoolId) => {
   setSchoolIdDelete(schoolId);
-  console.log("selectedid: " + schoolId);
   setShowModal(true);
-  console.log("modal show true");
 };
 
 const hideModalHandler = () => {
   setShowModal(false);
-  console.log("modal show false");
 };
-
 
   const send = (event) => {
     navigate('/');
@@ -276,7 +222,6 @@ const hideModalHandler = () => {
       {/* ADD */}
     <Row>
       <Col>
-   
         <Card>
           <CardTitle tag="h6" className="border-bottom p-3 mb-0">
           <i class="bi bi-patch-plus-fill me-2"></i>
@@ -320,13 +265,13 @@ const hideModalHandler = () => {
                 required
                 onChange={(e) => setFileInput(e.target.files[0])}
                 /></FormGroup>
-                               <Button  style={{
-    backgroundColor: '#a6d22c',
-    border: 'none',
-    float: 'left', 
-    marginBottom: '10px',
-    color: 'white'
-  }}>Įrašyti
+                <Button  style={{
+                    backgroundColor: '#a6d22c',
+                    border: 'none',
+                    float: 'left', 
+                    marginBottom: '10px',
+                    color: 'white'
+                  }}>Įrašyti
                 </Button>
             </Form>
           </CardBody>
@@ -352,8 +297,6 @@ const hideModalHandler = () => {
           <CardBody>
           {message && <div style={{ marginBottom: '10px', color: message.includes('Klaida') ? 'red' : 'green' }}>{message}</div>}
             <Form onSubmit={updateSchool}>
-               {/* {% csrf_token %} */}
-               {/* TODO: jeigu keiciasi pavadinimas mokyklos? - pasirenka is saraso kuri mokykla ir viduj pirma eilute pavadinimas*/}
               <FormGroup>
                 <Label for="title3">Mokykla</Label>
                 <Input
@@ -399,12 +342,12 @@ const hideModalHandler = () => {
                 onChange={(e) => setFileInputUpdate(e.target.files[0])}
                 /></FormGroup>
                  <Button  style={{
-    backgroundColor: '#a6d22c',
-    border: 'none',
-    float: 'left', 
-    marginBottom: '10px',
-    color: 'white'
-  }}>Įrašyti
+                    backgroundColor: '#a6d22c',
+                    border: 'none',
+                    float: 'left', 
+                    marginBottom: '10px',
+                    color: 'white'
+                  }}>Įrašyti
                 </Button>
             </Form>
           </CardBody>
@@ -413,12 +356,10 @@ const hideModalHandler = () => {
       </Col>
     </Row>
 
-
     </TabPane>
         <TabPane tabId="delete">
     
 {/* DELETE */}
-
 
 <Row>
       <Col>
@@ -430,51 +371,45 @@ const hideModalHandler = () => {
           <CardBody>
           {message && <div style={{ marginBottom: '10px', color: message.includes('Klaida') ? 'red' : 'green' }}>{message}</div>}
            
-               {/* {% csrf_token %} */}
-               {/* TODO: jeigu keiciasi pavadinimas mokyklos? */}
-
-
-               <div className="list">
-      <Modal show={showModal} hide={hideModalHandler} onRemoveProduct={deleteSchool}></Modal>
-      <Table>
-        <thead>
-          <tr>
-            <th>Pavadinimas</th>
-            <th>Licenzija iki</th>
-            <th>Šalinti</th>
-          </tr>
-        </thead>
-        <tbody>
-        {schools.length === 0 ? (
-          <tr>
-            <td colSpan="3">Mokyklų nėra</td>
-          </tr>
-        ) : (
-          schools.map((school) => (
-            <tr key={school.id}>
-              <td>{school.title}</td>
-              <td>{school.license_end}</td>
-            
-              <td>
-             <Button style={{  border: 'none', background: 'transparent' }} onClick={() => showModalHandler(school.id)}>             
-                ✖
-                </Button>
-               </td>
-            </tr>
-        ))
-        )}
-        
-        </tbody>
-      </Table>
-        </div>
-          </CardBody>
-        </Card>
-        <Button style={{ backgroundColor: '#1b1c20', color: 'white', marginBottom: '10px' }} onClick={send}> ← Atgal</Button>
-      </Col>
-    </Row>
-    </TabPane>
-      </TabContent>
-    </div>
+          <div className="list">
+            <Modal show={showModal} hide={hideModalHandler} onRemoveProduct={deleteSchool}></Modal>
+            <Table>
+              <thead>
+                <tr>
+                  <th>Pavadinimas</th>
+                  <th>Licenzija iki</th>
+                  <th>Šalinti</th>
+                </tr>
+              </thead>
+              <tbody>
+              {schools.length === 0 ? (
+                <tr>
+                  <td colSpan="3">Mokyklų nėra</td>
+                </tr>
+              ) : (
+                schools.map((school) => (
+                  <tr key={school.id}>
+                    <td>{school.title}</td>
+                    <td>{school.license_end}</td>
+                    <td>
+                    <Button style={{  border: 'none', background: 'transparent' }} onClick={() => showModalHandler(school.id)}>             
+                      ✖
+                      </Button>
+                    </td>
+                  </tr>
+              )))}
+              
+              </tbody>
+            </Table>
+              </div>
+                </CardBody>
+              </Card>
+              <Button style={{ backgroundColor: '#1b1c20', color: 'white', marginBottom: '10px' }} onClick={send}> ← Atgal</Button>
+            </Col>
+          </Row>
+          </TabPane>
+            </TabContent>
+          </div>
   );
 };
 

@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config';
 import './Style.css';
-import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
 import { Card, CardBody, CardTitle, CardSubtitle, Table } from "reactstrap";
 const FinishedAssignments = () => {
@@ -14,27 +13,18 @@ const FinishedAssignments = () => {
   const token = Cookies.get('token'); 
   const userString = Cookies.get('user');
   const userData = JSON.parse(userString);
-  let user_email = "";
-  let role = "";
-  
-  if(token!=null)
-  {
-    //const decodedToken = jwtDecode(token);
-    user_email = userData.email;
-    role = userData.role;
-  }
-  //TODO: is token role ir pagal ja rodyt
+  let role = userData.role;
   const navigate  = useNavigate();
+
   useEffect(() => {
     if(role === 2){
-    // Fetch homeworks data from your backend (assuming the endpoint is /api/homeworks)
     axios.get(`${BACKEND_URL}/assignments_teacher_finished/`, {
       headers: {
         'Authorization' : `Token ${token}`,
         'Content-Type': 'application/json',
         'X-CSRFToken': Cookies.get('csrftoken')
       },
-    }) // Replace with your actual endpoint
+    }) 
       .then(response => {
         setHomeworkTeacher(response.data);
       })
@@ -42,14 +32,13 @@ const FinishedAssignments = () => {
         console.error('Error fetching homeworks finished:', error);
       });
     } else if (role === 1){
-
       axios.get(`${BACKEND_URL}/assignments_student_finished/`, {
       headers: {
         'Authorization' : `Token ${token}`,
         'Content-Type': 'application/json',
         'X-CSRFToken': Cookies.get('csrftoken')
       },
-    }) // Replace with your actual endpoint
+    })
       .then(response => {
         setHomeworkStudent(response.data);
       })
@@ -112,8 +101,7 @@ const FinishedAssignments = () => {
             )))}
             </tbody>
           </Table>)}
-
-
+          
           {role===1 && (<Table className="no-wrap mt-3 align-middle" responsive borderless>
             <thead>
               <tr>

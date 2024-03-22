@@ -1,43 +1,24 @@
 import React from "react";
-import { Redirect } from "react-router";
 import { useState } from "react";
 import { useEffect } from "react";
-// import { useAlert } from "react-alert";
-import { useLocation } from "react-router-dom";
-import { useParams, Link } from 'react-router-dom';
-import { Modal } from "./Modal.js";
+import { useParams} from 'react-router-dom';
 import axios from 'axios';
-// import Forms from "./ui/Forms";
 import BACKEND_URL from '../layouts/config.js';
 import './Style.css';
-import {
-  Card,
-  Row,
-  Col,
-  CardTitle,
-  CardBody,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input, Table
-} from "reactstrap";
+import {Row, Col, Card, CardTitle, CardBody, Button, Form, FormGroup, Label, Input} from 'reactstrap';
 import { useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
 export default function AssignHomework() {
 
-    //get_classes_by_teacher
-    const { homeworkId } = useParams();
-  const navigate  = useNavigate();
+  const { homeworkId } = useParams();
   const [message, setMessage] = useState(''); 
-  console.log("id: ", homeworkId);
   const [fromDateInput, setFromDateInput] = useState('');
   const [toDateInput, setToDateInput] = useState('');
   const [classInput, setClassInput] = useState(''); 
-
   const [classes, setClasses] = useState([]); 
-  const [fail, setFail] = useState("");
+
   let token = Cookies.get('token'); 
+  const navigate  = useNavigate();
 
   const getClasses = async() => {
     try {
@@ -51,17 +32,16 @@ export default function AssignHomework() {
       if (response.status !== 200) {
           throw new Error('HTTP error ' + response.status);
       }
-      console.log(response.data);
       setClasses(response.data);
       setClassInput(response.data[0].id)
   } catch (error) {
       console.error(error);
-      // Handle error here
   }
   };
   useEffect(() => {
     getClasses();
   }, []);
+
   const assignHomework = async (event) => {
     event.preventDefault();
     try {
@@ -83,7 +63,6 @@ export default function AssignHomework() {
       setMessage(response.status===201 ? 'Operacija sėkminga!' : 'Klaida! ' + response.error);
   } catch (error) {
       console.error(error);
-      // Handle error here
   }
   };
   
@@ -102,7 +81,6 @@ export default function AssignHomework() {
           <CardBody>
           {message && <div style={{ marginBottom: '10px', color: message.includes('Klaida') ? 'red' : 'green' }}>{message}</div>}
             <Form onSubmit={assignHomework}>
-               {/* {% csrf_token %} */}
                <Row>
                 <Col>
               <FormGroup>
@@ -143,15 +121,14 @@ export default function AssignHomework() {
                   value={classInput}
                   onChange={(e) => setClassInput(e.target.value)}
                 >
-                   {classes.length > 0 ? ( // Check if classes is not empty
-                classes.map((classs) => (
+                   {classes.length > 0 ? (classes.map((classs) => (
                   <option key={classs.id} value={classs.id}>
                     {classs.title}
                   </option>
-                ))
-              ) : (
+                  ))
+                ) : (
                 <option value="">Nėra klasių</option>
-              )}
+                )}
                 </Input>
               </FormGroup>
               <Button   style={{ backgroundColor: '#a6d22c', color: 'white', border:'none' }}>Paskirti</Button>

@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Login.css'; // Import CSS for transition
+import './Login.css';
 import BACKEND_URL from '../layouts/config';
 import './Style.css';
-// import CheckToken from './CheckToken';
 import { useAuth } from './AuthContext';
 import Cookies from 'js-cookie';
 import axios from 'axios';
@@ -13,14 +12,13 @@ function LoginForm() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const [showLoginForm, setShowLoginForm] = useState(true); // State to control visibility
+  const [showLoginForm, setShowLoginForm] = useState(true);
   const { login } = useAuth();
-  // const { handleLoginn } = CheckToken();
 
   useEffect(() => {
     const token = Cookies.get('token'); 
     if (token) {
-      setShowLoginForm(false); // Hide login form if user already logged in
+      setShowLoginForm(false);
     }
   }, []);
 
@@ -28,8 +26,8 @@ function LoginForm() {
     try {
       const response = await axios.post(`${BACKEND_URL}/login/`,
       {email: email,
-      password: password}, {
-        headers: {
+       password: password}, {
+       headers: {
           'Content-Type': 'application/json',
         },
       });
@@ -38,24 +36,17 @@ function LoginForm() {
         Cookies.set('csrftoken', response.data.csrf_token, { secure: true, sameSite: 'strict' });
         Cookies.set('token', response.data.token, { secure: true, sameSite: 'strict' });
         Cookies.set('user', JSON.stringify(response.data.user),{ secure: true, sameSite: 'strict' });
-        console.log("cookie: " + Cookies.get('user'));
-        //handleLoginn(data.token);
-
-        login(response.data.token); // This will set the isLoggedIn state to true
+  
+        login(response.data.token); 
         
-        console.log('Login successful!'); setShowLoginForm(false); // Hide the login form on successful login
-        // Navigate after a brief delay to allow for the transition
         setTimeout(() => {
           navigate(`/`);
         }, 500);
       } else {
-        // Handle login error
         setError(response.data.error || 'Nepavyko prisijungti');
       }
     } catch (error) {
-      // Handle network errors or other exceptions
       setError('Netinkamas prisijungimo vardas arba slaptažodis');
-      console.error('Error during login:', error);
     }
   };
 
@@ -67,7 +58,7 @@ function LoginForm() {
         justifyContent: 'center',
         alignItems: 'center',
         height: '100vh',
-        background: `url(${process.env.PUBLIC_URL}/fonasg.png)`, // Replace with your image URL
+        background: `url(${process.env.PUBLIC_URL}/fonasg.png)`, 
         backgroundSize: 'cover',
       }}
     >

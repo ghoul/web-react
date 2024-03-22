@@ -1,56 +1,34 @@
 import React from "react";
-import { Redirect } from "react-router";
 import { useState } from "react";
 import { useEffect } from "react";
-// import { useAlert } from "react-alert";
-import { useLocation } from "react-router-dom";
-import { useParams, Link } from 'react-router-dom';
-import { Modal } from "./Modal.js";
+import { useParams} from 'react-router-dom';
 import BACKEND_URL from '../layouts/config.js';
 import './Style.css';
-// import Forms from "./ui/Forms";
-import {
-  Card,
-  Row,
-  Col,
-  CardTitle,
-  CardBody,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input, Table, CardSubtitle
-} from "reactstrap";
+import {Row, Col, Card, CardTitle, CardBody, Button, Form, CardSubtitle, Input} from 'reactstrap'; 
 import { useNavigate } from 'react-router-dom';
 import Cookies from "js-cookie";
 import axios from 'axios';
+import { Modal } from './Modal.js';
 export default function AssignmentTest() {
-    const { assignmentId } = useParams();
-    const [assignment, setAssignment] = useState([]);
-    const [title, setTitle] = useState('');
-    const [initialized, setInitialized] = useState(false);
-    const [successMessage, setSuccessMessage] = useState('');
-    // const [userId, setUserId] = useState('');
-    const [startTime, setStartTime] = useState(null);
-    //TODO: AR TIKRAI NORITE PATEIKTI?
+  const { assignmentId } = useParams();
+  const [assignment, setAssignment] = useState([]);
+  const [title, setTitle] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [startTime, setStartTime] = useState(null);
+    
   const [showModal, setShowModal] = useState(false);
-  const [pairs, setPairs] = useState([]); //{questionId: 0, answer : ''}
-  const [multipleChoices, setmultipleChoices] = useState([]); //{questionId: 0, answer : ''}
+  const [pairs, setPairs] = useState([]); 
+  const [multipleChoices, setmultipleChoices] = useState([]); 
 
-//   const [title, setTitle] = useState(null);
   const token = Cookies.get('token'); 
   const userString = Cookies.get('user');
   const userData = JSON.parse(userString);
   const userId = userData.id;
   const navigate  = useNavigate();
-  const generateInitialPairs = (count) => {
-    return Array(count).fill({ questionId: 0, answer: '' });
-  };
+
   useEffect(() => {
     const fetchAssignment = async () => {
       try {
-        // const delayInMilliseconds = 1000;
-        // await new Promise(resolve => setTimeout(resolve, delayInMilliseconds));
         const response = await axios.get(`${BACKEND_URL}/test/${assignmentId}/`, {
           headers: {
             'Authorization' : `Token ${token}`,
@@ -59,12 +37,10 @@ export default function AssignmentTest() {
           },
         });
        
-        console.log(response.data);
         setAssignment(response.data);
         setTitle(response.data[0].homework_title);
         const newPairs = response.data.map(item => ({ questionId: item.id, answer: '' }));
         setPairs(newPairs);
-        console.log("PO VISKO!!!");
 
       } catch (error) {
         console.error('Error fetching Assignment:', error);
@@ -75,7 +51,6 @@ export default function AssignmentTest() {
   }, []); 
 
   const handlePairChange = (index, field, value) => {
-    console.log("handlepairchangeee");
     const updatedPairs = [...pairs];
     const updatedChoices = [...multipleChoices];
     if(field==="multiple")
@@ -85,24 +60,16 @@ export default function AssignmentTest() {
       );
   
       if (existingIndex !== -1) {
-        // Pair exists, remove it
         updatedChoices.splice(existingIndex, 1);
-        console.log("removed choice: " + value);
       } else {
-        // Pair doesn't exist, add it
         updatedChoices.push({ question: index, option: value });
-        console.log("added choice: " + value);
       }
-  
-      // Update state with the modified choices
       setmultipleChoices(updatedChoices);
     }
     else{
       updatedPairs[index][field] = value;
-      console.log("field: " + field + " value: " + value);
       setPairs(updatedPairs);
     }
-
   };
 
   useEffect(() => {
@@ -113,43 +80,25 @@ export default function AssignmentTest() {
     e.preventDefault();
     const endTime = performance.now();
     const elapsedTime = endTime - startTime;
-    console.log(`Time elapsed: ${elapsedTime} milliseconds`);
-    console.log("saveanswer");
-    // for (const element of pairs) {
-    //     console.log(element.answer);
-    //   }
-    if (pairs.length > 0 ) { //&& pairs.some(pair => pair.answer.trim() !== '')
+    if (pairs.length > 0 ) {
       const formData = new FormData();
       formData.append('time', elapsedTime);
-
       pairs.forEach((pair, index) => {
         formData.append(`pairs[${index}][questionId]`, pair.questionId);
-        //console.log("type: " + pair.type);
-        if (pair.answer === '') { //type===3?
-          multipleChoices.forEach((indexes, ind) =>{
+        if (pair.answer === '') {
+            multipleChoices.forEach((indexes, ind) =>{
             if(indexes.question === index)
             {
-              formData.append(`pairs[${index}][multipleIndex][${ind}]`, indexes.option); //iraso kurie is options index pasirinkti
-              console.log("index: "  + index);
-              console.log("ind: "  + ind);
-              console.log("optionindex: "  + indexes.option);
-            }
-            
-          })        
-      
+              formData.append(`pairs[${index}][multipleIndex][${ind}]`, indexes.option);
+            }       
+          })             
         }
-        else{
-          formData.append(`pairs[${index}][answer]`, pair.answer);
-        console.log("answer: " + pair.answer);
+        else {
+          formData.append(`pairs[${index}][answer]`, pair.answer);        
         }
-        
       });
 
-      // Send formData to your backend (Django) using fetch or axios
-      console.log('Data to be sent:', formData);
-      // Perform further actions like API request
-      try {
-
+      try{
         const response = await axios.post(`${BACKEND_URL}/test/${assignmentId}/`, formData, {
           headers: {
             'Authorization': `Token ${token}`,
@@ -159,23 +108,26 @@ export default function AssignmentTest() {
     
         if (response.status !== 201) {
           throw new Error('HTTP error ' + response.status);
-        }else{
-        
+        }else {
+          
           navigate(`/statistics/${assignmentId}/${userId}`);
         }
       } catch (error) {
           console.error(error);
-         
-          // Handle error here
       }
-     
   }
-  else{
+  else {
     alert('Neatsakyta į visus klausimus');
   }
 }
  
+const showModalHandler = () => {
+  setShowModal(true);
+};
 
+const hideModalHandler = () => {
+  setShowModal(false);
+};
 
   const send = (event) => {
     navigate(`/`);
@@ -195,8 +147,9 @@ export default function AssignmentTest() {
       </CardSubtitle>
       </CardBody>
     </Card>
+    <Modal question="Ar tikrai norite pateikti?" show={showModal} hide={hideModalHandler} onConfirm={saveAnswer}></Modal>
     <Form>
-        {/* {true&&console.log(assignment)} */}
+    
     {
   assignment.map((pair, index) => (
     <Card key={index} className="mb-3">
@@ -218,10 +171,7 @@ export default function AssignmentTest() {
               <div key={optionIndex}>
                 <Input
                   type="radio"
-                  name={`correctOption${index}`}
-                  // style={{ display: 'none' }}
-                  // checked={correctOptionIndexes[index] === optionIndex}
-                 
+                  name={`correctOption${index}`}                
                   onChange={(e) => handlePairChange(index, 'answer', option.id)}
                 />
                 {option.text}
@@ -237,9 +187,6 @@ export default function AssignmentTest() {
                 <Input
                   type="checkbox"
                   name={`multipleOption${index}`}
-                  // style={{ display: 'none' }}
-                  // checked={correctOptionIndexes[index] === optionIndex}
-                 //TODO: issaugot multiple choices i atskira masyva gal indeksus?
                   onChange={(e) => handlePairChange(index, 'multiple', option.id)}
                 />
                 {option.text}
@@ -247,18 +194,13 @@ export default function AssignmentTest() {
             ))}
           </>
         )}
-        
-
-        
       </CardBody>
-      
     </Card>
     
           ))}
-          <Button type="button" style={{ backgroundColor: '#a6d22c', color: 'white', border:'none' }} onClick={saveAnswer}>Pateikti</Button>
-              </Form>
-      </Col>
-  
-    </Row>
+          <Button type="button" style={{ backgroundColor: '#a6d22c', color: 'white', border:'none' }} onClick={showModalHandler}>Pateikti</Button>
+      </Form>
+    </Col>
+  </Row>
   );
 };

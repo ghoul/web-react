@@ -13,11 +13,8 @@ function ChangePassword() {
   const [message, setMessage] = useState('');
   const token = Cookies.get('token'); 
   const userString = Cookies.get('user');
-  var userData ='';
-  if(userString) {
-    userData =JSON.parse(userString); 
-  }
-const userId = userData.id;
+  var userData = JSON.parse(userString); 
+  const userId = userData.id;
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -41,18 +38,14 @@ const userId = userData.id;
       if (response.status !== 200) {
         setMessage(response.error);
         throw new Error('Failed to change password');
-        
       }
-
-     
-    else {
+     else {
       setMessage('Slaptažodis pakeistas sėkmingai');
-    } 
+     } 
       setTimeout(() => {
         setMessage('');
       }, 5000);
     } catch (error) {
-      console.error('Error changing passworddd', error);
       setMessage('Klaida! Nepavyko pakeisti slaptažodžio');
     }
   };
@@ -95,7 +88,7 @@ const userId = userData.id;
           Keisti slaptažodį
         </button>
       </form>
-<br></br>
+      <br></br>
       <Button style={{ backgroundColor: '#1b1c20', color: 'white', marginBottom: '10px' }}><Link to={`/profile`} className="nav-link" style={{ color: 'white' }}> ← Atgal </Link></Button>
     </div>
   );

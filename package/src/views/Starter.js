@@ -120,7 +120,7 @@ const Starter = () => {
   return (
     <div>
    <Card>
-   <Modal show={showModal} hide={hideModalHandler} onRemoveProduct={deleteAssignment}></Modal>
+   <Modal show={showModal} hide={hideModalHandler} onConfirm={deleteAssignment}></Modal>
         <CardBody>
           <CardTitle tag="h5">Aktyvūs namų darbai</CardTitle>
           {role === 2 && (
