@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {Row, Col, Card, CardTitle, CardBody, Button, Form, FormGroup, Label, Input} from 'reactstrap';
-import './HomeworkForm.css';
 import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config';
 import './Style.css';
@@ -10,7 +9,7 @@ import axios from 'axios';
 const AllHomework = () => {
   const [homeworkName, setHomeworkName] = useState('');
   const [pairs, setPairs] = useState([{ type: 'select', question: '', options: [], answer: '', image: null, points: 0 }]);
-  const [successMessage, setSuccessMessage] = useState('');
+  const [successMessage, setMessage] = useState(''); 
   const [correctOptionIndexes, setCorrectOptionIndexes] = useState(Array(pairs.length).fill(null));
 
   const [multipleOptionIndexes, setMultipleOptionIndexes] = useState([]) 
@@ -83,6 +82,11 @@ const AllHomework = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const hasEmptyPoints = pairs.some(pair => pair.points === 0);
+    if(hasEmptyPoints){
+      setMessage('Klaida! Nenustatyti taškai');
+      return;
+    }
     if (pairs.length > 0 && pairs.some(pair => pair.question.trim() !== '' )) {
       const formData = new FormData();
       formData.append('title', homeworkName);
@@ -115,20 +119,22 @@ const AllHomework = () => {
                 'X-CSRFToken': Cookies.get('csrftoken')
             },
         });
-    
+        console.log(response);
+        console.log(response.data);
         if (response.status === 201) {
-          const data = response.data;
-          setSuccessMessage("Operacija sekminga");
-
-      } else {
-          console.error('Failed to create homework');
+          setMessage("Operacija sėkminga!");
+        }
+      } catch (error) {
+        
+        console.error('Klaida:', error);
+        if (error.response && error.response.data && error.response.data.error) {
+          setMessage('Klaida! ' + error.response.data.error);
+        } else {
+            setMessage('Klaida!');
+        }
       }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-  
     } else {
-      alert('Namų darbe privalo būti bent viena užduotis');
+      setMessage('Klaida! Namų darbe privalo būti bent viena užduotis');
     }
   };
 
@@ -146,7 +152,6 @@ const AllHomework = () => {
             Namų darbo kūrimo forma
           </CardTitle>
           <CardBody>
-            {successMessage && <div style={{ marginBottom: '10px', color: successMessage.includes('Klaida') ? 'red' : 'green' }}>{successMessage}</div>}
             <Form onSubmit={handleSubmit}>
               <FormGroup>
                 <h6 style={{ textDecoration: 'underline' }}>
@@ -182,6 +187,7 @@ const AllHomework = () => {
                     <FormGroup>
                           <Label for={`points${index}`}>Taškai</Label>
                           <Input
+                            required
                             type="number"
                             id={`points${index}`}
                             value={pair.points}
@@ -196,6 +202,7 @@ const AllHomework = () => {
                           <FormGroup>
                             <Label for={`question${index}`}>Klausimas</Label>
                             <Input
+                              required
                               type="text"
                               id={`question${index}`}
                               value={pair.question}
@@ -211,6 +218,7 @@ const AllHomework = () => {
                                 <Row  className="align-items-center">
                                   <Col>
                                     <Input
+                                      required
                                       type="text"
                                       value={option}
                                       onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)}
@@ -253,6 +261,7 @@ const AllHomework = () => {
                         <FormGroup>
                           <Label for={`question${index}`}>Klausimas</Label>
                           <Input
+                            required
                             type="text"
                             id={`question${index}`}
                             value={pair.question}
@@ -268,6 +277,7 @@ const AllHomework = () => {
                               <Row  className="align-items-center">
                                 <Col>
                                   <Input
+                                    required
                                     type="text"
                                     value={option}
                                     onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)}
@@ -309,6 +319,7 @@ const AllHomework = () => {
                         <FormGroup>
                           <Label for={`question${index}`}>Klausimas</Label>
                           <Input
+                            required
                             type="text"
                             id={`question${index}`}
                             value={pair.question}
@@ -318,6 +329,7 @@ const AllHomework = () => {
                         <FormGroup>
                           <Label for={`answer${index}`}>Atsakymas</Label>
                           <Input
+                           required
                             type="text"
                             id={`answer${index}`}
                             value={pair.answer}
@@ -337,15 +349,15 @@ const AllHomework = () => {
                 type="button"
                 style={{ backgroundColor: '#a6d22c', color: 'white', border: 'none' }}
                 onClick={addPair}
-                className="add-pair-button"
                 disabled={pairs.length >= 15}
               >
               <i class="bi bi-plus-lg"></i> Pridėti klausimą
               </Button>
               <FormGroup>
-                <Button type="submit"  style={{backgroundColor: 'black', color: 'white', border: 'none'}} className="submit-button">
+                <Button type="submit"  style={{backgroundColor: 'black', color: 'white', border: 'none', marginTop: '10px'}} className="submit-button">
                   Įrašyti
                 </Button>
+                {successMessage && <div style={{ marginBottom: '10px', color: successMessage.includes('Klaida') ? 'red' : 'green' }}>{successMessage}</div>}
               </FormGroup>
             </Form>
           </CardBody>

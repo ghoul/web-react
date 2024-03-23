@@ -10,6 +10,7 @@ import axios from 'axios';
 const AllHomework = () => {
   const [homework, setHomework] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState(''); 
   const [selectedHomeworkId, setSelectedHomeworkId] = useState(null);
   let token = Cookies.get('token'); 
   const navigate  = useNavigate();
@@ -23,17 +24,14 @@ const AllHomework = () => {
                     'X-CSRFToken': Cookies.get('csrftoken')
                 },
             });
-            if (response.status !== 200) {
-                throw new Error('HTTP error ' + response.status);
-            }
             setHomework(response.data);
         } catch (error) {
-            console.error(error);
+            console.error("Klaida: " + error);
         }
     };
 
     fetchHomework();
-});
+}, []);
 
   const deleteHomework = async () => {
       try {
@@ -44,13 +42,22 @@ const AllHomework = () => {
             'X-CSRFToken': Cookies.get('csrftoken')
           },
         });
-        if (response.status !== 204) {
-            throw new Error('HTTP error ' + response.status);
+        if (response.status != 204) {
+          if(response.data.error){
+            setMessage("Klaida! " + response.data.error);
+          }else{
+            setMessage("Klaida!");
+          }
         }
         setHomework(prevHomework => prevHomework.filter(homework => homework.id !== selectedHomeworkId));
         hideModalHandler();
     } catch (error) {
-        console.error(error);
+        console.error("Klaida: " + error);
+        if (error.response && error.response.data && error.response.data.error) {
+          setMessage('Klaida! ' + error.response.data.error);
+        } else {
+            setMessage('Klaida!');
+        }
     }
   };
   
@@ -75,6 +82,7 @@ const AllHomework = () => {
             <i class="bi bi-plus"></i>  Kurti naują 
             </Link>
       </Button>
+      {message && <div style={{ marginBottom: '10px', color: message.includes('Klaida') ? 'red' : 'green' }}>{message}</div>}
       <Table>
         <thead>
           <tr>

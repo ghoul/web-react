@@ -35,16 +35,19 @@ const Statistics = () => {
         setClasss(response.data.assignment.class_title);
       })
       .catch(error => {
-        console.error('Error fetching homeworks:', error);
+        console.error('Klaida:', error);
       });
-  });
+  }, []);
 
   const send = (event) => {
-    navigate(`/`);
+    if(role===1){
+      navigate(`/finished-assignments`)
+    } else{
+      navigate(`/`);
+    }
   }
 
   const download = (event) => {
-    console.log(students);
     const sortedData = students.sort((a, b) => a.student_last_name.localeCompare(b.student_last_name));
     const data = sortedData.map(student => `${student.student_last_name} ${student.student_first_name}: ${student.grade}`).join('\n');
     const blob = new Blob([data], { type: 'text/plain' });

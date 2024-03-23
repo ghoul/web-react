@@ -13,7 +13,7 @@ export default function AssignmentTest() {
   const { assignmentId } = useParams();
   const [assignment, setAssignment] = useState([]);
   const [title, setTitle] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
+  const [message, setMessage] = useState('');
   const [startTime, setStartTime] = useState(null);
     
   const [showModal, setShowModal] = useState(false);
@@ -43,12 +43,12 @@ export default function AssignmentTest() {
         setPairs(newPairs);
 
       } catch (error) {
-        console.error('Error fetching Assignment:', error);
+        console.error('Klaida:', error);
       }
     };
 
     fetchAssignment();
-  }); 
+  }, []); 
 
   const handlePairChange = (index, field, value) => {
     const updatedPairs = [...pairs];
@@ -86,10 +86,12 @@ export default function AssignmentTest() {
       pairs.forEach((pair, index) => {
         formData.append(`pairs[${index}][questionId]`, pair.questionId);
         if (pair.answer === '') {
+            var count = 0;
             multipleChoices.forEach((indexes, ind) =>{
             if(indexes.question === index)
             {
-              formData.append(`pairs[${index}][multipleIndex][${ind}]`, indexes.option);
+              formData.append(`pairs[${index}][multipleIndex][${count}]`, indexes.option);
+              count+=1;
             }       
           })             
         }
@@ -106,14 +108,16 @@ export default function AssignmentTest() {
           }
         });
     
-        if (response.status !== 201) {
-          throw new Error('HTTP error ' + response.status);
-        }else {
-          
+        if (response.status == 201) {
           navigate(`/statistics/${assignmentId}/${userId}`);
         }
       } catch (error) {
-          console.error(error);
+          console.error("Klaida: " + error);
+          if (error.response && error.response.data && error.response.data.error) {
+            setMessage('Klaida! ' + error.response.data.error);
+          } else {
+              setMessage('Klaida!');
+          }
       }
   }
   else {
@@ -145,6 +149,7 @@ const hideModalHandler = () => {
       <CardSubtitle className="mb-2 text-muted text-left" tag="h6">
         Testas
       </CardSubtitle>
+      {message && <div style={{ color: message.includes('Klaida') ? 'red' : 'green' }}>{message}</div>}
       </CardBody>
     </Card>
     <Modal question="Ar tikrai norite pateikti?" show={showModal} hide={hideModalHandler} onConfirm={saveAnswer}></Modal>

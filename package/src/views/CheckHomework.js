@@ -30,12 +30,12 @@ export default function CheckHomework() {
         setEdit(response.data.edit);
         
       } catch (error) {
-        console.error('Error fetching Homework:', error);
+        console.error('Klaida:', error);
       }
     };
 
     fetchHomework();
-  });
+  }, []);
 
   const send = (event) => {
     navigate(`/all-homework`);

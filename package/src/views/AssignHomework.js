@@ -29,21 +29,27 @@ export default function AssignHomework() {
               'X-CSRFToken': Cookies.get('csrftoken')
           },
       });
-      if (response.status !== 200) {
-          throw new Error('HTTP error ' + response.status);
-      }
       setClasses(response.data);
       setClassInput(response.data[0].id)
   } catch (error) {
-      console.error(error);
+      console.error("Klaida: " + error);
+      if (error.response && error.response.data && error.response.data.error) {
+        setMessage('Klaida! ' + error.response.data.error);
+      } else {
+          setMessage('Klaida!');
+      }
   }
   };
   useEffect(() => {
     getClasses();
-  });
+  }, []);
 
   const assignHomework = async (event) => {
     event.preventDefault();
+    if (new Date(fromDateInput) >= new Date(toDateInput)) {
+      setMessage('Klaida! Pradžios data turi būti ankstesnė nei pabaigos data.');
+      return;
+    }
     try {
       const response = await  axios.post(`${BACKEND_URL}/assignments/`, {
         homework: homeworkId,
@@ -57,12 +63,17 @@ export default function AssignHomework() {
             'X-CSRFToken': Cookies.get('csrftoken')
         }
     });
-      if (response.status !== 201) {
-          throw new Error('HTTP error ' + response.status);
-      }
-      setMessage(response.status===201 ? 'Operacija sėkminga!' : 'Klaida! ' + response.error);
+
+    if (response.status == 201) {
+      setMessage("Operacija sėkminga!");
+    }
   } catch (error) {
       console.error(error);
+      if (error.response && error.response.data && error.response.data.error) {
+        setMessage('Klaida! ' + error.response.data.error);
+      } else {
+          setMessage('Klaida!');
+      }
   }
   };
   

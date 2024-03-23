@@ -12,6 +12,7 @@ const Starter = () => {
   const [homeworkTeacher, setHomeworkTeacher] = useState([]);
   const [homeworkStudent, setHomeworkStudent] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [message, setMessage] = useState('');
   const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
   const token = Cookies.get('token'); 
   const userString = Cookies.get('user');
@@ -37,7 +38,7 @@ const Starter = () => {
         setHomeworkTeacher(response.data);
       })
       .catch(error => {
-        console.error('Error fetching homeworks:', error);
+        console.error('Klaida:', error);
       });
     } else if (role === 1){
       axios.get(`${BACKEND_URL}/assignments_student/`, {
@@ -51,14 +52,14 @@ const Starter = () => {
         setHomeworkStudent(response.data);
       })
       .catch(error => {
-        console.error('Error fetching homeworks:', error);
+        console.error('Klaida:', error);
       });
     }
 
   };
   useEffect(() => {
     getAssignments();
-  });
+  }, []);
 
   const showModalHandler = (assignmentId) => {
     setSelectedAssignmentId(assignmentId);
@@ -69,21 +70,33 @@ const Starter = () => {
     setShowModal(false);
   };
 
-  const deleteAssignment = () => {
-    axios.delete(`${BACKEND_URL}/assignments_teacher/${selectedAssignmentId}/`, {
-        headers: {
-            'Authorization': `Token ${token}`,
-            'Content-Type': 'application/json',
-            'X-CSRFToken': Cookies.get('csrftoken')
-        },
-    })
-    .then(response => {
-        hideModalHandler();
-        getAssignments();
-    })
-    .catch(error => {
-        console.error('Failed to delete assignment:', error);
-    });
+  const deleteAssignment = async (e) => {
+    try{
+      const response = await axios.delete(`${BACKEND_URL}/assignments_teacher/${selectedAssignmentId}/`, {
+          headers: {
+              'Authorization': `Token ${token}`,
+              'Content-Type': 'application/json',
+              'X-CSRFToken': Cookies.get('csrftoken')
+          },
+      });
+        if(response.status != 204){
+          if (response.data.error) {
+            setMessage('Klaida! ' + response.data.error);
+          } else {
+              setMessage('Klaida!');
+          }
+        }
+          hideModalHandler();
+          getAssignments();
+  }
+  catch(error){
+    console.error('Klaida:', error);
+    if (error.response && error.response.data && error.response.data.error) {
+      setMessage('Klaida! ' + error.response.data.error);
+    } else {
+        setMessage('Klaida!');
+    }
+  }
 };
 
   const handleStartGame = async (assignmentId) => {
@@ -91,7 +104,12 @@ const Starter = () => {
         const url = `http://localhost:8080/?student_id=${user_id}&assignment_id=${assignmentId}`;
         window.open(url, '_blank');
     } catch (error) {
-      console.error('Network error:', error);
+      console.error('Klaida:', error);
+      if (error.response && error.response.data && error.response.data.error) {
+        setMessage('Klaida! ' + error.response.data.error);
+      } else {
+          setMessage('Klaida!');
+      }
     }
   };
 
@@ -106,7 +124,7 @@ const Starter = () => {
           <CardSubtitle className="mb-2 text-muted" tag="h6">
             Statistika
           </CardSubtitle>
-
+          {message && <div style={{ color: message.includes('Klaida') ? 'red' : 'green' }}>{message}</div>}
           <Table className="no-wrap mt-3 align-middle" responsive borderless>
             <thead>
               <tr>

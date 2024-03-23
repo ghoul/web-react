@@ -23,12 +23,12 @@ const Podium = () => {
         setClasss(response.data.class_title);
       })
       .catch(error => {
-        console.error('Error fetching podium:', error);
+        console.error('Klaida:', error);
       });
   };
   useEffect(() => {
    getPodium();
-  });
+  }, []);
 
   const renderPodiumUser = (user, index) => (
     <div key={index} className={`${styles.podium} ${styles[`podium-${index + 1}`]}`}>

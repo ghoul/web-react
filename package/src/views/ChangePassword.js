@@ -24,7 +24,6 @@ function ChangePassword() {
     }
 
     try {
-      console.log(password);
        const response = await axios.put(`${BACKEND_URL}/password/${userId}/`, 
        {password: password
       }, {
@@ -35,13 +34,9 @@ function ChangePassword() {
         }
       });
 
-      if (response.status !== 200) {
-        setMessage(response.error);
-        throw new Error('Failed to change password');
+      if (response.status == 200) {
+        setMessage("Operacija sėkminga!");
       }
-     else {
-      setMessage('Slaptažodis pakeistas sėkmingai');
-     } 
       setTimeout(() => {
         setMessage('');
       }, 5000);

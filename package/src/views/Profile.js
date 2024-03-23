@@ -33,11 +33,11 @@ function Profile() {
         setEmail(userData.email);
         setSchool(userData.school_title);
       } catch (error) {
-        console.error('Error fetching profile:', error);
+        console.error('Klaida:', error);
       }
     }
     fetchData();
-  });
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -54,19 +54,25 @@ function Profile() {
           'X-CSRFToken': Cookies.get('csrftoken')
         }
       });
-      setMessage(response.status == 200 ? 'Profile updated successfully' : 'Failed to update profile');
+      if (response.status === 200) {
+        setMessage('Operacija sėkminga!');
+     }
       setTimeout(() => {
         setMessage('');
       }, 3000);
     } catch (error) {
-      setMessage('Failed to update profile');
+      if (error.response && error.response.data && error.response.data.error) {
+        setMessage('Klaida! ' + error.response.data.error);
+      } else {
+          setMessage('Klaida!');
+      }
     }
   };
 
   return (
     <div className="container mt-5">
       <h1>Profilio redagavimas</h1>
-      {message && <div style={{ color: message.includes('Failed') ? 'red' : 'green' }}>{message}</div>}
+      {message && <div style={{ color: message.includes('Klaida') ? 'red' : 'green' }}>{message}</div>}
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">

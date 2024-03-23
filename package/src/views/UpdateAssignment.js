@@ -40,36 +40,41 @@ export default function UpdateAssignment() {
 
    useEffect(() => { 
     getAssignment();
-   });
-   const saveAssignment = (event) => {
+   }, []);
+   const saveAssignment = async (event) => {
      event.preventDefault();
+     if (new Date(fromDateInput) >= new Date(toDateInput)) {
+      setMessage('Klaida! Pradžios data turi būti ankstesnė nei pabaigos data.');
+      return;
+    }
      const assignment = {
          from_date : fromDateInput,
          to_date : toDateInput,
          classs : classInput
-       };
-       axios.put(`${BACKEND_URL}/assignments/${assignmentId}/`, assignment, {
-        headers: {
-            'Authorization': `Token ${token}`,
-            'Content-Type': 'application/json',
-            'X-CSRFToken': Cookies.get('csrftoken')
+      };
+
+      try {
+      const response = await axios.put(`${BACKEND_URL}/assignments/${assignmentId}/`, assignment, {
+      headers: {
+          'Authorization': `Token ${token}`,
+          'Content-Type': 'application/json',
+          'X-CSRFToken': Cookies.get('csrftoken')
         }
-    })
-    .then(response => {
-        if (response.status !== 200) {
-            throw new Error('HTTP error ' + response.status);
-        }
-    })
-    .then(data => {
-        setMessage('Operacija sėkminga!');
-        setTimeout(() => {
-            setMessage('');
-        }, 3000);
-    })
-    .catch(error => {
-        console.error(error);
-        setMessage('Klaida!' + error.message);
-    });
+      });
+      if (response.status === 200) {
+          setMessage('Operacija sėkminga!');
+      }
+      setTimeout(() => {
+          setMessage('');
+      }, 3000);
+    }
+    catch (error){
+      if (error.response && error.response.data && error.response.data.error) {
+        setMessage('Klaida! ' + error.response.data.error);
+      } else {
+          setMessage('Klaida!');
+      }
+    }
    };
    
    const send = (event) => {

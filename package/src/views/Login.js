@@ -40,13 +40,18 @@ function LoginForm() {
         login(response.data.token); 
         
         setTimeout(() => {
-          navigate(`/`);
+          if(response.data.user.role === 3){
+            navigate(`/manage-school`);
+          } else{
+            navigate(`/`);
+          }
+         
         }, 500);
       } else {
         setError(response.data.error || 'Nepavyko prisijungti');
       }
     } catch (error) {
-      setError('Netinkamas prisijungimo vardas arba slaptažodis');
+      setError("Neteisingas el. paštas arba slaptažodis");
     }
   };
 

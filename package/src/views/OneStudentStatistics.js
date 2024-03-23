@@ -3,6 +3,7 @@ import { Button, Card, CardTitle, CardBody, Row, Col, CardSubtitle, Label, Input
 import { useNavigate, useParams } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config.js';
 import Cookies from "js-cookie";
+import axios from "axios";
 
 export default function OneStudentStatistics() {
   const { assignmentId, studentId } = useParams();
@@ -20,15 +21,14 @@ export default function OneStudentStatistics() {
  useEffect(() => {
   const fetchHomework = async () => {
     try {
-      const response = await fetch(`${BACKEND_URL}/one_student_answers/${assignmentId}/${studentId}/`, {
-        method: 'GET',
+      const response = await axios.get(`${BACKEND_URL}/one_student_answers/${assignmentId}/${studentId}/`, {
         headers: {
           'Authorization': `Token ${token}`,
           'Content-Type': 'application/json',
           'X-CSRFToken': Cookies.get('csrftoken')
         },
       });
-      const data = await response.json();
+      const data = response.data;
       
       if (data.results.length > 0) {
         setResults(data.results);
@@ -42,10 +42,10 @@ export default function OneStudentStatistics() {
         const correctAnswers = data.results.filter(pair => pair.points === pair.question.points).length;
         setAnswered(correctAnswers);
       } else {
-        console.error('No results found');
+        console.error('Nėra informacijos');
       }
     } catch (error) {
-      console.error('Error fetching results:', error);
+      console.error('Klaida:', error);
     }
   };
 

@@ -51,7 +51,7 @@ const ThemeRoutes = [
       { path: "/profile", element: <Profile /> },
       { path: "/password", element: <Password /> },
 
-      {path: "/add-school", element: <AddSchool/>},
+      {path: "/manage-school", element: <AddSchool/>},
     ],
   },
 ];

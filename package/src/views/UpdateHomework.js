@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {Row, Col, Card, CardTitle, CardBody, Button, Form, FormGroup, Label, Input} from 'reactstrap';
-import './HomeworkForm.css';
 import BACKEND_URL from '../layouts/config';
 import { useNavigate, useParams } from 'react-router-dom';
 import './Style.css';
@@ -10,7 +9,7 @@ const UpdateHomework = () => {
   const {homeworkId }= useParams();
   const [homeworkName, setHomeworkName] = useState('');
   const [pairs, setPairs] = useState([{ id: null, qtype: 'write', question: '', answer: '', points: 0, options: [], correct_options: [] }]);
-  const [successMessage, setSuccessMessage] = useState('');
+  const [successMessage, setMessage] = useState('');
   const [correctOptionIndexes, setCorrectOptionIndexes] = useState(Array(pairs.length).fill(null));
   const [multipleOptionIndexes, setMultipleOptionIndexes] = useState([]);
   const navigate = useNavigate();
@@ -68,10 +67,10 @@ const UpdateHomework = () => {
             setMultipleOptionIndexes(initialMultipleOptionIndexes);         
             }
          else {
-          console.error('Failed to fetch homework details');
+          console.error('Klaida');
       }});
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Klaida:', error);
       }
     };
 
@@ -130,6 +129,12 @@ const UpdateHomework = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const hasEmptyPoints = pairs.some(pair => pair.points === 0);
+    if(hasEmptyPoints){
+      setMessage('Klaida! Nenustatyti taškai');
+      return;
+    }
+
     if (pairs.length > 0 && pairs.some(pair => pair.question.trim() !== '')) {
       const dataToSend = {
         title: homeworkName,
@@ -145,25 +150,28 @@ const UpdateHomework = () => {
         }))
       };
       try {
-        axios.put(`${BACKEND_URL}/homework/${homeworkId}/`, dataToSend,  {
+        const response = await axios.put(`${BACKEND_URL}/homework/${homeworkId}/`, dataToSend,  {
           headers: {
             'Authorization': `Token ${token}`,
             'X-CSRFToken': Cookies.get('csrftoken')
           }
-        }).then(response => {
-          if (response.status == 201) {
-            setSuccessMessage("Operacija sėkminga!");
-          }
-         else {
-          console.error('Failed to submit homework');
+        });
+
+        if (response.status == 201) {
+          setMessage("Operacija sėkminga!");
         }
-      });
+
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Klaida:', error);
+        if (error.response && error.response.data && error.response.data.error) {
+          setMessage('Klaida! ' + error.response.data.error);
+        } else {
+            setMessage('Klaida!');
+        }
       }
     } 
   else {
-    alert('Namų darbe privalo būti bent viena užduotis');
+    setMessage('Klaida! Namų darbe privalo būti bent viena užduotis');
   }
 }
 
@@ -223,7 +231,6 @@ const UpdateHomework = () => {
             Namų darbo redagavimo forma
           </CardTitle>
           <CardBody>
-            {successMessage && <div style={{ marginBottom: '10px', color: successMessage.includes('Klaida') ? 'red' : 'green' }}>{successMessage}</div>}
             <Form onSubmit={handleSubmit}>
               <FormGroup>
                 <Label for="homeworkName">Namų darbo pavadinimas</Label>
@@ -259,6 +266,7 @@ const UpdateHomework = () => {
                           <FormGroup>
                             <Label for={`points${index}`}>Taškai</Label>
                             <Input
+                              required
                               type="number"
                               id={`points${index}`}
                               value={pair.points}
@@ -271,6 +279,7 @@ const UpdateHomework = () => {
                       <FormGroup>
                             <Label for={`question${index}`}>Klausimas</Label>
                             <Input
+                              required
                               type="text"
                               id={`question${index}`}
                               value={pair.question}
@@ -283,6 +292,7 @@ const UpdateHomework = () => {
                           <FormGroup>
                             <Label for={`answer${index}`}>Atsakymas</Label>
                             <Input
+                              required
                               type="text"
                               id={`answer${index}`}
                               value={pair.answer}
@@ -305,6 +315,7 @@ const UpdateHomework = () => {
                                         <Row  className="align-items-center">
                                           <Col>
                                             <Input
+                                              required
                                               type="text"
                                               value={option}
                                               onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)}
@@ -355,6 +366,7 @@ const UpdateHomework = () => {
                                 <Row  className="align-items-center">
                                   <Col>
                                     <Input
+                                      required
                                       type="text"
                                       value={option}
                                       onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)}
@@ -400,15 +412,15 @@ const UpdateHomework = () => {
                 ))} 
              
               <Button type="button" style={{backgroundColor: '#a6d22c', color: 'white', border: 'none'}} 
-              onClick={addPair} className="add-pair-button"
-              disabled={pairs.length >= 15}>
+              onClick={addPair} disabled={pairs.length >= 15}>
               <i class="bi bi-plus-lg"></i> Pridėti klausimą
               </Button>
               <FormGroup>
-                <Button type="submit"  style={{backgroundColor: 'black', color: 'white', border: 'none'}} className="submit-button">
+             
+                <Button type="submit"  style={{backgroundColor: 'black', color: 'white', border: 'none', marginTop: '10px'}} className="submit-button">
                   Įrašyti
                 </Button>
-
+                {successMessage && <div style={{ marginBottom: '10px', color: successMessage.includes('Klaida') ? 'red' : 'green' }}>{successMessage}</div>}
               </FormGroup>
             </Form>
           </CardBody>

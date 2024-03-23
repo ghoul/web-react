@@ -31,7 +31,7 @@ const navigation = [
   },
   {
     title: "Mokyklų tvarkymas",
-    href: "/add-school",
+    href: "/manage-school",
     icon: "bi bi-person-circle",
   },
   {
@@ -64,6 +64,8 @@ const Sidebar = ({ isMobileMenuOpen }) => {
     if (role === 3) { //admin
       return (
         navItem.title !== "Lyderių lentelė" &&
+        navItem.title !== "Pagrindinis" &&
+        navItem.title !== "Profilis" &&
         navItem.title !== "Užbaigti namų darbai" &&
         navItem.title !== "Namų darbai" 
       );

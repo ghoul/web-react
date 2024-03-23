@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {Row, Col, Card, CardTitle, CardBody, Button, Form, FormGroup, Label, Input, Table, TabContent, TabPane, Nav, NavItem, NavLink} from 'reactstrap';
 import { Modal } from './Modal.js';
-import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config';
 import './Style.css';
 import Cookies from 'js-cookie';
@@ -23,7 +22,6 @@ const AddSchool = () => {
   const [schoolIdUpdate, setSchoolIdUpdate]  = useState(1);
 
   const [activeTab, setActiveTab] = useState('add');
-  const navigate  = useNavigate();
 
   let token = Cookies.get('token'); 
   const toggleTab = (tab) => {
@@ -44,13 +42,13 @@ const AddSchool = () => {
       setSchoolIdUpdate(data[0].id)
       setLicenseInputUpdate(data[0].license_end)
     } catch (error) {
-      console.error('Error fetching schools:', error);
+      console.error('Klaida:', error);
     }
   };
 
   useEffect(() => {
     fetchSchools();
-  });
+  }, []);
 
   const createSchool = async (event) => {
     event.preventDefault();
@@ -69,15 +67,11 @@ const AddSchool = () => {
             body: formData,
         });
 
-        if (!response.ok) {
-            throw new Error('HTTP error ' + response.status);
-        }
-
         const blob = await response.blob();
         const url = window.URL.createObjectURL(new Blob([blob]));
         const a = document.createElement('a');
         a.href = url;
-        const formattedTitle = response.headers.get('FormattedTitle') ? response.headers.get('FormattedTitle'): titleInput+".txt";
+        const formattedTitle = titleInput + ".txt";
         a.download = `${formattedTitle}`;
         document.body.appendChild(a);
         a.click();
@@ -88,11 +82,14 @@ const AddSchool = () => {
         setTimeout(() => {
             setMessage('');
         }, 3000);
-       
         
     } catch (error) {
-        console.error(error);
-        setMessage('Klaida!' + error.error);
+        console.error("Klaida: " + error);
+        if (error.response && error.response.data && error.response.data.error) {
+          setMessage('Klaida! ' + error.response.data.error);
+        } else {
+            setMessage('Klaida!');
+        }
     }
 };
 const updateSchool = async (event) => {
@@ -112,20 +109,26 @@ const updateSchool = async (event) => {
           body: formData2,
       });
 
-      if (!response.ok) {
-          throw new Error('HTTP error ' + response.status);
-      }
-
       const blob = await response.blob();
       const url = window.URL.createObjectURL(new Blob([blob]));
       const a = document.createElement('a');
       a.href = url;
-      // const formattedTitle = response.headers.get('FormattedTitle'); // Access formatted title from response
-      // a.download = `${formattedTitle}`;
-      a.download = "login_credentials.txt"
+      var formattedTitleUpdate = '';
+      if (titleInputUpdate.length > 0){
+        formattedTitleUpdate = titleInputUpdate + ".txt";
+      }
+      else{
+        console.log(schoolIdUpdate);
+        console.log(schools);
+        const selectedSchool = schools.find(s => s.id == schoolIdUpdate);
+        console.log(selectedSchool);
+        formattedTitleUpdate = selectedSchool.title + ".txt";
+      }
+      a.download = formattedTitleUpdate;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
+      fetchSchools();
 
       setMessage(blob ? 'Operacija sėkminga!' : 'Klaida! ');
       setTimeout(() => {
@@ -135,7 +138,11 @@ const updateSchool = async (event) => {
       
   } catch (error) {
       console.error(error);
-      setMessage('Klaida!' + error.error);
+      if (error.response && error.response.data && error.response.data.error) {
+        setMessage('Klaida! ' + error.response.data.error);
+      } else {
+          setMessage('Klaida!');
+      }
   }
 };
 
@@ -143,25 +150,29 @@ const deleteSchool = async (event) => {
   event.preventDefault();
 
   try {
-      axios.delete(`${BACKEND_URL}/school/${schoolIdDelete}/`, {
+      const response = await axios.delete(`${BACKEND_URL}/school/${schoolIdDelete}/`, {
           headers: {
               'Authorization' : `Token ${token}`,
               'Content-Type': 'application/json',
               'X-CSRFToken': Cookies.get('csrftoken')
           }
-      }).then(response => {
-        const updatedSchools = schools.filter(school => school.id !== schoolIdDelete);
-        setSchools(updatedSchools);
-        hideModalHandler(); 
-      })
-      .catch(error => {
-        console.error('Error deleting school:', error);
       });
-     
-      
+        if(response.status != 204){
+          if (response.data.error) {
+             setMessage('Klaida! ' + response.data.error);
+          } else {
+            setMessage('Klaida!');
+          }
+        }
+        fetchSchools();
+        hideModalHandler(); 
   } catch (error) {
-      console.error(error);
-      setMessage('Klaida!' + error.error);
+        console.error('Klaida:', error);
+        if (error.response && error.response.data && error.response.data.error) {
+          setMessage('Klaida! ' + error.response.data.error);
+        } else {
+            setMessage('Klaida!');
+        }
   }
 };
 const handleSchoolChange = (selectedSchoolId) => {
@@ -183,9 +194,6 @@ const hideModalHandler = () => {
   setShowModal(false);
 };
 
-  const send = (event) => {
-    navigate('/');
-  }
   return (
     <div>
         <Nav className="nav nav-tabs">
@@ -230,7 +238,6 @@ const hideModalHandler = () => {
           <CardBody>
           {message && <div style={{ marginBottom: '10px', color: message.includes('Klaida') ? 'red' : 'green' }}>{message}</div>}
             <Form onSubmit={createSchool}>
-               {/* {% csrf_token %} */}
               <FormGroup>
                 <Label for="title">Pavadinimas</Label>
                 <Input
@@ -276,7 +283,6 @@ const hideModalHandler = () => {
             </Form>
           </CardBody>
         </Card>
-        <Button style={{ backgroundColor: '#1b1c20', color: 'white', marginBottom: '10px' }} onClick={send}> ← Atgal</Button>
       </Col>
     </Row>
 
@@ -352,7 +358,6 @@ const hideModalHandler = () => {
             </Form>
           </CardBody>
         </Card>
-        <Button style={{ backgroundColor: '#1b1c20', color: 'white', marginBottom: '10px' }} onClick={send}> ← Atgal</Button>
       </Col>
     </Row>
 
@@ -404,7 +409,6 @@ const hideModalHandler = () => {
               </div>
                 </CardBody>
               </Card>
-              <Button style={{ backgroundColor: '#1b1c20', color: 'white', marginBottom: '10px' }} onClick={send}> ← Atgal</Button>
             </Col>
           </Row>
           </TabPane>

@@ -29,7 +29,7 @@ const FinishedAssignments = () => {
         setHomeworkTeacher(response.data);
       })
       .catch(error => {
-        console.error('Error fetching homeworks finished:', error);
+        console.error('Klaida:', error);
       });
     } else if (role === 1){
       axios.get(`${BACKEND_URL}/assignments_student_finished/`, {
@@ -43,10 +43,10 @@ const FinishedAssignments = () => {
         setHomeworkStudent(response.data);
       })
       .catch(error => {
-        console.error('Error fetching homeworks finished:', error);
+        console.error('Klaida:', error);
       });
     }
-  });
+  }, []);
   const send = (event) => {
     navigate(`/`);
   }
