@@ -67,20 +67,19 @@ export default function CheckHomework() {
             </Row>
 
             {pair.qtype === 2 && (
-              <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
-              <Label check>
-                <Row>
-                  <Col md={6}>
-                    <Input
-                      type="text"
-                      readOnly
-                      value={pair.answer}
-                      style={{ width: '100%' }}
-                    />
-                  </Col>
-                </Row>
-              </Label>
-            </div>
+              <div key={index} >
+                    <Row>
+                      <Col md={4}>
+                          <Input
+                            type="text"
+                            readOnly
+                            value={pair.answer}
+                            style={{ width: '100%' }}
+                          />
+                          <p>{''}</p>
+                      </Col>
+                    </Row>
+                  </div> 
             )}
 
             {pair.qtype === 1 && (

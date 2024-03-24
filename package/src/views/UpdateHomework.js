@@ -378,12 +378,12 @@ const UpdateHomework = () => {
                                       type="checkbox"
                                       name={`multipleOption${index}`}
                                       style={{ display: 'none' }} 
-                                      checked={checkCorrect(index, optionIndex) !== -1}
+                                      checked={checkCorrect(index, optionIndex) > -1}
                                       onChange={() => handleMultipleCorrectOptionChange(index, optionIndex)}
                                     />
                                     {' '}
                                     <i
-                                      className={`bi ${checkCorrect(index, optionIndex) !== -1 ? 'bi-check-square-fill' : 'bi-check-square'}`}
+                                      className={`bi ${checkCorrect(index, optionIndex) > -1 ? 'bi-check-square-fill' : 'bi-check-square'}`}
                                     ></i>
                                   </Label>
                                   </Col>

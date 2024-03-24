@@ -38,6 +38,7 @@ const AddSchool = () => {
         },
       });
       const data = response.data;
+      console.log(response.data)
       setSchools(data);
       setSchoolIdUpdate(data[0].id)
       setLicenseInputUpdate(data[0].license_end)
@@ -177,9 +178,9 @@ const deleteSchool = async (event) => {
 };
 const handleSchoolChange = (selectedSchoolId) => {
   setSchoolIdUpdate(selectedSchoolId);
-  const selectedSchool = schools.find(school => school.id === selectedSchoolId);
+  const selectedSchool = schools.find(school => school.id == selectedSchoolId);
   if (selectedSchool) {
-    setLicenseInputUpdate(selectedSchool.license);
+    setLicenseInputUpdate(selectedSchool.license_end);
   } else {
     setLicenseInputUpdate(''); 
   }

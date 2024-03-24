@@ -179,7 +179,7 @@ const hideModalHandler = () => {
                   name={`correctOption${index}`}                
                   onChange={(e) => handlePairChange(index, 'answer', option.id)}
                 />
-                {option.text}
+                {" " + option.text}
               </div>
             ))}
           </>
@@ -194,7 +194,7 @@ const hideModalHandler = () => {
                   name={`multipleOption${index}`}
                   onChange={(e) => handlePairChange(index, 'multiple', option.id)}
                 />
-                {option.text}
+                {" " + option.text}
               </div>
             ))}
           </>

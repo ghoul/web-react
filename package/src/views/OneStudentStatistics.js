@@ -141,39 +141,37 @@ export default function OneStudentStatistics() {
                 {pair.question.qtype===2 && (     
                   <>      
                  <div key={index} >
-                              <Label check>
-                                <Row><Col  md={7}>
-                                <Input
-                                  type="text"
-                                  readOnly
-                                  value={pair.question.answer}
-                                  style={{ width: '100%' }}
-                                />
-                                <p>{''}</p></Col></Row>
-                              </Label>
-                            </div>
+                    <Row>
+                      <Col md={4}>
+                          <Input
+                            type="text"
+                            readOnly
+                            value={pair.question.answer}
+                            style={{ width: '100%' }}
+                          />
+                          <p>{''}</p>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col md={4}> 
+                        <Input
+                          type="text"
+                          readOnly
+                          value={pair.answer}
+                          style={{ width: '100%' }}
+                        />
+                      </Col>
 
-                            <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
-                                <Label check>
-                                  <Row>
-                                    <Col md={6}>
-                                      <Input
-                                        type="text"
-                                        readOnly
-                                        value={pair.answer}
-                                        style={{ width: '100%' }}
-                                      />
-                                    </Col>
-                                    <Col md={6} className="d-flex align-items-center ">
-                                      {pair.answer === pair.question.answer ? (
-                                        <span className="text-success"><i className="bi bi-check-lg"></i></span>
-                                      ) : (
-                                        <span className="text-danger"><i className="bi bi-x-lg"></i></span>
-                                      )}
-                                    </Col>
-                                  </Row>
-                                </Label>
-                              </div>
+                      <Col md={6} className="d-flex align-items-center ">
+                        {pair.answer.toLowerCase() === pair.question.answer.toLowerCase() ? (
+                          <span className="text-success"><i className="bi bi-check-lg"></i></span>
+                        ) : (
+                          <span className="text-danger"><i className="bi bi-x-lg"></i></span>
+                        )}
+                      </Col>
+
+                    </Row>
+                  </div> 
                      
                     </>
                   )}  

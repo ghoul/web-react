@@ -66,18 +66,17 @@ const AllHomework = () => {
   const handleMultipleCorrectOptionChange = (index, value) => { //question id and option id
     const updatedMultipleOptionIndexes = [...multipleOptionIndexes];
     const existingEntryIndex = checkCorrect(index,value)
-    if (existingEntryIndex) {
+    if (existingEntryIndex>-1) {
       updatedMultipleOptionIndexes.splice(existingEntryIndex, 1);
     } else {
       updatedMultipleOptionIndexes.push({ qid: index, oid: value });
     }
-
     setMultipleOptionIndexes(updatedMultipleOptionIndexes);
   };
 
   const checkCorrect = (qid, oid) =>{
     const existingEntryIndex = multipleOptionIndexes.findIndex(entry => entry.qid === qid && entry.oid === oid);
-    return existingEntryIndex !== -1;
+    return existingEntryIndex;
   }
 
   const handleSubmit = async (e) => {
@@ -230,12 +229,12 @@ const AllHomework = () => {
                                       type="checkbox"
                                       name={`multipleOption${index}`}
                                       style={{ display: 'none' }} 
-                                      checked={checkCorrect(index, optionIndex)}
+                                      checked={checkCorrect(index, optionIndex) > -1}
                                       onChange={() => handleMultipleCorrectOptionChange(index, optionIndex)}
                                     />
                                     {' '}
                                     <i
-                                      className={`bi ${checkCorrect(index, optionIndex) ? 'bi-check-square-fill' : 'bi-check-square'}`}
+                                      className={`bi ${checkCorrect(index, optionIndex)  > -1 ? 'bi-check-square-fill' : 'bi-check-square'}`}
                                     ></i>
                                   </Label>
                                   </Col>
