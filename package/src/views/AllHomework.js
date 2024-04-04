@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import BACKEND_URL from '../layouts/config.js';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-// import './Style.css';
+
 const AllHomework = () => {
   const [homework, setHomework] = useState([]);
   const [showModal, setShowModal] = useState(false);
