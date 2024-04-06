@@ -6,7 +6,8 @@ import './Style.css';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
-const AllHomework = () => {
+
+const AddHomework = () => {
   const [homeworkName, setHomeworkName] = useState('');
   const [pairs, setPairs] = useState([{ type: 'select', question: '', options: [], answer: '', image: null, points: 0 }]);
   const [successMessage, setMessage] = useState(''); 
@@ -192,6 +193,7 @@ const AllHomework = () => {
                             value={pair.points}
                             onChange={(e) => handlePairChange(index, 'points', e.target.value)}
                             min="0"
+                            data-testid={`points${index}`}
                           />
                         </FormGroup>
                         </Col>
@@ -221,6 +223,7 @@ const AllHomework = () => {
                                       type="text"
                                       value={option}
                                       onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)}
+                                      data-testid={`option`}
                                     />
                                   </Col>
                                   <Col>
@@ -265,6 +268,7 @@ const AllHomework = () => {
                             id={`question${index}`}
                             value={pair.question}
                             onChange={(e) => handlePairChange(index, 'question', e.target.value)}
+                            data-testid={`option`}
                           />
                         </FormGroup>
                         <FormGroup>
@@ -290,6 +294,7 @@ const AllHomework = () => {
                                       style={{ display: 'none' }} 
                                       checked={correctOptionIndexes[index] === optionIndex}
                                       onChange={() => handleCorrectOptionChange(index, optionIndex)}
+                                      data-testid={`correct`}
                                     />{' '}
                                     <i
                                     className={`bi ${correctOptionIndexes[index] === optionIndex ? 'bi-check-circle-fill' : 'bi-check-circle'}`}
@@ -323,6 +328,7 @@ const AllHomework = () => {
                             id={`question${index}`}
                             value={pair.question}
                             onChange={(e) => handlePairChange(index, 'question', e.target.value)}
+                            data-testid={`answer`}
                           />
                         </FormGroup>
                         <FormGroup>
@@ -366,4 +372,4 @@ const AllHomework = () => {
   );
 };
 
-export default AllHomework;
+export default AddHomework;

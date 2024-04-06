@@ -166,6 +166,7 @@ const hideModalHandler = () => {
           <Input
             type="text"
             id={`question${index}`}
+            data-testid={`question${index}`}
             defaultValue={''}
             onChange={(e) => handlePairChange(index, 'answer', e.target.value)}
           />
@@ -176,6 +177,7 @@ const hideModalHandler = () => {
               <div key={optionIndex}>
                 <Input
                   type="radio"
+                  data-testid={`question${index}option${optionIndex}`}
                   name={`correctOption${index}`}                
                   onChange={(e) => handlePairChange(index, 'answer', option.id)}
                 />
@@ -191,6 +193,7 @@ const hideModalHandler = () => {
               <div key={optionIndex}>
                 <Input
                   type="checkbox"
+                  data-testid={`question${index}option${optionIndex}`}
                   name={`multipleOption${index}`}
                   onChange={(e) => handlePairChange(index, 'multiple', option.id)}
                 />

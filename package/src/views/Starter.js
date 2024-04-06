@@ -49,6 +49,7 @@ const Starter = () => {
       },
     })
       .then(response => {
+        console.log("STUDENT DATA: "  + response.data.length);
         setHomeworkStudent(response.data);
       })
       .catch(error => {
@@ -202,7 +203,7 @@ const Starter = () => {
                   <td>{tdata.teacher_first_name} {tdata.teacher_last_name}</td>
 
                   <td>
-                    <Button className='noback-button' style={{background:'transparent', border:'none'}}>
+                    <Button className='noback-button' style={{background:'transparent', border:'none'}} data-testid="start-game-button">
                     <span className="nav-link" style={{ color: '#a6d22c', textDecoration: 'none', fontWeight: 'bold' }}
                      onClick={() => handleStartGame(tdata.id)}> 
                      <i class="bi bi-controller"></i>

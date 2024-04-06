@@ -34,6 +34,7 @@ const AllHomework = () => {
 }, []);
 
   const deleteHomework = async () => {
+    console.log('Delete homework function called');
       try {
         const response = await  axios.delete(`${BACKEND_URL}/homework/${selectedHomeworkId}/`, {
           headers: {

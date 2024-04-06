@@ -11,6 +11,7 @@
     "axios": "^1.6.8",
     "bootstrap": "5.3.0",
     "bootstrap-icons": "1.10.5",
+    "enzyme": "^3.11.0",
     "history": "5.3.0",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
@@ -27,7 +28,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-app-rewired test --coverage",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -54,16 +55,16 @@
     "@babel/preset-react": "^7.24.1",
     "@testing-library/dom": "^9.3.4",
     "babel-jest": "^29.7.0",
+    "customize-cra": "^1.0.0",
     "jest": "^27.5.1",
     "jsdom": "^24.0.0",
+    "react-app-rewired": "^2.2.1",
     "react-scripts": "5.0.1",
     "react-test-renderer": "^18.2.0"
   },
   "overrides": {
     "nth-check": "2.1.1"
   },
-
-  
   "jest": {
     "moduleNameMapper": {
       "^axios$": "axios/dist/node/axios.cjs"

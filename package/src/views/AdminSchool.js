@@ -5,7 +5,7 @@ import BACKEND_URL from '../layouts/config';
 import './Style.css';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-const AddSchool = () => {
+const AdminSchool = () => {
   const [titleInput, setTitleInput] = useState('');
   const [fileInput, setFileInput] = useState(null);
   const [licenseInput, setLicenseInput] = useState('');
@@ -38,6 +38,7 @@ const AddSchool = () => {
         },
       });
       const data = response.data;
+      console.log("dataaa: " + data[0].license_end);
       console.log(response.data)
       setSchools(data);
       setSchoolIdUpdate(data[0].id)
@@ -311,6 +312,7 @@ const hideModalHandler = () => {
                     id="title3"
                     value={schoolIdUpdate}
                     onChange={(e) => handleSchoolChange(e.target.value)}
+                    data-testid = {'updateSchool'}
                   >
                     {schools.map((school) => (
                       <option key={school.id} value={school.id}>{school.title}</option>
@@ -418,4 +420,4 @@ const hideModalHandler = () => {
   );
 };
 
-export default AddSchool;
+export default AdminSchool;

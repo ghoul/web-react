@@ -22,7 +22,7 @@ import Podium from "../views/PodiumAllTime.js";
 import Profile from "../views/Profile.js";
 import Password from "../views/ChangePassword.js";
 
-import AddSchool from "../views/AdminSchool.js";
+import AdminSchool from "../views/AdminSchool.js";
 
 /*****Routes******/
 
@@ -51,7 +51,7 @@ const ThemeRoutes = [
       { path: "/profile", element: <Profile /> },
       { path: "/password", element: <Password /> },
 
-      {path: "/manage-school", element: <AddSchool/>},
+      {path: "/manage-school", element: <AdminSchool/>},
     ],
   },
 ];

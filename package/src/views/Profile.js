@@ -33,7 +33,8 @@ function Profile() {
         setEmail(userData.email);
         setSchool(userData.school_title);
       } catch (error) {
-        console.error('Klaida:', error);
+        console.error('Klaida:', error.message);
+        setMessage("Klaida: " + error.message);
       }
     }
     fetchData();

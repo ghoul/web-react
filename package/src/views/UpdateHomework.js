@@ -272,6 +272,7 @@ const UpdateHomework = () => {
                               value={pair.points}
                               onChange={(e) => handlePairChange(index, 'points', e.target.value)}
                               min="0"
+                              data-testid = {`points${index}`}
                             />
                           </FormGroup>
                         </Col>
@@ -319,6 +320,7 @@ const UpdateHomework = () => {
                                               type="text"
                                               value={option}
                                               onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)}
+                                              data-testid={`option`}
                                             />
                                           </Col>
                                           <Col>
