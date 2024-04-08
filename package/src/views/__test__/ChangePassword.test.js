@@ -10,7 +10,7 @@ jest.mock('axios');
 describe('ChangePassword component', () => {
 
   beforeEach(() => {
-    const mockUser = { id: 123, first_name: 'first', last_name : 'last', role : 1, gender : 2 };
+    const mockUser = { id: 123, first_name: 'Jonas', last_name : 'Jonaitis', role : 1, gender : 2 };
     Cookies.set('user', JSON.stringify(mockUser));
   });
       

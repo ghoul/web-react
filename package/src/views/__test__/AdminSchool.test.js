@@ -52,7 +52,7 @@ describe('AdminSchool component', () => {
     fireEvent.click(screen.getAllByText('Įrašyti')[0]);
 
     await waitFor(() => {
-      expect(screen.getAllByText('Klaida!')[0]).toBeInTheDocument();  //Operacija sėkminga! TODO
+      expect(screen.getAllByText('Klaida!')[0]).toBeInTheDocument(); 
       
     });
   });
@@ -65,7 +65,7 @@ describe('AdminSchool component', () => {
         ],
       });
       axios.post.mockResolvedValueOnce({
-        status: 200,
+        status: 400,
         data: {},
       });
     render(<BrowserRouter><AdminSchool /></BrowserRouter>);
@@ -84,7 +84,7 @@ describe('AdminSchool component', () => {
     fireEvent.click(screen.getAllByText('Įrašyti')[1]);
 
     await waitFor(() => {
-      expect(screen.getAllByText('Klaida!')[0]).toBeInTheDocument(); //Operacija sėkminga! TODO
+      expect(screen.getAllByText('Klaida!')[0]).toBeInTheDocument(); 
     });
   });
 

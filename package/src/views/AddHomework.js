@@ -268,7 +268,7 @@ const AddHomework = () => {
                             id={`question${index}`}
                             value={pair.question}
                             onChange={(e) => handlePairChange(index, 'question', e.target.value)}
-                            data-testid={`option`}
+                            data-testid={`option${index}`}
                           />
                         </FormGroup>
                         <FormGroup>

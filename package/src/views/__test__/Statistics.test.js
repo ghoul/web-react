@@ -78,15 +78,7 @@ describe('Statistics component', () => {
     render(<BrowserRouter><Statistics /></BrowserRouter>);
     const downloadButton = screen.getByRole('button', { name: /parsisiųsti/i });
     expect(downloadButton).toBeInTheDocument();
-    //TODO
-
-    // const downloadLink = screen.getByRole('link', { name: /parsisiųsti/i });
-    //  // const downloadLink = screen.getByRole('button', { name: /parsisiųsti/i }).querySelector('a[download]');
-
-    //   console.log("DOWNLOAD LINK: " + downloadLink);
-    //   const today = new Date();
-    //   const formattedDate = today.toISOString().slice(0,10);
-    //   expect(downloadLink.href).toContain(`${mockTitle.toLowerCase().replace(/\s/g, '_')}_${mockClass}_${formattedDate}.txt`);
+  
   });
 
 

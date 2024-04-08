@@ -155,12 +155,6 @@ describe('Starter component', () => {
         expect(screen.getByTestId('start-game-button')).toBeInTheDocument();
     });
     fireEvent.click(screen.getByTestId('start-game-button'));
-
-    // await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // await waitFor(() => {
-    //   expect(windowOpen).toHaveBeenCalled();
-    // });
-    //TODO 
+    
   });
 });

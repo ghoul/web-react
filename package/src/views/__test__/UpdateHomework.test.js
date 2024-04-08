@@ -80,16 +80,16 @@ describe('UpdateHomework component', () => {
     await waitFor(() => {
         homeworkNameInput = screen.getByLabelText('Namų darbo pavadinimas');
     });
-    fireEvent.change(homeworkNameInput, { target: { value: 'Test Homework' } });
+    fireEvent.change(homeworkNameInput, { target: { value: 'Namų darbas' } });
 
     const questionField = screen.getByLabelText('Klausimas');
-    fireEvent.change(questionField, { target: { value: 'Test question?' } });
+    fireEvent.change(questionField, { target: { value: 'Klausimas?' } });
 
     const addButton = screen.getByText('pasirinkimas');
     fireEvent.click(addButton);
 
     const optionField = screen.getAllByTestId('option');
-    fireEvent.change(optionField[0], { target: { value: 'Test option2' } });
+    fireEvent.change(optionField[0], { target: { value: 'pasirinkimas 2' } });
 
     const pointsField = screen.getByTestId('points0');
     fireEvent.change(pointsField, { target: { value: '15' } });
@@ -97,7 +97,7 @@ describe('UpdateHomework component', () => {
     const submitButton = screen.getByText('Įrašyti');
     fireEvent.click(submitButton);
 
-    const failMessage = await screen.findByText('Klaida!'); //TODO?
+    const failMessage = await screen.findByText('Klaida!');
     expect(failMessage).toBeInTheDocument();
   });
 });
