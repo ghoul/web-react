@@ -86,9 +86,7 @@ describe('AssignHomework component', () => {
       screen.getByText('Paskirti');
     });
     fireEvent.click(screen.getByText('Paskirti'));
-    // await waitFor(() => {
-    //   screen.getByText('Klaida! Nepavyko paskirti namų darbo');
-    // });
+    
     await waitFor(() => {
       expect(screen.getByText('Klaida! Nepavyko paskirti namų darbo')).toBeInTheDocument();
     });

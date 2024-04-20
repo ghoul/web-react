@@ -91,6 +91,7 @@ const AddHomework = () => {
       const formData = new FormData();
       formData.append('title', homeworkName);
       pairs.forEach((pair, index) => {
+        console.log(correctOptionIndexes);
         formData.append(`pairs[${index}][qtype]`, pair.type);
         formData.append(`pairs[${index}][question]`, pair.question);
         formData.append(`pairs[${index}][points]`, pair.points);
@@ -102,6 +103,7 @@ const AddHomework = () => {
         }
         if (pair.type === 'select') {
           formData.append(`pairs[${index}][correctOptionIndex]`, correctOptionIndexes[index]);
+          
         }
         if (pair.type === 'multiple') {
           multipleOptionIndexes.forEach(({ qid, oid }) => {
