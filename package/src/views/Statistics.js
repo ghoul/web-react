@@ -49,8 +49,16 @@ const Statistics = () => {
 
   const download = (event) => {
     const sortedData = students.sort((a, b) => a.student_last_name.localeCompare(b.student_last_name));
-    const data = sortedData.map(student => `${student.student_last_name} ${student.student_first_name}: ${student.grade}`).join('\n');
-    const blob = new Blob([data], { type: 'text/plain' });
+    const longestNameLength = sortedData.reduce((max, student) => Math.max(max, student.student_last_name.length + student.student_first_name.length), 0);
+    const formattedData = sortedData.map(student => {
+      const name = `${student.student_last_name} ${student.student_first_name}`;
+      const spacing = ' '.repeat(longestNameLength - name.length + 3);
+      return `${name}${spacing}${student.grade}`;
+    }).join('\n');
+    const header = `Mokinys${' '.repeat(longestNameLength-6)}Pažymys\n`;
+    const border = '-'.repeat(header.length+2) + '\n';
+    const table = `${header}${border}${formattedData}`;
+    const blob = new Blob([table], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
@@ -61,7 +69,8 @@ const Statistics = () => {
     document.body.appendChild(link);
     link.click();
   }
-
+  
+  
   return (
     <div>
       <Row>

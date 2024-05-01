@@ -38,8 +38,6 @@ const AdminSchool = () => {
         },
       });
       const data = response.data;
-      console.log("dataaa: " + data[0].license_end);
-      console.log(response.data)
       setSchools(data);
       setSchoolIdUpdate(data[0].id)
       setLicenseInputUpdate(data[0].license_end)

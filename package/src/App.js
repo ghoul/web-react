@@ -7,18 +7,3 @@ const App = () => {
 };
 
 export default App;
-
-// import { BrowserRouter } from "react-router-dom";
-// import Themeroutes from "./routes/Router";
-
-// const App = () => {
-//   return (
-//     <BrowserRouter>
-//       <div className="dark">
-//         <Themeroutes />
-//       </div>
-//     </BrowserRouter>
-//   );
-// };
-
-// export default App;

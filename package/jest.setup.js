@@ -1,4 +1,3 @@
-// jest.setup.js
 import { JSDOM } from 'jsdom';
 
 const dom = new JSDOM('<!doctype html><html><body></body></html>');

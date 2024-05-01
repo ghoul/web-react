@@ -49,7 +49,6 @@ const Starter = () => {
       },
     })
       .then(response => {
-        console.log("STUDENT DATA: "  + response.data.length);
         setHomeworkStudent(response.data);
       })
       .catch(error => {
